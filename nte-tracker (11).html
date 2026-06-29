@@ -1,0 +1,1997 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NTE Task Tracker — Neverness to Everness</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3CradialGradient id='bg' cx='50%25' cy='50%25' r='50%25'%3E%3Cstop offset='0%25' stop-color='%237B5CF5'/%3E%3Cstop offset='100%25' stop-color='%233B2FA0'/%3E%3C/radialGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='url(%23bg)'/%3E%3C!-- outer ring --%3E%3Ccircle cx='32' cy='32' r='20' fill='none' stroke='white' stroke-width='2.5' stroke-opacity='0.9'/%3E%3C!-- orbit ellipse --%3E%3Cellipse cx='32' cy='32' rx='20' ry='8' fill='none' stroke='white' stroke-width='1.5' stroke-opacity='0.6' transform='rotate(-30 32 32)'/%3E%3C!-- center star --%3E%3Ccircle cx='32' cy='32' r='4.5' fill='white'/%3E%3C!-- sparkle dots --%3E%3Ccircle cx='32' cy='12' r='2' fill='white' fill-opacity='0.8'/%3E%3Ccircle cx='50' cy='22' r='1.5' fill='white' fill-opacity='0.6'/%3E%3Ccircle cx='14' cy='42' r='1.5' fill='white' fill-opacity='0.6'/%3E%3Ccircle cx='52' cy='44' r='1' fill='white' fill-opacity='0.5'/%3E%3Ccircle cx='12' cy='20' r='1' fill='white' fill-opacity='0.5'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0F0E17;--bg2:#1A1825;--bg3:#221F32;--border:#2E2A44;
+  --text:#EBE9F8;--text2:#9E9AC0;--text3:#5C5880;
+  --accent:#7B5CF5;--accent2:#534AB7;--coral:#D85A30;--teal:#1D9E75;--radius:10px;
+  --app-pad: clamp(0.75rem, 4vw, 1.5rem);
+  --gap: clamp(8px, 2vw, 14px);
+}
+
+/* ── Base ── */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;overflow-x:hidden}
+.app{max-width:860px;margin:0 auto;padding:clamp(1rem,4vw,2rem) var(--app-pad) 5rem}
+
+/* ── Header ── */
+.header{
+  display:flex;align-items:center;gap:var(--gap);
+  margin-bottom:clamp(1.25rem,4vw,2rem);
+  flex-wrap:wrap;row-gap:10px;
+}
+.logo{
+  width:clamp(40px,8vw,52px);height:clamp(40px,8vw,52px);
+  border-radius:clamp(10px,2vw,14px);
+  background:linear-gradient(135deg,#7B5CF5,#3B2FA0);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  box-shadow:0 0 24px rgba(123,92,245,.25);
+}
+.logo i{font-size:clamp(20px,4vw,26px);color:#fff}
+.header-text{flex:1;min-width:0}
+.header-text h1{font-size:clamp(16px,4vw,22px);font-weight:600;letter-spacing:-.3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.header-text p{font-size:clamp(11px,2.5vw,13px);color:var(--text2);margin-top:2px}
+.header-right{margin-left:auto;display:flex;align-items:center;gap:8px;flex-shrink:0}
+
+/* ── TZ Dropdown ── */
+.tz-dropdown{position:relative;flex-shrink:0}
+.tz-trigger{
+  display:flex;align-items:center;gap:6px;
+  background:var(--bg2);border:1px solid var(--border);border-radius:8px;
+  padding:7px 10px;cursor:pointer;transition:border-color .15s;user-select:none;
+  min-height:36px;
+}
+.tz-trigger:hover{border-color:var(--text3)}
+.tz-trigger.open{border-color:var(--accent)}
+.tz-trigger i.tz-icon{font-size:13px;color:var(--text3);flex-shrink:0}
+.tz-trigger-label{
+  font-size:clamp(10px,2.5vw,12px);color:var(--text2);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  max-width:clamp(60px,30vw,160px);
+}
+.tz-trigger i.tz-caret{font-size:12px;color:var(--text3);transition:transform .2s;flex-shrink:0}
+.tz-trigger.open i.tz-caret{transform:rotate(180deg);color:var(--accent)}
+
+/* dropdown panel — desktop: anchored below; mobile: fixed sheet */
+.tz-menu{
+  display:none;position:absolute;top:calc(100% + 6px);right:0;
+  width:clamp(200px,70vw,240px);
+  background:var(--bg2);border:1px solid var(--border);border-radius:10px;
+  box-shadow:0 8px 32px rgba(0,0,0,.6);z-index:1000;overflow:hidden;
+}
+.tz-menu.open{display:block}
+.tz-search-wrap{padding:8px 10px;border-bottom:1px solid var(--border)}
+.tz-search{
+  width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;
+  padding:7px 10px;font-size:13px;color:var(--text);font-family:'Inter',sans-serif;outline:none;
+}
+.tz-search::placeholder{color:var(--text3)}
+.tz-search:focus{border-color:var(--accent)}
+.tz-list{max-height:clamp(160px,40vh,240px);overflow-y:auto;padding:4px 0}
+.tz-list::-webkit-scrollbar{width:4px}
+.tz-list::-webkit-scrollbar-track{background:transparent}
+.tz-list::-webkit-scrollbar-thumb{background:var(--border);border-radius:999px}
+.tz-option{
+  padding:9px 12px;font-size:clamp(11px,2.5vw,12px);color:var(--text2);
+  cursor:pointer;transition:background .1s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.tz-option:hover{background:var(--bg3);color:var(--text)}
+.tz-option.selected{background:rgba(123,92,245,.15);color:#A997FF;font-weight:500}
+
+/* ── Stats ── */
+.stats-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:clamp(6px,2vw,10px);margin-bottom:clamp(1rem,3vw,2rem);
+}
+.stat-card{
+  background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);
+  padding:clamp(10px,3vw,14px) clamp(8px,2vw,12px);text-align:center;
+}
+.stat-num{font-size:clamp(18px,5vw,24px);font-weight:600}
+.stat-num span{font-size:clamp(11px,2.5vw,14px);font-weight:400;color:var(--text3)}
+.stat-lbl{font-size:clamp(9px,2vw,11px);color:var(--text2);margin-top:4px;text-transform:uppercase;letter-spacing:.06em}
+.stat-pct{display:block;font-size:clamp(9px,2vw,11px);color:var(--accent);margin-top:2px;font-weight:500}
+
+/* ── Tabs ── */
+.tab-bar{
+  display:flex;gap:4px;background:var(--bg2);border:1px solid var(--border);
+  border-radius:12px;padding:4px;margin-bottom:1.25rem;
+}
+.tab-btn{
+  flex:1;background:none;border:none;padding:clamp(8px,2vw,10px) 6px;
+  font-size:clamp(12px,3vw,13px);color:var(--text2);cursor:pointer;border-radius:9px;
+  transition:all .15s;font-family:'Inter',sans-serif;
+  display:flex;align-items:center;justify-content:center;gap:5px;
+  min-height:40px;-webkit-tap-highlight-color:transparent;
+}
+.tab-btn i{font-size:clamp(13px,3vw,14px)}
+.tab-btn.active{background:var(--accent);color:#fff;font-weight:500}
+.tab-btn:hover:not(.active){background:var(--bg3);color:var(--text)}
+
+/* ── Progress ── */
+.progress-row{display:flex;justify-content:space-between;align-items:center;font-size:clamp(11px,2.5vw,12px);color:var(--text2);margin-bottom:6px}
+.progress-row .pct{color:var(--accent);font-weight:600}
+.progress-wrap{background:var(--bg3);border-radius:999px;height:5px;overflow:hidden;margin-bottom:1.25rem}
+.progress-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--accent),#A997FF);transition:width .35s ease}
+
+/* ── Section label ── */
+.section-label{font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin:1.25rem 0 .4rem;padding-left:4px}
+
+/* ── Tasks ── */
+.task-item{
+  display:flex;align-items:flex-start;gap:10px;
+  padding:clamp(8px,2.5vw,10px) clamp(6px,2vw,10px);
+  border-radius:8px;cursor:pointer;transition:background .12s;
+  user-select:none;position:relative;-webkit-tap-highlight-color:transparent;
+  min-height:44px; /* touch-friendly */
+}
+.task-item:hover{background:var(--bg2)}
+/* on touch devices always show delete btn */
+@media(hover:none){.delete-btn{opacity:1 !important}}
+.task-item:hover .delete-btn{opacity:1}
+.task-item.done .task-text{text-decoration:line-through;color:var(--text3)}
+.cb{
+  width:clamp(16px,4vw,18px);height:clamp(16px,4vw,18px);
+  border-radius:5px;border:1.5px solid var(--border);background:transparent;
+  flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;transition:all .15s;
+}
+.task-item.done .cb{background:var(--accent);border-color:var(--accent)}
+.cb i{font-size:11px;color:#fff;display:none}
+.task-item.done .cb i{display:block}
+.task-text{font-size:clamp(13px,3vw,13.5px);color:var(--text);line-height:1.5;flex:1;word-break:break-word}
+.badge{display:inline-block;font-size:10px;font-weight:500;padding:1px 7px;border-radius:999px;margin-right:5px;vertical-align:middle;white-space:nowrap}
+.badge-opt{background:rgba(123,92,245,.15);color:#A997FF;border:1px solid rgba(123,92,245,.25)}
+.badge-pers{background:rgba(29,158,117,.12);color:#5DCAA5;border:1px solid rgba(29,158,117,.25)}
+.badge-monthly{background:rgba(201,139,42,.12);color:#EF9F27;border:1px solid rgba(201,139,42,.25)}
+.badge-biweek{background:rgba(216,90,48,.12);color:#F0997B;border:1px solid rgba(216,90,48,.25)}
+.badge-custom{background:rgba(123,92,245,.1);color:#C4B5FD;border:1px solid rgba(123,92,245,.2)}
+.badge-onetime{background:rgba(201,139,42,.15);color:#EF9F27;border:1px solid rgba(201,139,42,.35)}
+/* permanently completed one-time tasks */
+.task-item.perm-done{opacity:.45;cursor:default !important}
+.task-item.perm-done:hover{background:transparent}
+.task-item.perm-done .cb{background:var(--teal) !important;border-color:var(--teal) !important}
+.task-item.perm-done .cb i{display:block !important}
+.task-item.perm-done .task-text{text-decoration:line-through;color:var(--text3) !important}
+.delete-btn{
+  opacity:0;background:none;border:none;cursor:pointer;color:var(--text3);
+  font-size:15px;padding:4px 6px;border-radius:4px;flex-shrink:0;
+  transition:all .12s;line-height:1;margin-top:0;
+  min-width:28px;min-height:28px;display:flex;align-items:center;justify-content:center;
+}
+.delete-btn:hover{color:#F0997B;background:rgba(216,90,48,.1)}
+
+/* ── Panel ── */
+.panel{display:none}.panel.active{display:block}
+
+/* ── Tip box ── */
+.tip-box{
+  background:rgba(123,92,245,.08);border-left:3px solid var(--accent);
+  border-radius:0 8px 8px 0;padding:10px 14px;margin-bottom:1.25rem;
+  font-size:clamp(11.5px,2.5vw,12.5px);color:var(--text2);line-height:1.65;
+  word-break:break-word;
+}
+.tip-box b{color:var(--text);font-weight:500}
+.countdown{color:var(--accent);font-weight:600;font-variant-numeric:tabular-nums;letter-spacing:.02em;white-space:nowrap}
+.task-countdown{display:inline-block;font-size:11px;font-weight:600;color:var(--accent);font-variant-numeric:tabular-nums;background:rgba(123,92,245,.1);border:1px solid rgba(123,92,245,.2);border-radius:6px;padding:1px 7px;margin-left:8px;vertical-align:middle;white-space:nowrap}
+
+/* ── Edit / pencil btn on task rows ── */
+.edit-btn{
+  opacity:0;background:none;border:none;cursor:pointer;color:var(--text3);
+  font-size:14px;padding:4px 5px;border-radius:4px;flex-shrink:0;
+  transition:all .12s;display:flex;align-items:center;justify-content:center;
+  min-width:26px;min-height:26px;
+}
+.edit-btn:hover{color:var(--accent);background:rgba(123,92,245,.12)}
+.task-item:hover .edit-btn{opacity:1}
+@media(hover:none){.edit-btn{opacity:1 !important}}
+
+/* ── Modal overlay ── */
+.modal-overlay{
+  display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);
+  z-index:2000;align-items:center;justify-content:center;padding:1rem;
+  backdrop-filter:blur(3px);
+}
+.modal-overlay.open{display:flex}
+.modal{
+  background:var(--bg2);border:1px solid var(--border);border-radius:14px;
+  width:100%;max-width:500px;max-height:90vh;overflow-y:auto;
+  box-shadow:0 20px 60px rgba(0,0,0,.7);
+}
+.modal::-webkit-scrollbar{width:4px}
+.modal::-webkit-scrollbar-thumb{background:var(--border);border-radius:999px}
+.modal-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 18px;border-bottom:1px solid var(--border);position:sticky;top:0;
+  background:var(--bg2);z-index:1;
+}
+.modal-title{font-size:15px;font-weight:600;color:var(--text)}
+.modal-close{
+  background:none;border:none;cursor:pointer;color:var(--text3);font-size:18px;
+  width:30px;height:30px;display:flex;align-items:center;justify-content:center;
+  border-radius:6px;transition:all .12s;
+}
+.modal-close:hover{color:var(--text);background:var(--bg3)}
+.modal-body{padding:18px}
+.modal-footer{
+  padding:14px 18px;border-top:1px solid var(--border);
+  display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;
+}
+
+/* ── Modal form elements ── */
+.field{margin-bottom:14px}
+.field-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--text3);margin-bottom:6px;display:block}
+.field input[type=text],.field input[type=number],.field select,.field textarea{
+  width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:8px;
+  padding:9px 12px;font-size:13px;color:var(--text);font-family:'Inter',sans-serif;
+  outline:none;transition:border-color .15s;resize:vertical;
+  -moz-appearance:textfield;
+}
+.field input[type=number]::-webkit-inner-spin-button,
+.field input[type=number]::-webkit-outer-spin-button{
+  -webkit-appearance:none;margin:0;
+}
+/* custom stepper wrapper for number inputs */
+.num-wrap{display:flex;gap:0;border:1px solid var(--border);border-radius:8px;overflow:hidden;background:var(--bg3)}
+.num-wrap input[type=number]{border:none;border-radius:0;background:transparent;flex:1;text-align:center;padding:9px 4px}
+.num-wrap input[type=number]:focus{border-color:transparent}
+.num-step{background:var(--bg2);border:none;border-left:1px solid var(--border);color:var(--text2);font-size:16px;width:36px;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.num-step:first-child{border-left:none;border-right:1px solid var(--border)}
+.num-step:hover{background:var(--accent);color:#fff}
+.num-step:active{opacity:.7}
+.subitem-max{-moz-appearance:textfield}
+.subitem-max::-webkit-inner-spin-button,.subitem-max::-webkit-outer-spin-button{-webkit-appearance:none}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--accent)}
+.field input::placeholder,.field textarea::placeholder{color:var(--text3)}
+.field select option{background:var(--bg2)}
+
+/* badge pills selector */
+.badge-pills{display:flex;gap:6px;flex-wrap:wrap}
+.badge-pill{
+  padding:4px 12px;border-radius:999px;font-size:11px;font-weight:500;
+  cursor:pointer;border:1px solid var(--border);color:var(--text3);
+  background:transparent;transition:all .15s;user-select:none;
+}
+.badge-pill:hover{border-color:var(--text3);color:var(--text2)}
+.badge-pill.active-opt{background:rgba(123,92,245,.2);color:#A997FF;border-color:rgba(123,92,245,.5)}
+.badge-pill.active-pers{background:rgba(29,158,117,.2);color:#5DCAA5;border-color:rgba(29,158,117,.5)}
+.badge-pill.active-monthly{background:rgba(201,139,42,.2);color:#EF9F27;border-color:rgba(201,139,42,.5)}
+.badge-pill.active-biweek{background:rgba(216,90,48,.2);color:#F0997B;border-color:rgba(216,90,48,.5)}
+.badge-pill.active-custom{background:rgba(123,92,245,.15);color:#C4B5FD;border-color:rgba(123,92,245,.4)}
+.badge-pill.active-none{border-color:var(--accent);color:var(--accent)}
+
+/* toggle row */
+.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:4px 0}
+.toggle-label{font-size:13px;color:var(--text2)}
+.toggle{position:relative;width:38px;height:22px;flex-shrink:0}
+.toggle input{opacity:0;width:0;height:0;position:absolute}
+.toggle-slider{
+  position:absolute;inset:0;background:var(--bg3);border:1px solid var(--border);
+  border-radius:999px;cursor:pointer;transition:.2s;
+}
+.toggle-slider::before{
+  content:'';position:absolute;width:16px;height:16px;
+  left:2px;top:50%;transform:translateY(-50%);
+  background:var(--text3);border-radius:50%;transition:.2s;
+}
+.toggle input:checked + .toggle-slider{background:var(--accent);border-color:var(--accent)}
+.toggle input:checked + .toggle-slider::before{left:18px;background:#fff}
+
+/* counter fields row */
+.counter-fields{display:flex;gap:8px;margin-top:8px}
+.counter-fields .field{flex:1;margin-bottom:0}
+
+/* sublist editor */
+.subitems-list{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+.subitem-row{display:flex;gap:6px;align-items:center}
+.subitem-row input{flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:7px;padding:7px 10px;font-size:12.5px;color:var(--text);font-family:'Inter',sans-serif;outline:none;transition:border-color .15s}
+.subitem-row input:focus{border-color:var(--accent)}
+.subitem-row input::placeholder{color:var(--text3)}
+.subitem-max{width:62px;flex-shrink:0;background:var(--bg3);border:1px solid var(--border);border-radius:7px;padding:7px 8px;font-size:12px;color:var(--text);font-family:'Inter',sans-serif;outline:none;text-align:center}
+.subitem-max:focus{border-color:var(--accent)}
+.subitem-max::placeholder{color:var(--text3)}
+.subitem-del{background:none;border:none;cursor:pointer;color:var(--text3);font-size:15px;width:28px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:5px;transition:all .12s;flex-shrink:0}
+.subitem-del:hover{color:#F0997B;background:rgba(216,90,48,.1)}
+.add-subitem-btn{
+  background:none;border:1px dashed var(--border);border-radius:7px;
+  padding:7px 12px;font-size:12px;color:var(--text3);cursor:pointer;
+  font-family:'Inter',sans-serif;transition:all .15s;width:100%;margin-top:4px;
+  display:flex;align-items:center;justify-content:center;gap:5px;
+}
+.add-subitem-btn:hover{border-color:var(--accent);color:var(--accent)}
+
+/* reset override */
+.reset-override{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.reset-override select,.reset-override input{flex:1;min-width:80px}
+
+/* modal buttons */
+.btn-primary{background:var(--accent);border:none;border-radius:8px;padding:9px 18px;font-size:13px;font-weight:500;color:#fff;cursor:pointer;font-family:'Inter',sans-serif;transition:opacity .15s;display:flex;align-items:center;gap:5px}
+.btn-primary:hover{opacity:.85}
+.btn-secondary{background:none;border:1px solid var(--border);border-radius:8px;padding:9px 14px;font-size:13px;color:var(--text2);cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s}
+.btn-secondary:hover{background:var(--bg3);color:var(--text)}
+.btn-danger{background:none;border:1px solid rgba(216,90,48,.3);border-radius:8px;padding:9px 14px;font-size:13px;color:#F0997B;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s;margin-right:auto}
+.btn-danger:hover{background:rgba(216,90,48,.1)}
+
+/* ── Sublist (collapsible) ── */
+.task-item.has-sub{flex-wrap:wrap;cursor:pointer}
+.task-item.has-sub:hover{background:var(--bg2)}
+.task-item.has-sub .cb{cursor:default;opacity:.4}
+.task-item.has-sub .sub-caret{font-size:13px;color:var(--text3);margin-left:auto;transition:transform .2s;flex-shrink:0}
+.task-item.has-sub.sub-open .sub-caret{transform:rotate(180deg);color:var(--accent)}
+.parent-all-done .cb{opacity:1 !important;background:var(--accent) !important;border-color:var(--accent) !important}
+.parent-all-done .cb i{display:block !important}
+.parent-all-done .task-text{text-decoration:line-through;color:var(--text3)}
+/* ── Sublist nesting levels ── */
+.sublist-wrap{
+  width:100%;
+  display:none;
+  padding:4px 0 6px 20px;
+  border-left:2px solid var(--border);
+  margin:4px 0 2px 16px;
+  flex-direction:column;gap:2px;
+}
+.task-item.has-sub.sub-open > .sublist-wrap,
+.sublist-item.has-sub.sub-open > .sublist-wrap{display:flex}
+.sublist-item{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:7px;min-height:40px;flex-wrap:wrap}
+.sublist-item .task-text{font-size:13px;color:var(--text2);flex:1}
+.sublist-item.done .task-text{text-decoration:line-through;color:var(--text3)}
+.sublist-item.has-counter{flex-wrap:wrap}
+.sublist-item.has-counter .counter-bar-wrap{width:100%;margin-left:26px;margin-bottom:2px}
+/* nested has-sub inside sublist */
+.sublist-item.has-sub{cursor:pointer}
+.sublist-item.has-sub:hover{background:var(--bg2)}
+.sublist-item.has-sub .sub-caret{font-size:12px;color:var(--text3);margin-left:auto;transition:transform .2s;flex-shrink:0}
+.sublist-item.has-sub.sub-open > .sub-caret{transform:rotate(180deg);color:var(--accent)}
+.sublist-item.has-sub > .sublist-wrap{margin-left:14px;padding-left:16px;border-left-color:var(--bg3)}
+.sublist-item.parent-all-done .cb{background:var(--accent) !important;border-color:var(--accent) !important}
+.sublist-item.parent-all-done .cb i{display:block !important}
+.sublist-item.parent-all-done .task-text{text-decoration:line-through;color:var(--text3)}
+
+/* ── Skip list item states ── */
+.skip-item{display:flex;align-items:center;gap:10px;padding:6px 8px;border-radius:7px;min-height:40px;cursor:pointer;user-select:none;transition:background .12s;-webkit-tap-highlight-color:transparent}
+.skip-item:hover{background:var(--bg2)}
+.skip-cb{width:22px;height:22px;border-radius:6px;border:1.5px solid var(--border);background:transparent;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s;font-size:13px}
+.skip-item[data-state="skip"] .skip-cb{background:#1a3a2a;border-color:#1D9E75;color:#5DCAA5}
+.skip-item[data-state="keep"] .skip-cb{background:#3a1a1a;border-color:#C0392B;color:#F0997B}
+.skip-item .task-text{font-size:13px;color:var(--text2);flex:1;transition:color .15s}
+.skip-item[data-state="skip"] .task-text{color:var(--text3);text-decoration:line-through}
+.skip-item[data-state="keep"] .task-text{color:var(--text)}
+.skip-state-hint{font-size:10px;font-weight:500;flex-shrink:0;opacity:.7}
+.skip-item[data-state="skip"] .skip-state-hint{color:#5DCAA5}
+.skip-item[data-state="keep"] .skip-state-hint{color:#F0997B}
+.counter-wrap{display:flex;align-items:center;gap:6px;margin-left:auto;flex-shrink:0}
+.counter-btn{
+  width:26px;height:26px;border-radius:6px;border:1px solid var(--border);
+  background:var(--bg3);color:var(--text2);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;font-weight:600;line-height:1;
+  transition:all .12s;flex-shrink:0;user-select:none;
+  -webkit-tap-highlight-color:transparent;
+}
+.counter-btn:hover{background:var(--accent);border-color:var(--accent);color:#fff}
+.counter-btn:active{transform:scale(.88)}
+.counter-display{
+  font-size:12px;font-weight:600;color:var(--accent);
+  font-variant-numeric:tabular-nums;white-space:nowrap;
+  min-width:44px;text-align:center;
+}
+.counter-display.done-count{color:var(--teal,#1D9E75)}
+.counter-bar-wrap{
+  height:3px;background:var(--bg3);border-radius:999px;
+  overflow:hidden;margin-top:4px;
+}
+.counter-bar-fill{
+  height:100%;border-radius:999px;
+  background:linear-gradient(90deg,var(--accent),#A997FF);
+  transition:width .3s ease;
+}
+/* task row layout when counter present */
+.task-item.has-counter{flex-wrap:wrap;align-items:center}
+.task-item.has-counter .task-text{flex:1;min-width:0}
+.task-item.has-counter .counter-bar-wrap{width:100%;margin-left:28px;margin-bottom:2px}
+
+/* ── Add task ── */
+.add-task-area{margin-top:1.5rem;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.add-task-header{
+  display:flex;align-items:center;gap:8px;
+  padding:clamp(10px,3vw,12px) 14px;
+  cursor:pointer;font-size:clamp(12px,3vw,13px);color:var(--text2);
+  user-select:none;transition:color .15s;min-height:44px;
+  -webkit-tap-highlight-color:transparent;
+}
+.add-task-header:hover{color:var(--text)}
+.add-task-header i.toggle-icon{margin-left:auto;font-size:14px;transition:transform .2s}
+.add-task-header.open i.toggle-icon{transform:rotate(45deg)}
+.add-task-header i.plus-icon{color:var(--accent);font-size:15px}
+.add-task-form{display:none;padding:0 12px 14px;border-top:1px solid var(--border)}
+.add-task-form.open{display:block}
+.form-row{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.form-row input[type=text]{
+  flex:1;min-width:0;background:var(--bg3);border:1px solid var(--border);border-radius:8px;
+  padding:10px 12px;font-size:clamp(13px,3vw,13px);color:var(--text);
+  font-family:'Inter',sans-serif;outline:none;transition:border-color .15s;
+  width:100%;/* fallback for narrow */
+}
+.form-row input[type=text]:focus{border-color:var(--accent)}
+.form-row input[type=text]::placeholder{color:var(--text3)}
+.form-select{
+  background:var(--bg3);border:1px solid var(--border);border-radius:8px;
+  padding:10px 10px;font-size:clamp(11px,2.5vw,12px);color:var(--text2);
+  font-family:'Inter',sans-serif;outline:none;cursor:pointer;
+  transition:border-color .15s;flex-shrink:0;
+}
+.form-select:focus{border-color:var(--accent)}
+.add-btn{
+  background:var(--accent);border:none;border-radius:8px;
+  padding:10px 16px;font-size:clamp(12px,3vw,13px);font-weight:500;color:#fff;
+  cursor:pointer;font-family:'Inter',sans-serif;white-space:nowrap;
+  transition:opacity .15s;display:flex;align-items:center;gap:5px;flex-shrink:0;
+}
+.add-btn:hover{opacity:.85}
+.add-btn:active{opacity:.7;transform:scale(.97)}
+
+/* ── Buttons ── */
+.btn-row{display:flex;gap:8px;margin-top:1.5rem;flex-wrap:wrap}
+.reset-btn{
+  background:none;border:1px solid var(--border);
+  padding:clamp(8px,2vw,9px) clamp(12px,3vw,16px);
+  border-radius:8px;font-size:clamp(12px,2.5vw,12.5px);color:var(--text2);
+  cursor:pointer;font-family:'Inter',sans-serif;
+  display:flex;align-items:center;gap:5px;transition:all .15s;
+  min-height:40px;-webkit-tap-highlight-color:transparent;
+}
+.reset-btn:hover{background:var(--bg2);color:var(--text);border-color:var(--text3)}
+.reset-btn:active{opacity:.7}
+
+/* ════════════════════════════════════════
+   RESPONSIVE BREAKPOINTS
+════════════════════════════════════════ */
+
+/* ── Large desktop (1200px+) ── */
+@media(min-width:1200px){
+  .app{padding-top:2.5rem;padding-bottom:5rem}
+}
+
+/* ── Tablet landscape / small desktop (768–1199px) ── */
+@media(max-width:1199px) and (min-width:768px){
+  .stats-grid{gap:12px}
+}
+
+/* ── Tablet portrait (600–767px) ── */
+@media(max-width:767px) and (min-width:600px){
+  .header-text h1{font-size:19px}
+  .tz-trigger-label{max-width:130px}
+}
+
+/* ── Large phone (480–599px) ── */
+@media(max-width:599px){
+  .tab-btn span{display:none}
+  .tab-btn{gap:0}
+  .tz-trigger-label{max-width:100px}
+  .form-row{flex-direction:column}
+  .form-row input[type=text]{width:100%}
+  .form-select{width:100%}
+  .add-btn{width:100%;justify-content:center}
+}
+
+/* ── Small phone (max 420px) ── */
+@media(max-width:420px){
+  .header{gap:10px}
+  .header-text h1{font-size:15px}
+  .header-text p{display:none}
+  .stat-num{font-size:16px}
+  .stat-lbl{font-size:8px}
+  .stat-pct{font-size:9px}
+  .tz-trigger-label{max-width:72px}
+  .task-text{font-size:12.5px}
+  /* TZ menu fills more of the screen width */
+  .tz-menu{width:min(240px, calc(100vw - 2rem));right:0}
+}
+
+/* ── Tiny phone (max 320px) ── */
+@media(max-width:320px){
+  .app{padding-left:.6rem;padding-right:.6rem}
+  .header-text h1{font-size:13px}
+  .stats-grid{gap:5px}
+  .stat-card{padding:8px 4px}
+  .stat-num{font-size:14px}
+  .tz-trigger-label{display:none}
+  .tz-trigger{padding:7px 8px;gap:4px}
+}
+
+/* ── Touch-only: bigger tap targets, always-visible delete ── */
+@media(hover:none) and (pointer:coarse){
+  .task-item{padding-top:11px;padding-bottom:11px}
+  .delete-btn{opacity:1;color:var(--text3)}
+  .tab-btn{min-height:46px}
+  .reset-btn{min-height:46px}
+  .add-task-header{min-height:48px}
+
+  /* bottom sheet backdrop */
+  .tz-backdrop{
+    display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);
+    z-index:1998;backdrop-filter:blur(2px);
+  }
+  .tz-backdrop.open{display:block}
+
+  /* bottom sheet panel */
+  .tz-menu{
+    position:fixed !important;
+    bottom:0;left:0;right:0;top:auto !important;
+    width:100% !important;
+    max-height:72vh;
+    border-radius:18px 18px 0 0;
+    border:none;
+    border-top:1px solid var(--border);
+    box-shadow:0 -8px 40px rgba(0,0,0,.6);
+    z-index:1999 !important;
+    display:none;
+    flex-direction:column;
+    overflow:hidden;
+  }
+  .tz-menu.open{display:flex}
+
+  /* drag handle */
+  .tz-menu::before{
+    content:'';display:block;width:36px;height:4px;
+    background:var(--border);border-radius:999px;
+    margin:10px auto 0;flex-shrink:0;
+  }
+
+  .tz-search-wrap{flex-shrink:0}
+  .tz-list{flex:1;max-height:none;overflow-y:auto;-webkit-overflow-scrolling:touch}
+}
+
+/* ── Wide / 4K ── */
+@media(min-width:1600px){
+  .app{max-width:960px}
+  .header-text h1{font-size:26px}
+  .stat-num{font-size:28px}
+  .task-text{font-size:15px}
+}
+
+/* ── Reduced motion ── */
+@media(prefers-reduced-motion:reduce){
+  *{transition:none !important;animation:none !important}
+}
+/* Goals tab special gold accent when active */
+#tab-goals.active{background:linear-gradient(135deg,#C98B2A,#EF9F27)}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="header">
+    <div class="logo"><i class="ti ti-universe"></i></div>
+    <div class="header-text">
+      <h1>Neverness to Everness</h1>
+      <p>Daily, weekly &amp; monthly task tracker</p>
+    </div>
+    <div class="header-right">
+      <div class="tz-dropdown" id="tzDropdown">
+        <div class="tz-trigger" id="tzTrigger" onclick="toggleTzMenu()">
+          <i class="ti ti-clock tz-icon"></i>
+          <span class="tz-trigger-label" id="tzTriggerLabel">UTC+06:00 (BDT, BSST)</span>
+          <i class="ti ti-chevron-down tz-caret"></i>
+        </div>
+        <div class="tz-backdrop" id="tzBackdrop" onclick="closeTzMenu()"></div>
+        <div class="tz-menu" id="tzMenu">
+          <div class="tz-search-wrap">
+            <input class="tz-search" id="tzSearch" placeholder="Search timezone…" oninput="filterTz()" onclick="event.stopPropagation()">
+          </div>
+          <div class="tz-list" id="tzList"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="stats-grid" id="statsGrid"></div>
+
+  <div class="tab-bar">
+    <button class="tab-btn active" id="tab-daily" onclick="switchTab('daily')"><i class="ti ti-sun"></i><span>Daily</span></button>
+    <button class="tab-btn" id="tab-weekly" onclick="switchTab('weekly')"><i class="ti ti-calendar-week"></i><span>Weekly</span></button>
+    <button class="tab-btn" id="tab-monthly" onclick="switchTab('monthly')"><i class="ti ti-calendar-month"></i><span>Monthly</span></button>
+    <button class="tab-btn" id="tab-goals" onclick="switchTab('goals')"><i class="ti ti-trophy"></i><span>Goals</span></button>
+  </div>
+
+  <!-- DAILY -->
+  <div class="panel active" id="dailyPanel">
+    <div class="tip-box" id="tipDaily"></div>
+    <div class="progress-row"><span id="dailyLbl">0 of 0 done</span><span class="pct" id="dailyPct">0%</span></div>
+    <div class="progress-wrap"><div class="progress-fill" id="dailyBar" style="width:0%"></div></div>
+    <div id="dailyList"></div>
+    <div id="dailyCustomList"></div>
+    <div class="btn-row">
+      <button class="add-btn" onclick="openModal(null,'daily')"><i class="ti ti-plus" style="font-size:13px"></i>Add Task</button>
+      <button class="reset-btn" onclick="resetTab('daily')"><i class="ti ti-refresh"></i>Reset daily</button>
+    </div>
+  </div>
+
+  <!-- WEEKLY -->
+  <div class="panel" id="weeklyPanel">
+    <div class="tip-box" id="tipWeekly"></div>
+    <div class="progress-row"><span id="weeklyLbl">0 of 0 done</span><span class="pct" id="weeklyPct">0%</span></div>
+    <div class="progress-wrap"><div class="progress-fill" id="weeklyBar" style="width:0%"></div></div>
+    <div id="weeklyList"></div>
+    <div id="weeklyCustomList"></div>
+    <div class="btn-row">
+      <button class="add-btn" onclick="openModal(null,'weekly')"><i class="ti ti-plus" style="font-size:13px"></i>Add Task</button>
+      <button class="reset-btn" onclick="resetTab('weekly')"><i class="ti ti-refresh"></i>Reset weekly</button>
+    </div>
+  </div>
+
+  <!-- MONTHLY -->
+  <div class="panel" id="monthlyPanel">
+    <div class="tip-box" id="tipMonthly"></div>
+    <div class="progress-row"><span id="monthlyLbl">0 of 0 done</span><span class="pct" id="monthlyPct">0%</span></div>
+    <div class="progress-wrap"><div class="progress-fill" id="monthlyBar" style="width:0%"></div></div>
+    <div id="monthlyList"></div>
+    <div id="monthlyCustomList"></div>
+    <div class="btn-row">
+      <button class="add-btn" onclick="openModal(null,'monthly')"><i class="ti ti-plus" style="font-size:13px"></i>Add Task</button>
+      <button class="reset-btn" onclick="resetTab('monthly')"><i class="ti ti-refresh"></i>Reset monthly</button>
+    </div>
+  </div>
+
+  <!-- GOALS -->
+  <div class="panel" id="goalsPanel">
+    <div class="tip-box" style="border-left-color:#C98B2A;background:rgba(201,139,42,.08)">
+      <b>Goals &amp; Progression</b> — Your personal tracker for long-term goals, character unlocks, collection progress, and anything that doesn't follow a reset schedule. Tasks here <b>never reset automatically</b>.
+    </div>
+    <div class="progress-row"><span id="goalsLbl">0 of 0 done</span><span class="pct" id="goalsPct">0%</span></div>
+    <div class="progress-wrap"><div class="progress-fill" id="goalsBar" style="width:0%;background:linear-gradient(90deg,#C98B2A,#EF9F27)"></div></div>
+    <div id="goalsList"></div>
+    <div id="goalsCustomList"></div>
+    <div class="btn-row">
+      <button class="add-btn" onclick="openModal(null,'goals')" style="background:linear-gradient(135deg,#C98B2A,#EF9F27)"><i class="ti ti-plus" style="font-size:13px"></i>Add Goal</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════ TASK EDITOR MODAL ═══════════ -->
+<div class="modal-overlay" id="taskModal" onclick="modalOverlayClick(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title" id="modalTitle">Add Task</span>
+      <button class="modal-close" onclick="closeModal()"><i class="ti ti-x"></i></button>
+    </div>
+    <div class="modal-body">
+
+      <!-- Task name -->
+      <div class="field">
+        <label class="field-label">Task name</label>
+        <input type="text" id="mName" placeholder="e.g. Collect Fons from Cafe">
+      </div>
+
+      <!-- Label / badge -->
+      <div class="field">
+        <label class="field-label">Label</label>
+        <div class="badge-pills">
+          <span class="badge-pill" data-badge="" onclick="toggleBadge('')">None</span>
+          <span class="badge-pill" data-badge="opt" onclick="toggleBadge('opt')">Optional</span>
+          <span class="badge-pill" data-badge="pers" onclick="toggleBadge('pers')">Personal</span>
+          <span class="badge-pill" data-badge="monthly" onclick="toggleBadge('monthly')">Monthly</span>
+          <span class="badge-pill" data-badge="biweek" onclick="toggleBadge('biweek')">Bi-weekly</span>
+          <span class="badge-pill" data-badge="custom" onclick="toggleBadge('custom')">Custom</span>
+        </div>
+        <div id="customLabelWrap" style="display:none;margin-top:10px">
+          <input type="text" id="mCustomLabel" placeholder="Custom label name (e.g. Event, Boss)" maxlength="20" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--text);font-family:'Inter',sans-serif;outline:none;transition:border-color .15s" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'" oninput="previewCustomLabel()">
+          <div id="customLabelPreview" style="margin-top:7px;display:none"></div>
+        </div>
+      </div>
+
+      <!-- Counter -->
+      <div class="field">
+        <div class="toggle-row">
+          <span class="toggle-label">Enable counter</span>
+          <label class="toggle"><input type="checkbox" id="mCounterOn" onchange="toggleCounterFields()"><span class="toggle-slider"></span></label>
+        </div>
+        <div class="counter-fields" id="counterFields" style="display:none">
+          <div class="field">
+            <label class="field-label">Max count</label>
+            <div class="num-wrap">
+              <button type="button" class="num-step" onclick="stepNumInput('mCounterMax',-1)">−</button>
+              <input type="number" id="mCounterMax" min="1" max="9999" value="10">
+              <button type="button" class="num-step" onclick="stepNumInput('mCounterMax',1)">+</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sublist -->
+      <div class="field">
+        <div class="toggle-row">
+          <span class="toggle-label">Add sublist (dropdown)</span>
+          <label class="toggle"><input type="checkbox" id="mSubOn" onchange="toggleSubFields()"><span class="toggle-slider"></span></label>
+        </div>
+        <div id="subFields" style="display:none;margin-top:10px">
+          <div class="subitems-list" id="subitemsList"></div>
+          <button class="add-subitem-btn" onclick="addSubitemRow()"><i class="ti ti-plus"></i> Add sub-item</button>
+          <div style="font-size:11px;color:var(--text3);margin-top:6px">Each sub-item can optionally have its own counter — enter a max number or leave blank for a simple checkbox.</div>
+        </div>
+      </div>
+
+      <!-- One-time task -->
+      <div class="field">
+        <div class="toggle-row">
+          <span class="toggle-label">One-time task <span style="font-size:11px;color:var(--text3)">(won't reset — permanently completed)</span></span>
+          <label class="toggle"><input type="checkbox" id="mOneTime"><span class="toggle-slider"></span></label>
+        </div>
+      </div>
+
+      <!-- Reset time override -->
+      <div class="field">
+        <div class="toggle-row">
+          <span class="toggle-label">Custom reset time</span>
+          <label class="toggle"><input type="checkbox" id="mResetOn" onchange="toggleResetFields()"><span class="toggle-slider"></span></label>
+        </div>
+        <div id="resetFields" style="display:none;margin-top:10px">
+          <div class="reset-override">
+            <div class="field" style="margin-bottom:0;flex:1">
+              <label class="field-label">Resets</label>
+              <select id="mResetType">
+                <option value="daily">Daily</option>
+                <option value="weekly">Weekly (Monday)</option>
+                <option value="monthly">Monthly</option>
+                <option value="never">Never (manual only)</option>
+              </select>
+            </div>
+            <div class="field" style="margin-bottom:0;flex:1">
+              <label class="field-label">At time (HH:MM)</label>
+              <input type="text" id="mResetTime" placeholder="02:00" maxlength="5">
+            </div>
+          </div>
+          <div style="font-size:11px;color:var(--text3);margin-top:6px">Leave time blank to inherit the tab's default reset time.</div>
+        </div>
+      </div>
+
+    </div>
+    <div class="modal-footer">
+      <button class="btn-danger" id="mDeleteBtn" onclick="deleteFromModal()" style="display:none"><i class="ti ti-trash"></i> <span id="mDeleteLabel">Delete</span></button>
+      <button class="btn-secondary" onclick="closeModal()">Cancel</button>
+      <button class="btn-primary" onclick="saveModal()"><i class="ti ti-check"></i> Save</button>
+    </div>
+  </div>
+</div>
+<script>
+// ─── Timezone list (offset in minutes from UTC) ──────────────────────────────
+const TIMEZONES = [
+  {label:'UTC−12:00 (BIT)',        offset:-720},
+  {label:'UTC−11:00 (NUT)',        offset:-660},
+  {label:'UTC−10:00 (HST, Hawaii)',offset:-600},
+  {label:'UTC−09:30 (MART)',       offset:-570},
+  {label:'UTC−09:00 (AKST)',       offset:-540},
+  {label:'UTC−08:00 (PST)',        offset:-480},
+  {label:'UTC−07:00 (MST)',        offset:-420},
+  {label:'UTC−06:00 (CST)',        offset:-360},
+  {label:'UTC−05:00 (EST)',        offset:-300},
+  {label:'UTC−04:00 (AST, EDT)',   offset:-240},
+  {label:'UTC−03:30 (NST)',        offset:-210},
+  {label:'UTC−03:00 (ART, BRT)',   offset:-180},
+  {label:'UTC−02:00 (GST)',        offset:-120},
+  {label:'UTC−01:00 (CVT)',        offset:-60},
+  {label:'UTC±00:00 (GMT, WET)',   offset:0},
+  {label:'UTC+01:00 (CET, WAT)',   offset:60},
+  {label:'UTC+02:00 (EET, CAT)',   offset:120},
+  {label:'UTC+03:00 (MSK, EAT)',   offset:180},
+  {label:'UTC+03:30 (IRST)',       offset:210},
+  {label:'UTC+04:00 (GST, AMT)',   offset:240},
+  {label:'UTC+04:30 (AFT)',        offset:270},
+  {label:'UTC+05:00 (PKT, UZT)',   offset:300},
+  {label:'UTC+05:30 (IST, SLT)',   offset:330},
+  {label:'UTC+05:45 (NPT)',        offset:345},
+  {label:'UTC+06:00 (BDT, BSST)', offset:360, default:true},
+  {label:'UTC+06:30 (MMT)',        offset:390},
+  {label:'UTC+07:00 (ICT, WIB)',   offset:420},
+  {label:'UTC+08:00 (CST, HKT)',   offset:480},
+  {label:'UTC+08:45 (ACWST)',      offset:525},
+  {label:'UTC+09:00 (JST, KST)',   offset:540},
+  {label:'UTC+09:30 (ACST)',       offset:570},
+  {label:'UTC+10:00 (AEST, PGT)',  offset:600},
+  {label:'UTC+10:30 (LHST)',       offset:630},
+  {label:'UTC+11:00 (SBT, NCT)',   offset:660},
+  {label:'UTC+12:00 (NZST, FJT)', offset:720},
+  {label:'UTC+12:45 (CHAST)',      offset:765},
+  {label:'UTC+13:00 (PHOT, TOT)', offset:780},
+  {label:'UTC+14:00 (LINT)',       offset:840},
+];
+
+// ─── Storage helpers ──────────────────────────────────────────────────────────
+const ls = {
+  get:(k,def='{}')=>{try{return JSON.parse(localStorage.getItem(k)||def)}catch{return JSON.parse(def)}},
+  set:(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch{}},
+};
+const getState  = ()=>ls.get('nte_v1');
+const setState  = s=>ls.set('nte_v1',s);
+const getCustom = ()=>ls.get('nte_custom','{"daily":[],"weekly":[],"monthly":[]}');
+const setCustom = c=>ls.set('nte_custom',c);
+const getMeta   = ()=>ls.get('nte_meta');
+const setMeta   = m=>ls.set('nte_meta',m);
+const getCounters = ()=>ls.get('nte_counters');
+const setCounters = c=>ls.set('nte_counters',c);
+function getCounter(id){return parseInt(getCounters()[id]||0,10)}
+function setCounter(id,val){const c=getCounters();c[id]=val;setCounters(c)}
+// skip states: 'none' | 'skip' | 'keep'
+const getSkips = ()=>ls.get('nte_skips');
+const setSkips = s=>ls.set('nte_skips',s);
+function getSkipState(id){return getSkips()[id]||'none'}
+function cycleSkip(id, tab, el){
+  const skips=getSkips();
+  const cur=skips[id]||'none';
+  const next=cur==='none'?'skip':cur==='skip'?'keep':'none';
+  skips[id]=next; setSkips(skips);
+  // full re-render so parent done state updates
+  renderList(tab);
+  renderCustomList(tab);
+  updateProgress(tab);
+  updateStats();
+}
+// permanent completions — never reset
+const getPerms = ()=>ls.get('nte_perms');
+const setPerms = p=>ls.set('nte_perms',p);
+function isPermDone(id){return !!getPerms()[id]}
+function setPermDone(id,val){const p=getPerms();p[id]=val;setPerms(p)}
+
+// ─── Timezone state ───────────────────────────────────────────────────────────
+let TZ_OFFSET = 360; // default BDT (UTC+6), in minutes
+
+function getTZOffset(){
+  return TZ_OFFSET;
+}
+function nowInTZ(){
+  // Returns a Date whose UTC fields represent local time in the selected TZ
+  return new Date(Date.now() + getTZOffset()*60000);
+}
+
+// ─── Period helpers ───────────────────────────────────────────────────────────
+function getDailyPeriod(){
+  const t = nowInTZ();
+  if(t.getUTCHours() < 2) t.setUTCDate(t.getUTCDate()-1);
+  return t.toISOString().slice(0,10);
+}
+// Weekly: Monday 02:00 TZ
+function getWeeklyPeriod(){
+  const t = nowInTZ();
+  let day = t.getUTCDay();
+  const beforeResetOnMonday = (day===1 && t.getUTCHours()<2);
+  const dayAdj = day===0 ? 7 : day;
+  let diff = dayAdj - 1;
+  if(beforeResetOnMonday) diff += 7;
+  const monday = new Date(t);
+  monday.setUTCDate(t.getUTCDate() - diff);
+  return monday.toISOString().slice(0,10);
+}
+// Bi-weekly: every 2 Mondays. We use a fixed anchor (2025-01-06 = known Monday).
+// Count weeks since anchor, group into pairs.
+const BIWEEKLY_ANCHOR_MS = Date.UTC(2025,0,6,2,0,0) - 6*3600000; // 2025-01-06 02:00 BDT in UTC... we'll compute dynamically
+function getBiweeklyPeriod(){
+  // Anchor: 2025-01-06 Monday 02:00 in selected TZ
+  const anchorUTC = Date.UTC(2025,0,6) + 2*3600000 - getTZOffset()*60000;
+  const now = Date.now();
+  const weekMs = 7*24*3600000;
+  const weeksSinceAnchor = Math.floor((now - anchorUTC) / weekMs);
+  const biweekNum = Math.floor(weeksSinceAnchor / 2);
+  return 'bw_'+biweekNum;
+}
+// Monthly: calendar month in TZ, but if before 2am on the 1st treat as previous month
+function getMonthlyPeriod(){
+  const t = nowInTZ();
+  if(t.getUTCDate()===1 && t.getUTCHours()<2) t.setUTCDate(0); // go to last day of prev month
+  return t.toISOString().slice(0,7); // "YYYY-MM"
+}
+
+// ─── Next reset timestamps (UTC ms) ──────────────────────────────────────────
+function nextDailyReset(){
+  const t = nowInTZ();
+  const next = new Date(t);
+  next.setUTCHours(2,0,0,0);
+  if(next <= t) next.setUTCDate(next.getUTCDate()+1);
+  return next.getTime() - getTZOffset()*60000;
+}
+function nextWeeklyReset(){
+  const t = nowInTZ();
+  const day = t.getUTCDay();
+  const dayAdj = day===0 ? 7 : day;
+  let daysUntilMon = (8 - dayAdj) % 7;
+  if(daysUntilMon===0 && t.getUTCHours()>=2) daysUntilMon=7;
+  const next = new Date(t);
+  next.setUTCDate(t.getUTCDate() + daysUntilMon);
+  next.setUTCHours(2,0,0,0);
+  return next.getTime() - getTZOffset()*60000;
+}
+function nextBiweeklyReset(){
+  // Next even-numbered Monday at 02:00 TZ after current biweekly period
+  const anchorUTC = Date.UTC(2025,0,6) + 2*3600000 - getTZOffset()*60000;
+  const weekMs = 7*24*3600000;
+  const now = Date.now();
+  const weeksSinceAnchor = Math.floor((now - anchorUTC) / weekMs);
+  const biweekNum = Math.floor(weeksSinceAnchor / 2);
+  // Start of next bi-weekly period = anchor + (biweekNum+1)*2 weeks
+  return anchorUTC + (biweekNum + 1) * 2 * weekMs;
+}
+function nextMonthlyReset(){
+  const t = nowInTZ();
+  // First day of next month at 02:00 TZ
+  const next = new Date(t);
+  next.setUTCDate(1);
+  next.setUTCHours(2,0,0,0);
+  next.setUTCMonth(next.getUTCMonth()+1);
+  return next.getTime() - getTZOffset()*60000;
+}
+
+function fmtCountdown(ms){
+  if(ms<=0) return '00:00:00';
+  const s=Math.floor(ms/1000);
+  const d=Math.floor(s/86400), h=Math.floor((s%86400)/3600), m=Math.floor((s%3600)/60), sc=s%60;
+  if(d>0) return `${d}d ${String(h).padStart(2,'0')}h ${String(m).padStart(2,'0')}m`;
+  return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(sc).padStart(2,'0')}`;
+}
+
+function tzLabel(){
+  const sign = TZ_OFFSET>=0?'+':'-';
+  const abs = Math.abs(TZ_OFFSET);
+  const hh = String(Math.floor(abs/60)).padStart(2,'0');
+  const mm = String(abs%60).padStart(2,'0');
+  return `UTC${sign}${hh}:${mm}`;
+}
+
+function updateTipBoxes(){
+  const tz = tzLabel();
+  const d = document.getElementById('tipDaily');
+  const w = document.getElementById('tipWeekly');
+  const m = document.getElementById('tipMonthly');
+  if(d) d.innerHTML = `<b>Daily reset</b> — Auto-resets at <b>2:00 AM (${tz})</b> every day. &nbsp;⏱ Resets in <span class="countdown" id="countdown-daily">--:--:--</span>`;
+  if(w) w.innerHTML = `<b>Weekly tasks</b> — Auto-resets every <b>Monday at 2:00 AM (${tz})</b>. Some items reset every 2 weeks <span class="badge badge-biweek">bi-weekly</span> resets in <span class="countdown" id="countdown-biweekly">--:--:--</span>. &nbsp;⏱ Weekly resets in <span class="countdown" id="countdown-weekly">--:--:--</span>`;
+  if(m) m.innerHTML = `<b>Monthly tasks</b> — Complete these once per month for big currency and item rewards. &nbsp;⏱ Resets in <span class="countdown" id="countdown-monthly">--:--:--</span>`;
+}
+
+// ─── Auto-reset on load ───────────────────────────────────────────────────────
+function silentResetItems(items, state, counters, biweeklyOnly=false){
+  items.forEach(rawI=>{
+    const i = typeof rawI.id !== 'undefined' ? rawI : rawI;
+    if(i.hidden) return;
+    if(i.oneTime && isPermDone(i.id)) return;
+    // if biweeklyOnly, only reset items flagged biweekly:true
+    if(biweeklyOnly && !i.biweekly) return;
+    delete state[i.id];
+    if(i.counter) delete counters[i.id];
+    if(i.subItems) silentResetItemsFlat(i.subItems, state, counters);
+  });
+}
+function silentResetItemsFlat(items, state, counters){
+  items.forEach(s=>{ delete state[s.id]; if(s.counter) delete counters[s.id]; if(s.subItems) silentResetItemsFlat(s.subItems,state,counters); });
+}
+function silentResetTab(tab, biweeklyOnly=false){
+  if(tab==='goals') return; // goals never auto-reset
+  const state=getState(), custom=getCustom(), counters=getCounters();
+  TASKS[tab].forEach(sec=>silentResetItems(sec.items.map(i=>applyOverride(i)), state, counters, biweeklyOnly));
+  if(!biweeklyOnly){
+    (custom[tab]||[]).forEach(i=>{
+      if(i.oneTime && isPermDone(i.id)) return;
+      delete state[i.id];
+    });
+  }
+  setState(state); setCounters(counters);
+}
+function checkAutoReset(){
+  const meta=getMeta();
+  const dp=getDailyPeriod(), wp=getWeeklyPeriod(), bwp=getBiweeklyPeriod(), mp=getMonthlyPeriod();
+  let changed=false;
+  if(meta.lastDailyPeriod!==dp){silentResetTab('daily');meta.lastDailyPeriod=dp;changed=true;}
+  if(meta.lastWeeklyPeriod!==wp){silentResetTab('weekly');meta.lastWeeklyPeriod=wp;changed=true;}
+  else if(meta.lastBiweeklyPeriod!==bwp){silentResetTab('weekly',true);meta.lastBiweeklyPeriod=bwp;changed=true;}
+  if(meta.lastBiweeklyPeriod!==bwp){meta.lastBiweeklyPeriod=bwp;changed=true;}
+  if(meta.lastMonthlyPeriod!==mp){silentResetTab('monthly');meta.lastMonthlyPeriod=mp;changed=true;}
+  if(changed) setMeta(meta);
+}
+
+// ─── Countdown ticker ─────────────────────────────────────────────────────────
+let tickerInterval=null;
+function startCountdowns(){
+  if(tickerInterval) clearInterval(tickerInterval);
+  function tick(){
+    const now=Date.now();
+    const dc=document.getElementById('countdown-daily');
+    const wc=document.getElementById('countdown-weekly');
+    const bwc=document.getElementById('countdown-biweekly');
+    const mc=document.getElementById('countdown-monthly');
+    if(dc) dc.textContent=fmtCountdown(nextDailyReset()-now);
+    if(wc) wc.textContent=fmtCountdown(nextWeeklyReset()-now);
+    if(bwc) bwc.textContent=fmtCountdown(nextBiweeklyReset()-now);
+    if(mc) mc.textContent=fmtCountdown(nextMonthlyReset()-now);
+    // per-task countdowns
+    const taskBwEl=document.getElementById('countdown-task-w13');
+    if(taskBwEl) taskBwEl.textContent=fmtCountdown(nextBiweeklyReset()-now);
+    const taskHunterEl=document.getElementById('countdown-task-m3');
+    if(taskHunterEl) taskHunterEl.textContent=fmtCountdown(nextMonthlyReset()-now);
+    // live auto-resets
+    const meta=getMeta(); let changed=false;
+    const dp=getDailyPeriod();
+    if(meta.lastDailyPeriod!==dp){meta.lastDailyPeriod=dp;changed=true;silentResetTab('daily');renderList('daily');renderCustomList('daily');updateProgress('daily');updateStats();}
+    const wp=getWeeklyPeriod();
+    if(meta.lastWeeklyPeriod!==wp){meta.lastWeeklyPeriod=wp;changed=true;silentResetTab('weekly');renderList('weekly');renderCustomList('weekly');updateProgress('weekly');updateStats();}
+    const bwp=getBiweeklyPeriod();
+    if(meta.lastBiweeklyPeriod!==bwp){meta.lastBiweeklyPeriod=bwp;changed=true;silentResetTab('weekly',true);renderList('weekly');renderCustomList('weekly');updateProgress('weekly');updateStats();}
+    const mp=getMonthlyPeriod();
+    if(meta.lastMonthlyPeriod!==mp){meta.lastMonthlyPeriod=mp;changed=true;silentResetTab('monthly');renderList('monthly');renderCustomList('monthly');updateProgress('monthly');updateStats();}
+    if(changed) setMeta(meta);
+  }
+  tick();
+  tickerInterval=setInterval(tick,1000);
+}
+
+// ─── Custom TZ dropdown ───────────────────────────────────────────────────────
+function buildTZSelect(){
+  const saved=parseInt(localStorage.getItem('nte_tz')||'360',10);
+  TZ_OFFSET=saved;
+  renderTzList('');
+  // Set trigger label
+  const tz=TIMEZONES.find(z=>z.offset===saved)||TIMEZONES.find(z=>z.default);
+  document.getElementById('tzTriggerLabel').textContent=tz?tz.label:'UTC+06:00';
+  // Close on outside click
+  document.addEventListener('click',e=>{
+    if(!document.getElementById('tzDropdown').contains(e.target)) closeTzMenu();
+  });
+}
+function renderTzList(filter){
+  const q=filter.toLowerCase();
+  const list=document.getElementById('tzList');
+  list.innerHTML=TIMEZONES
+    .filter(z=>!q||z.label.toLowerCase().includes(q))
+    .map(z=>`<div class="tz-option${z.offset===TZ_OFFSET?' selected':''}" data-offset="${z.offset}" onclick="selectTz(${z.offset},${JSON.stringify(z.label)})">${z.label}</div>`)
+    .join('');
+}
+function filterTz(){
+  renderTzList(document.getElementById('tzSearch').value);
+}
+function toggleTzMenu(){
+  const trigger=document.getElementById('tzTrigger');
+  const menu=document.getElementById('tzMenu');
+  const backdrop=document.getElementById('tzBackdrop');
+  const opening=!menu.classList.contains('open');
+  menu.classList.toggle('open',opening);
+  trigger.classList.toggle('open',opening);
+  if(backdrop) backdrop.classList.toggle('open',opening);
+  if(opening){
+    document.getElementById('tzSearch').value='';
+    renderTzList('');
+    document.getElementById('tzSearch').focus();
+    setTimeout(()=>{
+      const sel=document.querySelector('.tz-option.selected');
+      if(sel) sel.scrollIntoView({block:'nearest'});
+    },50);
+  }
+}
+function closeTzMenu(){
+  document.getElementById('tzMenu').classList.remove('open');
+  document.getElementById('tzTrigger').classList.remove('open');
+  const backdrop=document.getElementById('tzBackdrop');
+  if(backdrop) backdrop.classList.remove('open');
+}
+function selectTz(offset,label){
+  TZ_OFFSET=offset;
+  localStorage.setItem('nte_tz',offset);
+  document.getElementById('tzTriggerLabel').textContent=label;
+  closeTzMenu();
+  checkAutoReset();
+  ['daily','weekly','monthly','goals'].forEach(t=>{renderList(t);renderCustomList(t);updateProgress(t);});
+  updateStats();
+  updateTipBoxes();
+  startCountdowns();
+}
+function onTzChange(){} // kept for compat, unused
+
+// ─── Task data ────────────────────────────────────────────────────────────────
+const TASKS = {
+  daily:[
+    {section:"Core dailies",items:[
+      {id:"d1",text:"Collect Fons from Origin Cafe & Restock"},
+      {id:"d2",text:"Collect Daily Anomoly Furniture from Property"},
+      {id:"d3",text:"Nacupeda's Pool Wish"},
+      {id:"d4",text:"The Witch's House Devinations"},
+      {id:"d5",text:"Fortune Shades Wish for Bonds"},
+      {id:"d6",text:"Give Gifts"},
+      {id:"d7",text:"Go on a Movie Date for Bonds"},
+      {id:"d8",text:"Daily Character Encounters shown on map (if any) for Bonds"},
+      {id:"d9",text:"Check Message for Side Quest from NPC"},
+      {id:"d10",text:"Spend All Character Pixels"},
+      {id:"d11",text:"Use City Stamina on Delivery / Racing / Fishing"},
+      {id:"d12",text:"Collect Daily Activity Rewards"},
+      {id:"d13",text:"Collect Battle Pass Missions and Rewards (Circle Bounty)"},
+    ]},
+    {section:"Optional",items:[
+      {id:"d14",badge:"opt",text:"Steal from Taygedo"},
+      {id:"d15",text:"Bully NPC",subItems:[
+        {id:"d15a",text:"Wallet",counter:{max:4}},
+        {id:"d15b",text:"Breakfast Bag",counter:{max:4}},
+        {id:"d15c",text:"Briefcase",counter:{max:4}},
+      ]},
+      {id:"d16",text:"5 posts for Baigel (5 views, 3 likes & comments)"},
+      {id:"d17",text:"Buy 3 Fishing Baits daily for 300 Fons"},
+    ]},
+    {section:"Personal goals",items:[
+      {id:"d18",badge:"pers",text:"Sell Daily Recommended Fish"},
+      {id:"d19",badge:"pers",text:"At least 1 Online Race"},
+      {id:"d20",badge:"pers",text:"At least 1 Challenge Race"},
+      {id:"d21",badge:"pers",text:"At least 1 Pink Paw Heist for Pink Paw Coins"},
+      {id:"d22",badge:"pers",text:"Eliminate All Anomolies for 33k–40k Beetle Coin"},
+      {id:"d23",badge:"pers",text:"Stop Crime for Goodheart Crispy Mouse Cookie / Beetle Coin (up to 18 crimes/day — not sure)",counter:{max:18}},
+      {id:"d24",badge:"opt",text:"Get Arrested for Prison Dailies (Prison Outfit & 300 Annulith)"},
+      {id:"d25",badge:"opt",text:"Reroll Taxi Passenger to get Character for Bonds (up to 3 characters/day — not sure)"},
+      {id:"d26",badge:"pers",text:"Eliminate Daily Anomolies for Furniture Upgrade Material",oneTime:true},
+      {id:"d27",badge:"pers",text:"40K Daily Fons from Chiz",oneTime:true},
+    ]},
+  ],
+  weekly:[
+    {section:"Weekly tasks",items:[
+      {id:"w1",text:"Use Weekly City Stamina"},
+      {id:"w2",text:"Collect 16k Fons weekly on map"},
+      {id:"w3",badge:"biweek",text:"Pink Paw Heist for 1m Fons (resets every 2 weeks)",biweekly:true},
+      {id:"w4",badge:"biweek",text:"Pink Paw Heist Challenges for Pink Paw Coins (resets every 2 weeks)",biweekly:true},
+      {id:"w5",text:"Weekly Battle Pass Mission (Circle Bounty)"},
+      {id:"w6",text:"Auction"},
+      {id:"w7",text:"Weekly 3 Anomoly Boss"},
+      {id:"w8",text:"Mamon Boss Anomoly Furniture"},
+      {id:"w9",text:"Use Butler Anomoly Furniture — weekly limit"},
+      {id:"w10",text:"Use Mailbox Anomoly Furniture — 1 Delivery"},
+      {id:"w11",text:"Collect Lost Wallet",counter:{max:100}},
+      {id:"w12",text:"Steal Bond / Furniture items from DSD Toy Shop ×3"},
+      {id:"w13",badge:"biweek",text:"Beyond the Rails (resets every 2 weeks)",biweekly:true,taskCountdown:'biweekly'},
+    ]},
+  ],
+  monthly:[
+    {section:"Monthly tasks",items:[
+      {id:"m1",badge:"monthly",text:"Monthly Battle Pass Mission (Circle Bounty)"},
+      {id:"m2",badge:"monthly",text:"Fair Exchange / Lost Exchange — get All Dices, Tri-Keys, Fons, Beetle Coins, Fluffy Cotton & Dreamless Seed"},
+      {id:"m3",text:"Buy All Hunter Exchange Item",taskCountdown:'monthly'},
+      {id:"m4",text:"Online Race ACE Rank"},
+      {id:"m5",text:"200,000 Scale Coin for 600,000 Beetle Coin"},
+    ]},
+  ],
+  goals:[
+    {section:"Currency & Coins",items:[
+      {id:"g_sc",text:"Scale Coin = 322,811",
+        subItems:[
+          {id:"g_sc_i1",text:"Fishing Rod IV = 42,500 Scale Coin"},
+          {id:"g_sc_i2",text:"Hooked For Life = 98,888 Scale Coin"},
+        ]
+      },
+      {id:"g_ppc",text:"Pink Paw Coin = 112,635",
+        subItems:[
+          {id:"g_ppc_i1",text:"B100 = 20,000 Pink Paw Coin"},
+          {id:"g_ppc_i2",text:"50x Annulith (500 Annulith) = 20,000 Pink Paw Coin"},
+          {id:"g_ppc_i3",text:"Zero-G Gag (Glider Livery Skin) = 6,250 Pink Paw Coin"},
+          {id:"g_ppc_i4",text:"Hunter Off Duty (MC Outfit) = 30,000 Pink Paw Coin"},
+          {id:"g_ppc_i5",text:"Tomorrow Rush (Wheel Chair) = 30,000 Pink Paw Coin"},
+          {id:"g_ppc_i6",text:"Beyond-Tomorrow Engine (Wheel Chair) = 30,000 Pink Paw Coin"},
+          {id:"g_ppc_i7",text:"Overmorrow Engine (Wheel Chair) = 7,500 Pink Paw Coin"},
+          {id:"g_ppc_i8",text:"Pinky Paws (B100 Skin) = 20,000 Pink Paw Coin"},
+          {id:"g_ppc_i9",text:"City Trails (Rover A1 Skin) = 7,500 Pink Paw Coin"},
+          {id:"g_ppc_i10",text:"Speed Legendary (ST79 Skin) = 7,500 Pink Paw Coin"},
+          {id:"g_ppc_i11",text:"ST999 (G3 Skin) = 3,750 Pink Paw Coin"},
+        ]
+      },
+      {id:"g_ds",text:"Dreamless Seed = 370x"},
+    ]},
+    {section:"Racing Goals",items:[
+      {id:"g_cr",text:"Finish All Challenge Races",
+        subItems:[
+          {id:"g_cr_sub",text:"Challenge Races To 3 Star",
+            subItems:[
+              {id:"g_cr1",text:"Sunday"},
+              {id:"g_cr2",text:"Coastal Drift"},
+              {id:"g_cr3",text:"Full Throttle"},
+              {id:"g_cr4",text:"Meridian"},
+              {id:"g_cr5",text:"Tempestas"},
+              {id:"g_cr6",text:"Uncrowned King"},
+            ]
+          },
+        ]
+      },
+      {id:"g_ace",text:"Reach Ace Driver on Online Race",
+        subItems:[
+          {id:"g_ace_sub",text:"Online Race Ranks",
+            subItems:[
+              {id:"g_rank_rookie",text:"Rookie Driver",
+                subItems:[
+                  {id:"g_rank_r4",text:"Rookie Driver IV"},
+                  {id:"g_rank_r3",text:"Rookie Driver III"},
+                  {id:"g_rank_r2",text:"Rookie Driver II"},
+                  {id:"g_rank_r1",text:"Rookie Driver I"},
+                ]
+              },
+              {id:"g_rank_amateur",text:"Amateur Driver",
+                subItems:[
+                  {id:"g_rank_a4",text:"Amateur Driver IV"},
+                  {id:"g_rank_a3",text:"Amateur Driver III"},
+                  {id:"g_rank_a2",text:"Amateur Driver II"},
+                  {id:"g_rank_a1",text:"Amateur Driver I"},
+                ]
+              },
+              {id:"g_rank_pro",text:"Pro Driver",
+                subItems:[
+                  {id:"g_rank_p4",text:"Pro Driver IV"},
+                  {id:"g_rank_p3",text:"Pro Driver III"},
+                  {id:"g_rank_p2",text:"Pro Driver II"},
+                  {id:"g_rank_p1",text:"Pro Driver I"},
+                ]
+              },
+              {id:"g_rank_legend",text:"Legend Driver",
+                subItems:[
+                  {id:"g_rank_l4",text:"Legend Driver IV"},
+                  {id:"g_rank_l3",text:"Legend Driver III"},
+                  {id:"g_rank_l2",text:"Legend Driver II"},
+                  {id:"g_rank_l1",text:"Legend Driver I"},
+                ]
+              },
+              {id:"g_rank_ace",text:"Ace Driver"},
+            ]
+          },
+        ]
+      },
+    ]},
+    {section:"High-Risk Commission",items:[
+      {id:"g_hrc",text:"Finish All High-Risk Commission",
+        subItems:[
+          {id:"g_hrc1",text:"Heaven's Forsaken",
+            subItems:[
+              {id:"g_hrc1_1",text:"Heaven's Forsaken I"},
+              {id:"g_hrc1_2",text:"Heaven's Forsaken II"},
+              {id:"g_hrc1_3",text:"Heaven's Forsaken III"},
+              {id:"g_hrc1_4",text:"Heaven's Forsaken IV"},
+              {id:"g_hrc1_5",text:"Heaven's Forsaken V"},
+              {id:"g_hrc1_6",text:"Heaven's Forsaken VI"},
+            ]
+          },
+          {id:"g_hrc2",text:"Where Is Home",
+            subItems:[
+              {id:"g_hrc2_1",text:"Where Is Home I"},
+              {id:"g_hrc2_2",text:"Where Is Home II"},
+              {id:"g_hrc2_3",text:"Where Is Home III"},
+              {id:"g_hrc2_4",text:"Where Is Home IV"},
+              {id:"g_hrc2_5",text:"Where Is Home V"},
+              {id:"g_hrc2_6",text:"Where Is Home VI"},
+            ]
+          },
+          {id:"g_hrc3",text:"Lightspeed Tagger",subItems:[
+            {id:"g_hrc3_1",text:"Lightspeed Tagger I"},
+            {id:"g_hrc3_2",text:"Lightspeed Tagger II"},
+            {id:"g_hrc3_3",text:"Lightspeed Tagger III"},
+            {id:"g_hrc3_4",text:"Lightspeed Tagger IV"},
+            {id:"g_hrc3_5",text:"Lightspeed Tagger V"},
+            {id:"g_hrc3_6",text:"Lightspeed Tagger VI"},
+          ]},
+          {id:"g_hrc4",text:"Kindness Hard To Refuse",subItems:[
+            {id:"g_hrc4_1",text:"Kindness Hard To Refuse I"},
+            {id:"g_hrc4_2",text:"Kindness Hard To Refuse II"},
+            {id:"g_hrc4_3",text:"Kindness Hard To Refuse III"},
+            {id:"g_hrc4_4",text:"Kindness Hard To Refuse IV"},
+            {id:"g_hrc4_5",text:"Kindness Hard To Refuse V"},
+            {id:"g_hrc4_6",text:"Kindness Hard To Refuse VI"},
+          ]},
+          {id:"g_hrc5",text:"Mist Pursuit",subItems:[
+            {id:"g_hrc5_1",text:"Mist Pursuit I"},
+            {id:"g_hrc5_2",text:"Mist Pursuit II"},
+            {id:"g_hrc5_3",text:"Mist Pursuit III"},
+            {id:"g_hrc5_4",text:"Mist Pursuit IV"},
+            {id:"g_hrc5_5",text:"Mist Pursuit V"},
+            {id:"g_hrc5_6",text:"Mist Pursuit VI"},
+          ]},
+          {id:"g_hrc6",text:"Rhythm Master",subItems:[
+            {id:"g_hrc6_1",text:"Rhythm Master I"},
+            {id:"g_hrc6_2",text:"Rhythm Master II"},
+            {id:"g_hrc6_3",text:"Rhythm Master III"},
+            {id:"g_hrc6_4",text:"Rhythm Master IV"},
+            {id:"g_hrc6_5",text:"Rhythm Master V"},
+            {id:"g_hrc6_6",text:"Rhythm Master VI"},
+          ]},
+          {id:"g_hrc7",text:"Brand Anniversary",subItems:[
+            {id:"g_hrc7_1",text:"Brand Anniversary I"},
+            {id:"g_hrc7_2",text:"Brand Anniversary II"},
+            {id:"g_hrc7_3",text:"Brand Anniversary III"},
+            {id:"g_hrc7_4",text:"Brand Anniversary IV"},
+            {id:"g_hrc7_5",text:"Brand Anniversary V"},
+            {id:"g_hrc7_6",text:"Brand Anniversary VI"},
+          ]},
+          {id:"g_hrc8",text:"Yarn Ball or Fons",subItems:[
+            {id:"g_hrc8_1",text:"Yarn Ball or Fons I"},
+            {id:"g_hrc8_2",text:"Yarn Ball or Fons II"},
+            {id:"g_hrc8_3",text:"Yarn Ball or Fons III"},
+            {id:"g_hrc8_4",text:"Yarn Ball or Fons IV"},
+            {id:"g_hrc8_5",text:"Yarn Ball or Fons V"},
+            {id:"g_hrc8_6",text:"Yarn Ball or Fons VI"},
+          ]},
+          {id:"g_hrc9",text:"Silent Garden",subItems:[
+            {id:"g_hrc9_1",text:"Silent Garden I"},
+            {id:"g_hrc9_2",text:"Silent Garden II"},
+            {id:"g_hrc9_3",text:"Silent Garden III"},
+            {id:"g_hrc9_4",text:"Silent Garden IV"},
+            {id:"g_hrc9_5",text:"Silent Garden V"},
+            {id:"g_hrc9_6",text:"Silent Garden VI"},
+          ]},
+          {id:"g_hrc10",text:"The Book of Post-Adolescence",subItems:[
+            {id:"g_hrc10_1",text:"The Book of Post-Adolescence I"},
+            {id:"g_hrc10_2",text:"The Book of Post-Adolescence II"},
+            {id:"g_hrc10_3",text:"The Book of Post-Adolescence III"},
+            {id:"g_hrc10_4",text:"The Book of Post-Adolescence IV"},
+            {id:"g_hrc10_5",text:"The Book of Post-Adolescence V"},
+            {id:"g_hrc10_6",text:"The Book of Post-Adolescence VI"},
+          ]},
+          {id:"g_hrc11",text:"Ride Assault",subItems:[
+            {id:"g_hrc11_1",text:"Ride Assault I"},
+            {id:"g_hrc11_2",text:"Ride Assault II"},
+            {id:"g_hrc11_3",text:"Ride Assault III"},
+            {id:"g_hrc11_4",text:"Ride Assault IV"},
+            {id:"g_hrc11_5",text:"Ride Assault V"},
+            {id:"g_hrc11_6",text:"Ride Assault VI"},
+          ]},
+          {id:"g_hrc12",text:"Let's Go See A Movie",subItems:[
+            {id:"g_hrc12_1",text:"Let's Go See A Movie I"},
+            {id:"g_hrc12_2",text:"Let's Go See A Movie II"},
+            {id:"g_hrc12_3",text:"Let's Go See A Movie III"},
+            {id:"g_hrc12_4",text:"Let's Go See A Movie IV"},
+            {id:"g_hrc12_5",text:"Let's Go See A Movie V"},
+            {id:"g_hrc12_6",text:"Let's Go See A Movie VI"},
+          ]},
+          {id:"g_hrc13",text:"Call of The Lost",subItems:[
+            {id:"g_hrc13_1",text:"Call of The Lost I"},
+            {id:"g_hrc13_2",text:"Call of The Lost II"},
+            {id:"g_hrc13_3",text:"Call of The Lost III"},
+            {id:"g_hrc13_4",text:"Call of The Lost IV"},
+            {id:"g_hrc13_5",text:"Call of The Lost V"},
+            {id:"g_hrc13_6",text:"Call of The Lost VI"},
+          ]},
+        ]
+      },
+    ]},
+    {section:"Pink Paw Missions",items:[
+      {id:"g_ppm",text:'Complete Pink Paw Challenge Target "Colloct"',
+        subItems:[
+          {id:"g_ppm1",text:"Defeat a total of 750 enemies"},
+          {id:"g_ppm2",text:"Open a total of 50 vaults"},
+        ]
+      },
+    ]},
+    {section:"Characters to Skip",items:[
+      {id:"g_skip",text:"Characters — Skip these",skipList:true,
+        subItems:[
+          {id:"g_skip1",text:"Skia"},
+          {id:"g_skip2",text:"Daffodill"},
+          {id:"g_skip3",text:"Edgar"},
+          {id:"g_skip4",text:"Chiz"},
+          {id:"g_skip5",text:"Fadia"},
+        ]
+      },
+    ]},
+    {section:"Character Level Goals",items:[
+      {id:"g_cafe",text:"Level Up for Origin Cafe",
+        subItems:[
+          {id:"g_cafe1",text:"Aurelia — Level 1"},
+          {id:"g_cafe2",text:"Baicang — Only Level 3"},
+          {id:"g_cafe3",text:"Nanally — Level 3 → must Level 5"},
+          {id:"g_cafe4",text:"Sakiri — Level 3 → must Level 5"},
+          {id:"g_cafe5",text:"Adler — Level 3 → must Level 5"},
+          {id:"g_cafe6",text:"Mint — Level 3 → must Level 5"},
+          {id:"g_cafe7",text:"Haniel — Level 5"},
+        ]
+      },
+      {id:"g_qol",text:"Other Level Up for QOL",
+        subItems:[
+          {id:"g_qol1",text:"Jiuyuan — Level 1 → must Level 4"},
+          {id:"g_qol2",text:"MC — must Level 5 (First to do)"},
+          {id:"g_qol3",text:"Hatori — Level 3, Level 5 eventually"},
+          {id:"g_qol4",text:"Hathor — must Level 5"},
+        ]
+      },
+    ]},
+    {section:"My Level Up Priority",items:[
+      {id:"g_lvl_hathor",text:"Hathor — Lv ? → 5",counter:{max:5},dynamicLv:true},
+      {id:"g_lvl_jiuyuan",text:"Jiuyuan — Lv ? → 4",counter:{max:4},dynamicLv:true,startVal:1},
+      {id:"g_lvl_nanally",text:"Nanally — Lv ? → 5",counter:{max:5},dynamicLv:true,startVal:3},
+      {id:"g_lvl_haniel",text:"Haniel — Lv ? → 5",counter:{max:5},dynamicLv:true},
+      {id:"g_lvl_mint",text:"Mint — Lv ? → 5",counter:{max:5},dynamicLv:true,startVal:3},
+      {id:"g_lvl_adler",text:"Adler — Lv ? → 5",counter:{max:5},dynamicLv:true,startVal:3},
+      {id:"g_lvl_sakiri",text:"Sakiri — Lv ? → 5",counter:{max:5},dynamicLv:true,startVal:3},
+      {id:"g_lvl_aurelia",text:"Aurelia — Lv ? → 5",counter:{max:5},dynamicLv:true,startVal:1},
+      {id:"g_lvl_chiz",text:"Chiz — Lv ? → 5",counter:{max:5},dynamicLv:true},
+      {id:"g_lvl_edgar",text:"Edgar — Lv ? → 5",counter:{max:5},dynamicLv:true},
+    ]},
+  ],
+};
+
+const BADGES={
+  opt:'<span class="badge badge-opt">optional</span>',
+  pers:'<span class="badge badge-pers">personal</span>',
+  monthly:'<span class="badge badge-monthly">monthly</span>',
+  biweek:'<span class="badge badge-biweek">bi-weekly</span>',
+  custom:'<span class="badge badge-custom">custom</span>',
+  onetime:'<span class="badge badge-onetime">1-time</span>',
+};
+
+// ─── Render ───────────────────────────────────────────────────────────────────
+function renderCounterItem(item, tab, isSubItem=false, isCustom=false){
+  const val=getCounter(item.id), max=item.counter.max;
+  const pct=Math.min(100,Math.round(val/max*100));
+  const full=(val>=max);
+  const wrapClass=isSubItem ? `sublist-item has-counter${full?' done':''}` : `task-item has-counter${full?' done':''}`;
+  const editBtn=(!isSubItem&&isCustom)?`<button class="edit-btn" onclick="event.stopPropagation();openModal('${item.id}','${tab}')" title="Edit"><i class="ti ti-pencil"></i></button>`:'';
+  // replace ? with live counter value if dynamicLv
+  const displayText = item.dynamicLv ? item.text.replace('?', val) : item.text;
+  return `<div class="${wrapClass}" id="citem-${item.id}">
+    <div class="cb" style="cursor:default">${full?'<i class="ti ti-check"></i>':''}</div>
+    <div class="task-text">${displayText}</div>
+    ${editBtn}
+    <div class="counter-wrap" onclick="event.stopPropagation()">
+      <button class="counter-btn" onclick="stepCounter('${item.id}','${tab}',-1)" title="−1">−</button>
+      <span class="counter-display${full?' done-count':''}">${val}<span style="color:var(--text3);font-weight:400">/${max}</span></span>
+      <button class="counter-btn" onclick="stepCounter('${item.id}','${tab}',1)" title="+1">+</button>
+    </div>
+    <div class="counter-bar-wrap"><div class="counter-bar-fill" style="width:${pct}%"></div></div>
+  </div>`;
+}
+
+function toggleTask(id,tab,el,oneTime=false){
+  if(isPermDone(id)) return;
+  const state=getState();
+  state[id]=!state[id];
+  setState(state);
+  if(oneTime && state[id]) setPermDone(id,true);
+  // full re-render so parent checkboxes update correctly
+  renderList(tab);
+  renderCustomList(tab);
+  updateProgress(tab);
+  updateStats();
+}
+
+// ─── Recursive sub-item renderer ─────────────────────────────────────────────
+function renderSubItemsHTML(items, tab, isCustom=false, isSkipList=false){
+  const state=getState();
+  return items.map(s=>{
+    if(isSkipList){
+      const st=getSkipState(s.id);
+      const icon=st==='skip'?'✓':st==='keep'?'✗':'';
+      const hint=st==='skip'?'Skipping':st==='keep'?'Keeping':'';
+      return `<div class="skip-item" data-state="${st}" onclick="cycleSkip('${s.id}','${tab}',this)">
+        <div class="skip-cb">${icon}</div>
+        <div class="task-text">${s.text}</div>
+        <span class="skip-state-hint">${hint}</span>
+      </div>`;
+    }
+    if(s.subItems && s.subItems.length){
+      const allDone=allSubDone(s);
+      const isOpen=state['sub_open_'+s.id]!==false;
+      return `<div class="sublist-item has-sub${allDone?' parent-all-done':''}${isOpen?' sub-open':''}" onclick="toggleSublist('${s.id}','${tab}',this)">
+        <div class="cb"><i class="ti ti-check"></i></div>
+        <div class="task-text">${s.text}</div>
+        <i class="ti ti-chevron-down sub-caret"></i>
+        <div class="sublist-wrap" onclick="event.stopPropagation()">
+          ${renderSubItemsHTML(s.subItems, tab, isCustom)}
+        </div>
+      </div>`;
+    } else if(s.counter){
+      return renderCounterItem(s, tab, true, isCustom);
+    } else {
+      const done=!!state[s.id];
+      return `<div class="sublist-item${done?' done':''}" onclick="toggleTask('${s.id}','${tab}',this)">
+        <div class="cb"><i class="ti ti-check"></i></div>
+        <div class="task-text">${s.text}</div>
+      </div>`;
+    }
+  }).join('');
+}
+
+function allSubDone(item){
+  const state=getState();
+  if(!item.subItems || !item.subItems.length){
+    if(item.counter) return getCounter(item.id)>=item.counter.max;
+    return !!state[item.id];
+  }
+  // for skipList parents, "done" = all children are 'skip' or 'keep' (decided)
+  if(item.skipList) return item.subItems.every(s=>getSkipState(s.id)!=='none');
+  return item.subItems.every(s=>allSubDone(s));
+}
+
+function renderList(tab){
+  const state=getState(), el=document.getElementById(tab+'List');
+  let html='';
+  TASKS[tab].forEach(sec=>{
+    html+=`<div class="section-label">${sec.section}</div>`;
+    sec.items.forEach(rawItem=>{
+      const item=applyOverride(rawItem);
+      if(item.hidden) return; // skip hidden
+      const permDone=item.oneTime && isPermDone(item.id);
+      const b=getBadgeHTML(item);
+      const editBtn=`<button class="edit-btn" onclick="event.stopPropagation();openModal('${item.id}','${tab}')" title="Edit"><i class="ti ti-pencil"></i></button>`;
+      if(item.subItems){
+        const allDone=allSubDone(item);
+        const isOpen=state['sub_open_'+item.id]!==false;
+        html+=`<div class="task-item has-sub${allDone?' parent-all-done':''}${isOpen?' sub-open':''}${permDone?' perm-done':''}" onclick="toggleSublist('${item.id}','${tab}',this)">
+          <div class="cb"><i class="ti ti-check"></i></div>
+          <div class="task-text">${b}${item.text}</div>
+          ${editBtn}<i class="ti ti-chevron-down sub-caret"></i>
+          <div class="sublist-wrap" onclick="event.stopPropagation()">
+            ${renderSubItemsHTML(item.subItems, tab, false, !!item.skipList)}
+          </div>
+        </div>`;
+      } else if(item.counter){
+        const val=getCounter(item.id), max=item.counter.max;
+        const pct=Math.min(100,Math.round(val/max*100));
+        const full=(val>=max);
+        const displayText=item.dynamicLv ? item.text.replace('?', String(val)) : item.text;
+        html+=`<div class="task-item has-counter${full?' done':''}${permDone?' perm-done':''}" id="citem-${item.id}">
+          <div class="cb" style="cursor:default">${full?'<i class="ti ti-check"></i>':''}</div>
+          <div class="task-text">${b}${displayText}</div>
+          ${editBtn}
+          <div class="counter-wrap" onclick="event.stopPropagation()">
+            <button class="counter-btn" onclick="stepCounter('${item.id}','${tab}',-1)">−</button>
+            <span class="counter-display${full?' done-count':''}">${val}<span style="color:var(--text3);font-weight:400">/${max}</span></span>
+            <button class="counter-btn" onclick="stepCounter('${item.id}','${tab}',1)">+</button>
+          </div>
+          <div class="counter-bar-wrap"><div class="counter-bar-fill" style="width:${pct}%"></div></div>
+        </div>`;
+      } else {
+        const done=permDone || !!state[item.id];
+        const cdId=item.taskCountdown?`countdown-task-${item.id}`:'';
+        const cdHtml=item.taskCountdown?`<span class="task-countdown" id="${cdId}">--:--:--</span>`:'';
+        html+=`<div class="task-item${done?' done':''}${permDone?' perm-done':''}" onclick="toggleTask('${item.id}','${tab}',this,${!!item.oneTime})">
+          <div class="cb"><i class="ti ti-check"></i></div>
+          <div class="task-text">${b}${item.text}</div>
+          ${cdHtml}
+          ${editBtn}
+        </div>`;
+      }
+    });
+  });
+  el.innerHTML=html;
+}
+function renderCustomList(tab){
+  const state=getState(), custom=getCustom(), items=custom[tab]||[];
+  const el=document.getElementById(tab+'CustomList');
+  // Goals empty state
+  if(tab==='goals' && !items.length){
+    el.innerHTML=`<div style="text-align:center;padding:2.5rem 1rem;color:var(--text3)">
+      <i class="ti ti-trophy" style="font-size:36px;color:#C98B2A;opacity:.4;display:block;margin-bottom:10px"></i>
+      <div style="font-size:13px;margin-bottom:4px">No goals yet</div>
+      <div style="font-size:12px">Add your first goal — character unlocks, collection targets, rank goals…</div>
+    </div>`;
+    return;
+  }
+  if(!items.length){el.innerHTML='';return;}
+  const sectionLabel=tab==='goals'?'My goals':'My custom tasks';
+  let html=`<div class="section-label">${sectionLabel}</div>`;
+  items.forEach(item=>{
+    const b=getBadgeHTML(item);
+    if(item.subItems && item.subItems.length){
+      const allDone=allSubDone(item);
+      const isOpen=state['sub_open_'+item.id]!==false;
+      html+=`<div class="task-item has-sub${allDone?' parent-all-done':''}${isOpen?' sub-open':''}" onclick="toggleSublist('${item.id}','${tab}',this)">
+        <div class="cb"><i class="ti ti-check"></i></div>
+        <div class="task-text">${b}${item.text}</div>
+        <button class="edit-btn" onclick="event.stopPropagation();openModal('${item.id}','${tab}')" title="Edit"><i class="ti ti-pencil"></i></button>
+        <i class="ti ti-chevron-down sub-caret"></i>
+        <div class="sublist-wrap" onclick="event.stopPropagation()">
+          ${renderSubItemsHTML(item.subItems, tab, true)}
+        </div>
+      </div>`;
+    } else if(item.counter){
+      html+=renderCounterItem(item,tab,false,true);
+    } else {
+      const done=!!state[item.id];
+      html+=`<div class="task-item${done?' done':''}" onclick="toggleTask('${item.id}','${tab}',this)">
+        <div class="cb"><i class="ti ti-check"></i></div>
+        <div class="task-text">${b}${item.text}</div>
+        <button class="edit-btn" onclick="event.stopPropagation();openModal('${item.id}','${tab}')" title="Edit"><i class="ti ti-pencil"></i></button>
+      </div>`;
+    }
+  });
+  el.innerHTML=html;
+}
+
+// ─── Modal state ──────────────────────────────────────────────────────────────
+let _modalTab=null, _modalId=null, _modalBadges=[], _modalIsBuiltin=false;
+
+function openModal(id, tab){
+  _modalTab=tab; _modalId=id; _modalBadges=[]; _modalIsBuiltin=false;
+
+  // Reset form
+  document.getElementById('mName').value='';
+  document.getElementById('mCounterOn').checked=false;
+  document.getElementById('mCounterMax').value='10';
+  document.getElementById('mSubOn').checked=false;
+  document.getElementById('mResetOn').checked=false;
+  document.getElementById('mOneTime').checked=false;
+  document.getElementById('mResetType').value='daily';
+  document.getElementById('mResetTime').value='';
+  document.getElementById('subitemsList').innerHTML='';
+  document.getElementById('mCustomLabel').value='';
+  document.getElementById('customLabelWrap').style.display='none';
+  document.getElementById('customLabelPreview').style.display='none';
+  toggleCounterFields(); toggleSubFields(); toggleResetFields();
+  selectBadges([]);
+
+  if(id){
+    // editing existing — could be custom or builtin
+    const custom=getCustom();
+    const customItem=(custom[tab]||[]).find(i=>i.id===id);
+    let item=customItem;
+    if(!item){
+      // search builtins
+      _modalIsBuiltin=true;
+      TASKS[tab].forEach(sec=>sec.items.forEach(i=>{ if(i.id===id) item=i; }));
+    }
+    if(!item) return;
+
+    const noun=tab==='goals'?'Goal':'Task';
+    document.getElementById('modalTitle').textContent=`Edit ${noun}`;
+    document.getElementById('mDeleteBtn').style.display='flex';
+    document.getElementById('mDeleteLabel').textContent=_modalIsBuiltin ? 'Hide task' : 'Delete';
+    document.getElementById('mName').value=item.text||'';
+    document.getElementById('mOneTime').checked=!!(item.oneTime);
+    // badges: support both old string and new array
+    const bArr=Array.isArray(item.badges)?item.badges:(item.badge?[item.badge]:[]);
+    selectBadges(bArr);
+
+    if(item.counter){
+      document.getElementById('mCounterOn').checked=true;
+      document.getElementById('mCounterMax').value=item.counter.max||10;
+      toggleCounterFields();
+    }
+    if(item.subItems && item.subItems.length){
+      document.getElementById('mSubOn').checked=true;
+      toggleSubFields();
+      item.subItems.forEach(s=>addSubitemRow(s.text, s.counter?.max||''));
+    }
+    if(item.resetOverride){
+      document.getElementById('mResetOn').checked=true;
+      document.getElementById('mResetType').value=item.resetOverride.type||'daily';
+      document.getElementById('mResetTime').value=item.resetOverride.time||'';
+      toggleResetFields();
+    }
+  } else {
+    const noun=tab==='goals'?'Goal':'Task';
+    document.getElementById('modalTitle').textContent=`Add ${noun}`;
+    document.getElementById('mDeleteBtn').style.display='none';
+  }
+
+  document.getElementById('taskModal').classList.add('open');
+  setTimeout(()=>document.getElementById('mName').focus(),80);
+}
+
+function stepNumInput(id, delta){
+  const inp=document.getElementById(id);
+  const val=parseInt(inp.value)||0;
+  const min=parseInt(inp.min)||1;
+  const max=parseInt(inp.max)||9999;
+  inp.value=Math.max(min,Math.min(max,val+delta));
+}
+
+function closeModal(){
+  document.getElementById('taskModal').classList.remove('open');
+}
+function modalOverlayClick(e){
+  if(e.target===document.getElementById('taskModal')) closeModal();
+}
+
+function toggleBadge(badge){
+  if(!badge){ _modalBadges=[]; } // "None" clears all
+  else {
+    const idx=_modalBadges.indexOf(badge);
+    if(idx>-1) _modalBadges.splice(idx,1);
+    else _modalBadges.push(badge);
+  }
+  refreshBadgePills();
+  // show custom label input if 'custom' is selected
+  const hasCustom=_modalBadges.includes('custom');
+  document.getElementById('customLabelWrap').style.display=hasCustom?'block':'none';
+  if(!hasCustom){ document.getElementById('mCustomLabel').value=''; document.getElementById('customLabelPreview').style.display='none'; }
+}
+function selectBadges(arr){
+  _modalBadges=arr.filter(b=>b&&b!=='customLabel');
+  // extract custom label name if stored as 'customLabel:Name'
+  const cl=arr.find(b=>typeof b==='string'&&b.startsWith('customLabel:'));
+  if(cl){ _modalBadges.push('custom'); document.getElementById('mCustomLabel').value=cl.replace('customLabel:',''); }
+  refreshBadgePills();
+  const hasCustom=_modalBadges.includes('custom');
+  document.getElementById('customLabelWrap').style.display=hasCustom?'block':'none';
+  if(hasCustom) previewCustomLabel();
+}
+function refreshBadgePills(){
+  document.querySelectorAll('.badge-pill').forEach(p=>{
+    p.className='badge-pill';
+    const b=p.dataset.badge;
+    if(!b && _modalBadges.length===0) p.classList.add('active-none');
+    else if(b && _modalBadges.includes(b)) p.classList.add('active-'+b);
+  });
+}
+function previewCustomLabel(){
+  const val=document.getElementById('mCustomLabel').value.trim();
+  const wrap=document.getElementById('customLabelPreview');
+  if(val){ wrap.style.display='block'; wrap.innerHTML=`<span style="font-size:11px;color:var(--text3);margin-right:6px">Preview:</span><span class="badge badge-custom">${val}</span>`; }
+  else { wrap.style.display='none'; }
+}
+// keep old name as alias
+function selectBadge(b){ selectBadges(b?[b]:[]); }
+function toggleCounterFields(){
+  const on=document.getElementById('mCounterOn').checked;
+  document.getElementById('counterFields').style.display=on?'flex':'none';
+}
+function toggleSubFields(){
+  const on=document.getElementById('mSubOn').checked;
+  document.getElementById('subFields').style.display=on?'block':'none';
+}
+function toggleResetFields(){
+  const on=document.getElementById('mResetOn').checked;
+  document.getElementById('resetFields').style.display=on?'block':'none';
+}
+
+function addSubitemRow(text='', max=''){
+  const list=document.getElementById('subitemsList');
+  const row=document.createElement('div');
+  row.className='subitem-row';
+  row.innerHTML=`<input type="text" placeholder="Sub-item name…" value="${text}">
+    <input type="number" class="subitem-max" placeholder="max" min="1" max="9999" value="${max}" title="Counter max (leave blank for checkbox)">
+    <button class="subitem-del" onclick="this.parentElement.remove()" title="Remove"><i class="ti ti-x"></i></button>`;
+  list.appendChild(row);
+}
+
+function saveModal(){
+  const name=document.getElementById('mName').value.trim();
+  if(!name) return document.getElementById('mName').focus();
+
+  const counterOn=document.getElementById('mCounterOn').checked;
+  const counterMax=parseInt(document.getElementById('mCounterMax').value)||10;
+  const subOn=document.getElementById('mSubOn').checked;
+  const resetOn=document.getElementById('mResetOn').checked;
+  const oneTime=document.getElementById('mOneTime').checked;
+
+  // Build final badges array — encode custom label name as 'customLabel:Name'
+  const customLabelName=document.getElementById('mCustomLabel').value.trim();
+  const finalBadges=_modalBadges.map(b=>{
+    if(b==='custom' && customLabelName) return 'customLabel:'+customLabelName;
+    return b;
+  });
+  let subItems=null;
+  if(subOn){
+    subItems=[];
+    document.querySelectorAll('#subitemsList .subitem-row').forEach(row=>{
+      const txt=row.querySelector('input[type=text]').value.trim();
+      const mx=parseInt(row.querySelector('input[type=number]').value)||0;
+      if(txt) subItems.push({
+        id:'s_'+Date.now()+'_'+Math.random().toString(36).slice(2,6),
+        text:txt,
+        ...(mx>0?{counter:{max:mx}}:{})
+      });
+    });
+  }
+
+  // Build resetOverride
+  let resetOverride=null;
+  if(resetOn){
+    resetOverride={
+      type:document.getElementById('mResetType').value,
+      time:document.getElementById('mResetTime').value.trim()||null
+    };
+  }
+
+  const tab=_modalTab;
+
+  if(_modalIsBuiltin && _modalId){
+    // Save edits to builtin task → store overrides separately
+    const overrides=getBuiltinOverrides();
+    overrides[_modalId]={
+      text:name, badges:finalBadges.length?finalBadges:null,
+      ...(oneTime?{oneTime:true}:{}),
+      ...(counterOn?{counter:{max:counterMax}}:{}),
+      ...(subItems!==null?{subItems}:{}),
+      ...(resetOverride?{resetOverride}:{})
+    };
+    setBuiltinOverrides(overrides);
+  } else {
+    const custom=getCustom();
+    custom[tab]=custom[tab]||[];
+    if(_modalId){
+      // edit existing custom
+      const idx=custom[tab].findIndex(i=>i.id===_modalId);
+      if(idx>-1){
+        const old=custom[tab][idx];
+        custom[tab][idx]={
+          ...old, text:name, badges:finalBadges.length?finalBadges:null,
+          ...(counterOn?{counter:{max:counterMax}}:{counter:undefined}),
+          ...(subItems!==null?{subItems}:{subItems:undefined}),
+          ...(resetOverride?{resetOverride}:{resetOverride:undefined})
+        };
+        // clean undefineds
+        Object.keys(custom[tab][idx]).forEach(k=>{ if(custom[tab][idx][k]===undefined) delete custom[tab][idx][k]; });
+      }
+    } else {
+      // new custom task
+      custom[tab].push({
+        id:'c_'+tab+'_'+Date.now(),
+        text:name,
+        badges:finalBadges.length?finalBadges:null,
+        ...(oneTime?{oneTime:true}:{}),
+        ...(counterOn?{counter:{max:counterMax}}:{}),
+        ...(subItems!==null && subItems.length?{subItems}:{}),
+        ...(resetOverride?{resetOverride}:{})
+      });
+    }
+    setCustom(custom);
+  }
+
+  closeModal();
+  renderList(tab);
+  renderCustomList(tab);
+  updateProgress(tab);
+  updateStats();
+}
+
+function deleteFromModal(){
+  if(!_modalId) return;
+  const tab=_modalTab;
+  if(_modalIsBuiltin){
+    // "hide" — store in hidden list, won't render
+    const hidden=getBuiltinOverrides();
+    hidden[_modalId]={...(hidden[_modalId]||{}), hidden:true};
+    setBuiltinOverrides(hidden);
+  } else {
+    const custom=getCustom();
+    custom[tab]=(custom[tab]||[]).filter(i=>i.id!==_modalId);
+    setCustom(custom);
+    const state=getState(); delete state[_modalId]; setState(state);
+  }
+  closeModal();
+  renderList(tab); renderCustomList(tab); updateProgress(tab); updateStats();
+}
+
+// ─── Builtin overrides store ──────────────────────────────────────────────────
+function getBuiltinOverrides(){return ls.get('nte_overrides')}
+function setBuiltinOverrides(o){ls.set('nte_overrides',o)}
+
+// Apply overrides to builtin item when rendering
+function applyOverride(item){
+  const ov=getBuiltinOverrides()[item.id];
+  return ov ? {...item,...ov} : item;
+}
+
+// Render all badges for an item (supports both legacy .badge string and new .badges array)
+function getBadgeHTML(item){
+  let html='';
+  const arr=Array.isArray(item.badges)&&item.badges.length ? item.badges : (item.badge?[item.badge]:[]);
+  arr.forEach(b=>{
+    if(!b) return;
+    if(b.startsWith('customLabel:')){
+      const name=b.replace('customLabel:','');
+      html+=`<span class="badge badge-custom">${name}</span>`;
+    } else if(BADGES[b]){
+      html+=BADGES[b];
+    }
+  });
+  if(item.oneTime) html+=BADGES['onetime'];
+  return html;
+}
+function stepCounter(id, tab, delta){
+  let max=null;
+  // search builtins
+  TASKS[tab].forEach(s=>s.items.forEach(i=>{
+    if(i.id===id && i.counter) max=i.counter.max;
+    if(i.subItems) i.subItems.forEach(si=>{ if(si.id===id && si.counter) max=si.counter.max; });
+  }));
+  // search custom
+  if(max===null){
+    (getCustom()[tab]||[]).forEach(i=>{
+      if(i.id===id && i.counter) max=i.counter.max;
+      if(i.subItems) i.subItems.forEach(si=>{ if(si.id===id && si.counter) max=si.counter.max; });
+    });
+  }
+  if(max===null) return;
+  const next=Math.max(0, Math.min(max, getCounter(id)+delta));
+  setCounter(id, next);
+  renderList(tab); renderCustomList(tab); updateProgress(tab); updateStats();
+}
+function toggleSublist(id, tab, el){
+  const state=getState();
+  const isOpen=el.classList.toggle('sub-open');
+  state['sub_open_'+id]=isOpen;
+  setState(state);
+}
+// close modal on ESC
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeModal(); });
+
+// ─── Progress & stats ─────────────────────────────────────────────────────────
+function countItem(i){
+  const state=getState();
+  if(i.subItems && i.subItems.length){
+    if(i.skipList){
+      // each skip child counts individually
+      let t=0,d=0;
+      i.subItems.forEach(s=>{ t++; if(getSkipState(s.id)!=='none') d++; });
+      return{total:t,done:d};
+    }
+    let t=0,d=0;
+    i.subItems.forEach(s=>{ const r=countItem(s); t+=r.total; d+=r.done; });
+    return{total:t,done:d};
+  }
+  const done=i.counter ? getCounter(i.id)>=i.counter.max : (i.oneTime?isPermDone(i.id):!!state[i.id]);
+  return{total:1,done:done?1:0};
+}
+
+function countTab(tab){
+  const custom=getCustom();
+  let total=0, done=0;
+  TASKS[tab].forEach(sec=>sec.items.forEach(rawI=>{
+    const i=applyOverride(rawI);
+    if(i.hidden) return;
+    const r=countItem(i); total+=r.total; done+=r.done;
+  }));
+  (custom[tab]||[]).forEach(i=>{ const r=countItem(i); total+=r.total; done+=r.done; });
+  return{total,done};
+}
+function updateProgress(tab){
+  const{total,done}=countTab(tab), pct=total?Math.round(done/total*100):0;
+  document.getElementById(tab+'Bar').style.width=pct+'%';
+  document.getElementById(tab+'Pct').textContent=pct+'%';
+  document.getElementById(tab+'Lbl').textContent=done+' of '+total+' done';
+}
+function updateStats(){
+  const tabs=['daily','weekly','monthly','goals'];
+  const labels=['Daily','Weekly','Monthly','Goals'];
+  const accents=[null,null,null,'#C98B2A'];
+  document.getElementById('statsGrid').innerHTML=tabs.map((t,i)=>{
+    const{total,done}=countTab(t), pct=total?Math.round(done/total*100):0;
+    const pctColor=accents[i]?`color:${accents[i]}`:'color:var(--accent)';
+    return`<div class="stat-card"><div class="stat-num">${done}<span>/${total}</span></div><div class="stat-lbl">${labels[i]}</div><span class="stat-pct" style="${pctColor}">${pct}%</span></div>`;
+  }).join('');
+}
+
+// ─── Reset ────────────────────────────────────────────────────────────────────
+function resetTab(tab){
+  const state=getState(), custom=getCustom(), counters=getCounters();
+  TASKS[tab].forEach(sec=>sec.items.forEach(i=>{
+    delete state[i.id];
+    if(i.counter) delete counters[i.id];
+    if(i.subItems) i.subItems.forEach(s=>{ delete state[s.id]; if(s.counter) delete counters[s.id]; });
+  }));
+  (custom[tab]||[]).forEach(i=>{delete state[i.id];}); setState(state); setCounters(counters);
+  renderList(tab); renderCustomList(tab); updateProgress(tab); updateStats();
+}
+
+// ─── Tab switch ───────────────────────────────────────────────────────────────
+function switchTab(tab){
+  ['daily','weekly','monthly','goals'].forEach(t=>{
+    document.getElementById('tab-'+t).classList.toggle('active',t===tab);
+    document.getElementById(t+'Panel').classList.toggle('active',t===tab);
+  });
+}
+
+// ─── Init ─────────────────────────────────────────────────────────────────────
+// Seed startVal counters (only if user hasn't touched them yet — value stays at 0)
+function seedStartVals(){
+  const counters=getCounters(); let changed=false;
+  ['daily','weekly','monthly','goals'].forEach(tab=>{
+    TASKS[tab].forEach(sec=>sec.items.forEach(item=>{
+      if(item.startVal!==undefined && counters[item.id]===undefined){
+        counters[item.id]=item.startVal; changed=true;
+      }
+    }));
+  });
+  if(changed) setCounters(counters);
+}
+buildTZSelect();
+seedStartVals();
+checkAutoReset();
+['daily','weekly','monthly','goals'].forEach(t=>{renderList(t);renderCustomList(t);updateProgress(t);});
+updateStats();
+updateTipBoxes();
+startCountdowns();
+</script>
+</body>
+</html>
