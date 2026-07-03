@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NTE Character Directory — Neverness to Everness</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0F0E17;--bg2:#1A1825;--bg3:#221F32;--border:#2E2A44;
+  --text:#EBE9F8;--text2:#9E9AC0;--text3:#5C5880;
+  --accent:#7B5CF5;--accent2:#534AB7;--pink:#E85D9E;
+  --incant:#D85A5A;--psyche:#4E8FE8;--cosmos:#B7B3D6;--chaos:#9B6BE0;--anima:#3BB37E;--lakshana:#D9A93C;
+  --radius:10px;
+  --app-pad: clamp(0.75rem, 4vw, 1.5rem);
+}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh}
+.app{max-width:1100px;margin:0 auto;padding:clamp(1rem,4vw,2rem) var(--app-pad) 5rem}
+
+/* header */
+.header{display:flex;align-items:center;gap:14px;margin-bottom:1.75rem;flex-wrap:wrap;row-gap:10px}
+.logo{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 0 24px rgba(123,92,245,.25)}
+.logo i{font-size:22px;color:#fff}
+.header-text h1{font-size:clamp(17px,4vw,22px);font-weight:700;letter-spacing:-.3px}
+.header-text p{font-size:12px;color:var(--text2);margin-top:2px}
+
+/* toolbar */
+.toolbar{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap}
+.search-wrap{position:relative;flex:1;min-width:200px}
+.search-wrap i{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--text3);font-size:16px}
+.search-input{width:100%;padding:10px 12px 10px 36px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:13px;font-family:inherit}
+.search-input:focus{outline:none;border-color:var(--accent)}
+.filter-select{padding:10px 12px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:13px;font-family:inherit;cursor:pointer}
+.filter-select:focus{outline:none;border-color:var(--accent)}
+
+/* table shell */
+.table-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;overflow-x:auto;margin-bottom:2.5rem}
+table{width:100%;border-collapse:collapse;min-width:760px}
+thead th{background:var(--bg3);color:var(--text);font-size:12px;font-weight:700;text-align:left;padding:12px 14px;white-space:nowrap;user-select:none;border-bottom:1px solid var(--border)}
+thead th.sortable{cursor:pointer}
+thead th.sortable:hover{color:var(--accent)}
+thead th .ti{font-size:11px;color:var(--text3);margin-left:3px}
+thead th.sort-asc .ti,thead th.sort-desc .ti{color:var(--accent)}
+tbody tr{border-bottom:1px solid var(--border);transition:background .12s}
+tbody tr:last-child{border-bottom:none}
+tbody tr:hover{background:var(--bg3)}
+tbody td{padding:10px 14px;font-size:13px;vertical-align:middle}
+.row-hidden{display:none}
+
+.avatar{width:40px;height:40px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;color:#fff;flex-shrink:0}
+.name-cell{display:flex;align-items:center;gap:10px}
+.char-name{color:var(--pink);font-weight:600}
+.badge-type{display:inline-flex;align-items:center;gap:5px;font-size:12.5px;font-weight:500}
+.badge-type i{font-size:13px}
+.faction{color:var(--pink);font-size:12.5px}
+.date-cell{white-space:nowrap;color:var(--text2);font-size:12.5px}
+.version-tag{color:var(--accent);font-weight:600;font-size:12.5px}
+.upcoming-version{color:var(--lakshana);font-weight:600;font-size:12.5px}
+
+/* section titles */
+.section-title{display:flex;align-items:center;gap:8px;font-size:18px;font-weight:700;margin-bottom:6px}
+.section-title i{color:var(--pink);font-size:18px}
+.section-sub{font-size:12.5px;color:var(--text2);margin-bottom:14px}
+.section-sub b{color:var(--text)}
+.empty-msg{padding:24px;text-align:center;color:var(--text3);font-size:13px}
+
+@media(max-width:640px){
+  thead th,tbody td{padding:9px 10px;font-size:12px}
+  .avatar{width:32px;height:32px;font-size:11px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="header">
+    <div class="logo"><i class="ti ti-users"></i></div>
+    <div class="header-text">
+      <h1>Character Directory</h1>
+      <p>Neverness to Everness — all released &amp; upcoming characters</p>
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <div class="search-wrap">
+      <i class="ti ti-search"></i>
+      <input id="searchInput" class="search-input" placeholder="Search by name or faction…" oninput="filterTable()">
+    </div>
+    <select id="esperFilter" class="filter-select" onchange="filterTable()">
+      <option value="">All Esper Types</option>
+      <option value="Incantation">Incantation</option>
+      <option value="Psyche">Psyche</option>
+      <option value="Cosmos">Cosmos</option>
+      <option value="Chaos">Chaos</option>
+      <option value="Anima">Anima</option>
+      <option value="Lakshana">Lakshana</option>
+    </select>
+    <select id="arcFilter" class="filter-select" onchange="filterTable()">
+      <option value="">All Arc Types</option>
+      <option value="Condensate">Condensate</option>
+      <option value="Plasma">Plasma</option>
+      <option value="Gas">Gas</option>
+      <option value="Liquid">Liquid</option>
+      <option value="Solid">Solid</option>
+    </select>
+  </div>
+
+  <div class="table-wrap">
+    <table id="charTable">
+      <thead>
+        <tr>
+          <th>Icon</th>
+          <th class="sortable" onclick="sortTable(1)">Name <i class="ti ti-arrows-sort"></i></th>
+          <th class="sortable" onclick="sortTable(2)">Esper Type <i class="ti ti-arrows-sort"></i></th>
+          <th class="sortable" onclick="sortTable(3)">Arc Type <i class="ti ti-arrows-sort"></i></th>
+          <th class="sortable" onclick="sortTable(4)">Faction <i class="ti ti-arrows-sort"></i></th>
+          <th class="sortable" onclick="sortTable(5)">Release Date <i class="ti ti-arrows-sort"></i></th>
+          <th class="sortable" onclick="sortTable(6)">Version <i class="ti ti-arrows-sort"></i></th>
+        </tr>
+      </thead>
+      <tbody id="charTableBody"></tbody>
+    </table>
+    <div id="emptyMsg" class="empty-msg" style="display:none">No characters match your filters.</div>
+  </div>
+
+  <div class="section-title"><i class="ti ti-sparkles"></i>Upcoming Characters</div>
+  <div class="section-sub">There are <b id="upcomingCount">0</b> announced upcoming characters:</div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Icon</th><th>Name</th><th>Esper Type</th><th>Arc Type</th><th>Faction</th><th>Release Date</th><th>Version</th>
+        </tr>
+      </thead>
+      <tbody id="upcomingTableBody"></tbody>
+    </table>
+  </div>
+
+</div>
+
+<script>
+// ─── Esper / Arc type visuals ───────────────────────────────────────────────
+const ESPER_META={
+  Incantation:{color:'var(--incant)',icon:'ti-atom-2'},
+  Psyche:{color:'var(--psyche)',icon:'ti-brain'},
+  Cosmos:{color:'var(--cosmos)',icon:'ti-atom'},
+  Chaos:{color:'var(--chaos)',icon:'ti-moon'},
+  Anima:{color:'var(--anima)',icon:'ti-leaf'},
+  Lakshana:{color:'var(--lakshana)',icon:'ti-sparkles'},
+};
+const ARC_META={
+  Condensate:'ti-settings',
+  Plasma:'ti-bolt',
+  Gas:'ti-circle',
+  Liquid:'ti-circle-dot',
+  Solid:'ti-hexagon',
+};
+function avatarColor(name){
+  const colors=['#7B5CF5','#D85A5A','#4E8FE8','#3BB37E','#D9A93C','#9B6BE0','#E85D9E','#3AA0A0'];
+  let hash=0; for(let i=0;i<name.length;i++) hash=name.charCodeAt(i)+((hash<<5)-hash);
+  return colors[Math.abs(hash)%colors.length];
+}
+function esperBadge(type){
+  const m=ESPER_META[type]||{color:'var(--text2)',icon:'ti-help'};
+  return `<span class="badge-type" style="color:${m.color}"><i class="ti ${m.icon}"></i>${type}</span>`;
+}
+function arcBadge(type){
+  const icon=ARC_META[type]||'ti-help';
+  return `<span class="badge-type" style="color:var(--text2)"><i class="ti ${icon}"></i>${type}</span>`;
+}
+function avatar(name){
+  const initial=name.split(' ').map(w=>w[0]).slice(0,2).join('');
+  return `<div class="avatar" style="background:${avatarColor(name)}">${initial}</div>`;
+}
+
+// ─── Data ────────────────────────────────────────────────────────────────────
+// Note: exact star rarity wasn't legible from the source screenshot, so it's
+// omitted here — everything else (esper/arc type, faction, dates, version)
+// is transcribed as shown.
+const CHARACTERS=[
+  {name:"Adler",esper:"Incantation",arc:"Condensate",faction:"Eibon Antique Shop",date:"April 29, 2026",version:"1.0"},
+  {name:"Aurelia",esper:"Psyche",arc:"Plasma",faction:"Tamamochi Street Resident Association",date:"April 29, 2026",version:"1.0"},
+  {name:"Baicang",esper:"Incantation",arc:"Condensate",faction:"Bureau of Anomaly Control",date:"April 29, 2026",version:"1.0"},
+  {name:"Chaos",esper:"Lakshana",arc:"Condensate",faction:"Bureau of Anomaly Control",date:"June 24, 2026",version:"1.1"},
+  {name:"Chiz",esper:"Cosmos",arc:"Gas",faction:"Dvořák Family",date:"April 29, 2026",version:"1.0"},
+  {name:"Daffodill",esper:"Chaos",arc:"Liquid",faction:"Eibon Antique Shop",date:"April 29, 2026",version:"1.0"},
+  {name:"Edgar",esper:"Cosmos",arc:"Liquid",faction:"Eibon Antique Shop",date:"April 29, 2026",version:"1.0"},
+  {name:"Esper Zero",esper:"Cosmos",arc:"Solid",faction:"Eibon Antique Shop",date:"April 29, 2026",version:"1.0"},
+  {name:"Fadia",esper:"Psyche",arc:"Condensate",faction:"Bureau of Anomaly Control",date:"April 29, 2026",version:"1.0"},
+  {name:"Haniel",esper:"Psyche",arc:"Solid",faction:"Sterry Express",date:"April 29, 2026",version:"1.0"},
+  {name:"Hathor",esper:"Lakshana",arc:"Plasma",faction:"Sterry Express",date:"April 29, 2026",version:"1.0"},
+  {name:"Hotori",esper:"Cosmos",arc:"Solid",faction:"Eibon Antique Shop",date:"May 13, 2026",version:"1.0"},
+  {name:"Jiuyuan",esper:"Anima",arc:"Solid",faction:"Sterry Express",date:"April 29, 2026",version:"1.0"},
+  {name:"Lacrimosa",esper:"Chaos",arc:"Liquid",faction:"Bureau of Anomaly Control",date:"June 03, 2026",version:"1.1"},
+  {name:"Mint",esper:"Anima",arc:"Liquid",faction:"Bureau of Anomaly Control",date:"April 29, 2026",version:"1.0"},
+  {name:"Nanally",esper:"Anima",arc:"Plasma",faction:"Eibon Antique Shop",date:"April 29, 2026",version:"1.0"},
+  {name:"Sakiri",esper:"Incantation",arc:"Gas",faction:"Eibon Antique Shop",date:"April 29, 2026",version:"1.0"},
+  {name:"Skia",esper:"Lakshana",arc:"Gas",faction:"Bureau of Anomaly Control",date:"April 29, 2026",version:"1.0"},
+];
+const UPCOMING=[
+  {name:"Iroi",esper:"Anima",arc:"Liquid",faction:"Bureau of Anomaly Control",date:"July 29, 2026",version:"1.2"},
+  {name:"Shinku",esper:"Cosmos",arc:"Condensate",faction:"Bureau of Anomaly Control",date:"July 08, 2026",version:"1.2"},
+];
+
+// ─── Render ──────────────────────────────────────────────────────────────────
+function rowHTML(c, isUpcoming=false){
+  return `<tr data-name="${c.name.toLowerCase()}" data-esper="${c.esper}" data-arc="${c.arc}" data-faction="${c.faction.toLowerCase()}">
+    <td>${avatar(c.name)}</td>
+    <td class="name-cell"><span class="char-name">${c.name}</span></td>
+    <td>${esperBadge(c.esper)}</td>
+    <td>${arcBadge(c.arc)}</td>
+    <td class="faction">${c.faction}</td>
+    <td class="date-cell">${c.date}</td>
+    <td class="${isUpcoming?'upcoming-version':'version-tag'}">${c.version}</td>
+  </tr>`;
+}
+function render(){
+  document.getElementById('charTableBody').innerHTML=CHARACTERS.map(c=>rowHTML(c)).join('');
+  document.getElementById('upcomingTableBody').innerHTML=UPCOMING.map(c=>rowHTML(c,true)).join('');
+  document.getElementById('upcomingCount').textContent=UPCOMING.length;
+}
+render();
+
+// ─── Search / filter ────────────────────────────────────────────────────────
+function filterTable(){
+  const q=document.getElementById('searchInput').value.toLowerCase().trim();
+  const esper=document.getElementById('esperFilter').value;
+  const arc=document.getElementById('arcFilter').value;
+  const rows=document.querySelectorAll('#charTableBody tr');
+  let visible=0;
+  rows.forEach(r=>{
+    const matchesQ=!q || r.dataset.name.includes(q) || r.dataset.faction.includes(q);
+    const matchesEsper=!esper || r.dataset.esper===esper;
+    const matchesArc=!arc || r.dataset.arc===arc;
+    const show=matchesQ && matchesEsper && matchesArc;
+    r.classList.toggle('row-hidden', !show);
+    if(show) visible++;
+  });
+  document.getElementById('emptyMsg').style.display=visible===0?'block':'none';
+}
+
+// ─── Sort ────────────────────────────────────────────────────────────────────
+let sortState={col:null,dir:1};
+function sortTable(colIdx){
+  const ths=document.querySelectorAll('#charTable thead th');
+  ths.forEach(th=>th.classList.remove('sort-asc','sort-desc'));
+  if(sortState.col===colIdx) sortState.dir*=-1; else { sortState.col=colIdx; sortState.dir=1; }
+  ths[colIdx].classList.add(sortState.dir===1?'sort-asc':'sort-desc');
+
+  const tbody=document.getElementById('charTableBody');
+  const rows=Array.from(tbody.querySelectorAll('tr'));
+  const keyMap={1:'name',2:'esper',3:'arc',4:'faction'};
+  rows.sort((a,b)=>{
+    let av,bv;
+    if(colIdx===5){ av=new Date(a.children[5].textContent); bv=new Date(b.children[5].textContent); }
+    else if(colIdx===6){ av=parseFloat(a.children[6].textContent); bv=parseFloat(b.children[6].textContent); }
+    else { av=a.dataset[keyMap[colIdx]]||''; bv=b.dataset[keyMap[colIdx]]||''; }
+    if(av<bv) return -1*sortState.dir;
+    if(av>bv) return 1*sortState.dir;
+    return 0;
+  });
+  rows.forEach(r=>tbody.appendChild(r));
+}
+</script>
+</body>
+</html>
