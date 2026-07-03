@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NTE Character Directory — Neverness to Everness</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0F0E17;--bg2:#1A1825;--bg3:#221F32;--border:#2E2A44;
+  --text:#EBE9F8;--text2:#9E9AC0;--text3:#5C5880;
+  --accent:#7B5CF5;--accent2:#534AB7;--pink:#E85D9E;
+  --incant:#D85A5A;--psyche:#4E8FE8;--cosmos:#B7B3D6;--chaos:#9B6BE0;--anima:#3BB37E;--lakshana:#D9A93C;
+  --r4-a:#5A1D78;--r4-b:#8B2FA8;--r5-a:#B5721E;--r5-b:#D9962E;
+  --dpink:#FF3D7E;
+  --radius:10px;
+  --app-pad: clamp(0.75rem, 4vw, 1.5rem);
+}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh}
+.app{max-width:1100px;margin:0 auto;padding:clamp(1rem,4vw,2rem) var(--app-pad) 5rem}
+
+/* header */
+.header{display:flex;align-items:center;gap:14px;margin-bottom:1.75rem;flex-wrap:wrap;row-gap:10px}
+.logo{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 0 24px rgba(123,92,245,.25)}
+.logo i{font-size:22px;color:#fff}
+.header-text h1{font-size:clamp(17px,4vw,22px);font-weight:700;letter-spacing:-.3px}
+.header-text p{font-size:12px;color:var(--text2);margin-top:2px}
+
+/* toolbar */
+.toolbar{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap}
+.search-wrap{position:relative;flex:1;min-width:200px}
+.search-wrap i{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--text3);font-size:16px}
+.search-input{width:100%;padding:10px 12px 10px 36px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:13px;font-family:inherit}
+.search-input:focus{outline:none;border-color:var(--accent)}
+.filter-select{padding:10px 12px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:13px;font-family:inherit;cursor:pointer}
+.filter-select:focus{outline:none;border-color:var(--accent)}
+
+/* table shell */
+.table-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;overflow-x:auto;margin-bottom:2.5rem}
+table{width:100%;border-collapse:collapse;min-width:760px}
+thead th{background:var(--bg3);color:var(--text);font-size:12px;font-weight:700;text-align:left;padding:12px 14px;white-space:nowrap;user-select:none;border-bottom:1px solid var(--border)}
+thead th.sortable{cursor:pointer}
+thead th.sortable:hover{color:var(--accent)}
+thead th .ti{font-size:11px;color:var(--text3);margin-left:3px}
+thead th.sort-asc .ti,thead th.sort-desc .ti{color:var(--accent)}
+tbody tr{border-bottom:1px solid var(--border);transition:background .12s}
+tbody tr:last-child{border-bottom:none}
+tbody tr:hover{background:var(--bg3)}
+tbody td{padding:10px 14px;font-size:13px;vertical-align:middle}
+.row-hidden{display:none}
+
+.avatar{width:40px;height:40px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;color:#fff;flex-shrink:0}
+.name-cell{display:flex;align-items:center;gap:10px}
+.char-name{color:var(--pink);font-weight:600}
+.badge-type{display:inline-flex;align-items:center;gap:5px;font-size:12.5px;font-weight:500}
+.badge-type i{font-size:13px}
+.faction{color:var(--pink);font-size:12.5px}
+.date-cell{white-space:nowrap;color:var(--text2);font-size:12.5px}
+.version-tag{color:var(--accent);font-weight:600;font-size:12.5px}
+.upcoming-version{color:var(--lakshana);font-weight:600;font-size:12.5px}
+.rarity-stars{display:inline-flex;gap:1px;font-size:11px}
+.rarity-stars.r4{color:#C084E8}
+.rarity-stars.r5{color:#F0B84E}
+
+/* view toggle */
+.view-toggle{display:flex;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;flex-shrink:0}
+.view-toggle button{background:transparent;border:none;color:var(--text2);padding:10px 16px;font-size:13px;font-weight:600;font-family:inherit;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all .15s}
+.view-toggle button.active{background:var(--accent);color:#fff}
+.view-toggle button:not(.active):hover{color:var(--text)}
+
+/* gallery grid */
+.gallery-wrap{display:none;margin-bottom:2.5rem}
+.gallery-wrap.active{display:block}
+.gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px}
+.gcard{position:relative;border-radius:12px;overflow:hidden;aspect-ratio:3/4;cursor:default;box-shadow:0 2px 10px rgba(0,0,0,.35);transition:transform .15s}
+.gcard:hover{transform:translateY(-3px)}
+.gcard.r4{background:linear-gradient(160deg,var(--r4-b),var(--r4-a) 70%)}
+.gcard.r5{background:linear-gradient(160deg,var(--r5-b),var(--r5-a) 70%)}
+.gcard-badges{position:absolute;top:7px;left:7px;right:7px;display:flex;justify-content:space-between;z-index:2}
+.gcard-icon{width:22px;height:22px;border-radius:50%;background:rgba(15,14,23,.65);backdrop-filter:blur(2px);display:flex;align-items:center;justify-content:center;font-size:12px}
+.gcard-icon.esper{color:var(--icon-color,#fff)}
+.gcard-icon.arc{color:#fff}
+.gcard-version{position:absolute;top:7px;right:7px;background:var(--lakshana);color:#241a05;font-size:10px;font-weight:800;padding:2px 6px;border-radius:5px;z-index:3}
+.gcard-avatar{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:38px;font-weight:800;color:rgba(255,255,255,.28);letter-spacing:-1px}
+.gcard-foot{position:absolute;left:0;right:0;bottom:0;padding:20px 8px 8px;background:linear-gradient(to top,rgba(0,0,0,.75),transparent)}
+.gcard-name{color:#fff;font-size:12.5px;font-weight:700;text-shadow:0 1px 3px rgba(0,0,0,.5)}
+.gcard-stars{font-size:9px;margin-top:1px}
+.gcard.r4 .gcard-stars{color:#E4C5F5}
+.gcard.r5 .gcard-stars{color:#FFE1A8}
+
+/* section titles */
+.section-title{display:flex;align-items:center;gap:8px;font-size:18px;font-weight:700;margin-bottom:6px}
+.section-title i{color:var(--pink);font-size:18px}
+.section-sub{font-size:12.5px;color:var(--text2);margin-bottom:14px}
+.section-sub b{color:var(--text)}
+.empty-msg{padding:24px;text-align:center;color:var(--text3);font-size:13px}
+
+@media(max-width:640px){
+  thead th,tbody td{padding:9px 10px;font-size:12px}
+  .avatar{width:32px;height:32px;font-size:11px}
+}
+
+/* ── Character Detail Modal ─────────────────────────────────────────────── */
+.detail-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(3px);z-index:100;display:none;align-items:flex-start;justify-content:center;padding:clamp(0.75rem,4vw,2.5rem) clamp(0.5rem,3vw,1rem);overflow-y:auto}
+.detail-overlay.active{display:flex}
+.detail-panel{background:#111113;border:1px solid #232329;border-radius:16px;width:100%;max-width:600px;position:relative;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.detail-topline{height:2px;background:linear-gradient(90deg,transparent,var(--dpink),transparent)}
+.detail-close{position:absolute;top:14px;right:14px;width:32px;height:32px;border-radius:8px;border:1px solid rgba(255,255,255,.15);background:rgba(10,10,12,.55);backdrop-filter:blur(4px);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;font-size:15px;z-index:5}
+.detail-close:hover{background:rgba(0,0,0,.75)}
+
+/* poster banner */
+.dposter{position:relative;height:190px;overflow:hidden}
+.dposter.r4{background:radial-gradient(circle at 30% 20%,var(--r4-b),var(--r4-a) 75%)}
+.dposter.r5{background:radial-gradient(circle at 30% 20%,var(--r5-b),var(--r5-a) 75%)}
+.dposter-pattern{position:absolute;inset:0;opacity:.15;background-image:radial-gradient(circle,#fff 1px,transparent 1px);background-size:16px 16px}
+.dposter-glow{position:absolute;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.25),transparent 70%);top:-60px;right:-40px}
+.dposter-silhouette{position:absolute;bottom:-18px;right:18px;font-size:150px;line-height:1;color:rgba(255,255,255,.16);font-family:'Inter',sans-serif}
+.dposter-silhouette i{font-size:150px}
+.dposter-badges{position:absolute;top:14px;left:16px;display:flex;gap:7px}
+.dposter-badge{width:30px;height:30px;border-radius:9px;background:rgba(10,10,12,.5);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;font-size:15px;color:#fff;border:1px solid rgba(255,255,255,.12)}
+.dposter-foot{position:absolute;left:18px;right:18px;bottom:14px}
+.dposter-stars{font-size:12px;margin-bottom:3px;letter-spacing:1px}
+.dposter.r4 .dposter-stars{color:#E4C5F5}
+.dposter.r5 .dposter-stars{color:#FFE1A8}
+.dposter-name{font-size:22px;font-weight:800;color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.4);letter-spacing:-.3px}
+.dposter-sub{font-size:11.5px;color:rgba(255,255,255,.75);margin-top:2px;font-weight:600}
+.detail-body{padding:16px 20px 22px}
+
+.dtabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+.dtab{background:#18181c;border:1px solid #232329;border-radius:9px;padding:11px 14px;display:flex;align-items:center;justify-content:center;gap:8px;font-size:12.5px;font-weight:600;color:var(--text2);cursor:pointer;transition:all .15s;-webkit-tap-highlight-color:transparent}
+.dtab i{font-size:14px}
+.dtab .dcount{background:rgba(255,255,255,.1);color:var(--text2);font-size:10px;font-weight:700;padding:1px 6px;border-radius:8px;margin-left:2px}
+.dtab.active{background:var(--dpink);border-color:var(--dpink);color:#160009}
+.dtab.active .dcount{background:rgba(0,0,0,.18);color:#160009}
+.dtab:not(.active):hover{border-color:#3a3a44;color:var(--text)}
+.dtab.wide{grid-column:1 / -1}
+
+.dtoolbar{display:flex;justify-content:flex-end;gap:14px;margin-bottom:10px}
+.dtoolbar button{background:none;border:none;color:var(--text3);font-size:11.5px;font-weight:600;display:flex;align-items:center;gap:4px;cursor:pointer}
+.dtoolbar button:hover{color:var(--text2)}
+
+.dacc{display:flex;flex-direction:column;gap:10px}
+.dacc-item{background:#18181c;border:1px solid #232329;border-radius:11px;overflow:hidden}
+.dacc-head{display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.dacc-icon{width:32px;height:32px;border-radius:8px;background:#232329;display:flex;align-items:center;justify-content:center;font-size:15px;color:var(--text2);flex-shrink:0}
+.dacc-title{flex:1;font-size:13.5px;font-weight:700}
+.dacc-tag{font-size:10px;font-weight:700;color:var(--dpink);letter-spacing:.4px;display:block;margin-top:1px}
+.dacc-chev{color:var(--text3);font-size:13px;transition:transform .2s;flex-shrink:0}
+.dacc-item.open .dacc-chev{transform:rotate(180deg)}
+.dacc-content{max-height:0;overflow:hidden;transition:max-height .25s ease}
+.dacc-item.open .dacc-content{max-height:600px}
+.dacc-inner{padding:0 16px 16px 16px;font-size:12.5px;color:var(--text2);line-height:1.6}
+.dacc-inner .placeholder{color:var(--text3);font-style:italic}
+.dlvl{border-left:2px solid var(--dpink);padding:8px 0 8px 12px;margin-bottom:8px}
+.dlvl:last-child{margin-bottom:0}
+.dlvl b{color:var(--text)}
+.dlvl .num{color:var(--dpink);font-weight:700}
+
+.dmats{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+@media(max-width:480px){.dmats{grid-template-columns:1fr}}
+.dmat-card{background:#18181c;border:1px solid #232329;border-radius:11px;padding:14px}
+.dmat-head{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.dmat-icon{width:34px;height:34px;border-radius:8px;background:#0d0d10;display:flex;align-items:center;justify-content:center;font-size:15px;color:var(--dpink);flex-shrink:0}
+.dmat-name{font-size:10.5px;font-weight:800;letter-spacing:.3px;color:var(--text2)}
+.dmat-qty{font-size:15px;font-weight:800;margin-top:1px}
+.dmat-acq{font-size:9.5px;font-weight:700;letter-spacing:.4px;color:var(--text3);margin-bottom:5px}
+.dmat-list{font-size:12px;color:var(--text2);list-style:none}
+.dmat-list li{position:relative;padding-left:11px;margin-bottom:3px}
+.dmat-list li:before{content:'';position:absolute;left:0;top:6px;width:4px;height:4px;border-radius:50%;background:var(--dpink)}
+.dcurrency{display:flex;align-items:center;justify-content:space-between;border-left:2px solid var(--lakshana);padding:10px 16px;background:#18181c;border-radius:0 10px 10px 0}
+.dcurrency-label{font-size:12.5px;color:var(--text2)}
+.dcurrency-val{display:flex;align-items:center;gap:8px;font-size:19px;font-weight:800}
+.dcurrency-icon{width:26px;height:26px;border-radius:50%;background:var(--lakshana);color:#241a05;display:flex;align-items:center;justify-content:center;font-size:14px;box-shadow:0 0 12px rgba(217,169,60,.5)}
+
+.dconsole-wrap{display:flex;justify-content:center;padding:20px 0 6px}
+.dconsole{width:210px;background:linear-gradient(160deg,#F2C43A,#D9A011);border-radius:26px;padding:16px 14px 22px;box-shadow:0 10px 30px rgba(0,0,0,.4)}
+.dconsole-notch{width:44px;height:5px;border-radius:3px;background:rgba(0,0,0,.25);margin:0 auto 10px}
+.dconsole-screen{background:#0c0c0e;border-radius:8px;padding:8px;display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.dconsole-screen div{aspect-ratio:1;border-radius:2px;background:#1c1c1f}
+.dconsole-dial{width:70px;height:70px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#8B5FD9,#3E2270);margin:16px auto 0;display:flex;align-items:center;justify-content:center;box-shadow:inset 0 0 0 4px rgba(0,0,0,.2)}
+.dconsole-dial:after{content:'';width:26px;height:26px;border-radius:50%;border:1.5px dashed rgba(255,255,255,.35)}
+.dconsole-note{text-align:center;font-size:11.5px;color:var(--text3);margin-top:16px}
+
+.dgift-card{background:#18181c;border:1px solid #232329;border-radius:12px;padding:18px;display:flex;align-items:center;gap:14px;margin-bottom:12px}
+.dgift-icon{width:52px;height:52px;border-radius:10px;background:linear-gradient(160deg,#3a3a44,#1c1c22);border:1px solid #2E2A44;display:flex;align-items:center;justify-content:center;font-size:22px;color:var(--dpink);flex-shrink:0}
+.dgift-name{font-size:14px;font-weight:700}
+.dgift-cost{display:flex;align-items:center;gap:5px;font-size:12px;color:#4EC8D9;font-weight:600;margin-top:3px}
+.dgift-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.dgift-stat{background:#18181c;border:1px solid #232329;border-radius:11px;padding:14px;text-align:center}
+.dgift-stat-label{font-size:10.5px;color:var(--text3);font-weight:700;letter-spacing:.4px;margin-bottom:4px}
+.dgift-stat-val{font-size:18px;font-weight:800}
+.dgift-stat-val.pink{color:var(--dpink)}
+.dgift-stat-val.gold{color:var(--lakshana)}
+.dgift-note{font-size:11px;color:var(--text3);margin-top:12px;line-height:1.5}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="header">
+    <div class="logo"><i class="ti ti-users"></i></div>
+    <div class="header-text">
+      <h1>Character Directory</h1>
+      <p>Neverness to Everness — all released &amp; upcoming characters</p>
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <div class="search-wrap">
+      <i class="ti ti-search"></i>
+      <input id="searchInput" class="search-input" placeholder="Search by name or faction…" oninput="filterTable()">
+    </div>
+    <select id="rarityFilter" class="filter-select" onchange="filterTable()">
+      <option value="">All Rarities</option>
+      <option value="5">5★</option>
+      <option value="4">4★</option>
+    </select>
+    <select id="esperFilter" class="filter-select" onchange="filterTable()">
+      <option value="">All Esper Types</option>
+      <option value="Incantation">Incantation</option>
+      <option value="Psyche">Psyche</option>
+      <option value="Cosmos">Cosmos</option>
+      <option value="Chaos">Chaos</option>
+      <option value="Anima">Anima</option>
+      <option value="Lakshana">Lakshana</option>
+    </select>
+    <select id="arcFilter" class="filter-select" onchange="filterTable()">
+      <option value="">All Arc Types</option>
+      <option value="Condensate">Condensate</option>
+      <option value="Plasma">Plasma</option>
+      <option value="Gas">Gas</option>
+      <option value="Liquid">Liquid</option>
+      <option value="Solid">Solid</option>
+    </select>
+    <div class="view-toggle">
+      <button id="btnTableView" class="active" onclick="setView('table')"><i class="ti ti-table"></i>Table</button>
+      <button id="btnGridView" onclick="setView('grid')"><i class="ti ti-layout-grid"></i>Grid</button>
+    </div>
+  </div>
+
+  <div class="table-wrap" id="tableWrapMain">
+    <table id="charTable">
+      <thead>
+        <tr>
+          <th>Icon</th>
+          <th class="sortable" onclick="sortTable(1)">Name <i class="ti ti-arrows-sort"></i></th>
+          <th class="sortable" onclick="sortTable(2)">Rarity <i class="ti ti-arrows-sort"></i></th>
+          <th class="sortable" onclick="sortTable(3)">Esper Type <i class="ti ti-arrows-sort"></i></th>
+          <th class="sortable" onclick="sortTable(4)">Arc Type <i class="ti ti-arrows-sort"></i></th>
+          <th class="sortable" onclick="sortTable(5)">Faction <i class="ti ti-arrows-sort"></i></th>
+          <th class="sortable" onclick="sortTable(6)">Release Date <i class="ti ti-arrows-sort"></i></th>
+          <th class="sortable" onclick="sortTable(7)">Version <i class="ti ti-arrows-sort"></i></th>
+        </tr>
+      </thead>
+      <tbody id="charTableBody"></tbody>
+    </table>
+    <div id="emptyMsg" class="empty-msg" style="display:none">No characters match your filters.</div>
+  </div>
+
+  <div class="gallery-wrap" id="galleryWrapMain">
+    <div class="gallery-grid" id="galleryGridMain"></div>
+    <div id="emptyMsgGrid" class="empty-msg" style="display:none">No characters match your filters.</div>
+  </div>
+
+  <div class="section-title"><i class="ti ti-sparkles"></i>Upcoming Characters</div>
+  <div class="section-sub">There are <b id="upcomingCount">0</b> announced upcoming characters:</div>
+
+  <div class="table-wrap" id="tableWrapUpcoming">
+    <table>
+      <thead>
+        <tr>
+          <th>Icon</th><th>Name</th><th>Rarity</th><th>Esper Type</th><th>Arc Type</th><th>Faction</th><th>Release Date</th><th>Version</th>
+        </tr>
+      </thead>
+      <tbody id="upcomingTableBody"></tbody>
+    </table>
+  </div>
+
+  <div class="gallery-wrap" id="galleryWrapUpcoming">
+    <div class="gallery-grid" id="galleryGridUpcoming"></div>
+  </div>
+
+</div>
+
+<div class="detail-overlay" id="detailOverlay" onclick="if(event.target===this) closeDetail()">
+  <div class="detail-panel">
+    <div class="detail-topline"></div>
+    <div class="detail-close" onclick="closeDetail()"><i class="ti ti-x"></i></div>
+    <div class="dposter" id="dPoster">
+      <div class="dposter-pattern"></div>
+      <div class="dposter-glow"></div>
+      <div class="dposter-silhouette"><i class="ti ti-user-filled"></i></div>
+      <div class="dposter-badges" id="dPosterBadges"></div>
+      <div class="dposter-foot">
+        <div class="dposter-stars" id="dPosterStars"></div>
+        <div class="dposter-name" id="dName"></div>
+        <div class="dposter-sub" id="dSub"></div>
+      </div>
+    </div>
+    <div class="detail-body">
+      <div class="dtabs" id="dTabs"></div>
+      <div id="dPane"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─── Esper / Arc type visuals ───────────────────────────────────────────────
+const ESPER_META={
+  Incantation:{color:'var(--incant)',icon:'ti-atom-2'},
+  Psyche:{color:'var(--psyche)',icon:'ti-brain'},
+  Cosmos:{color:'var(--cosmos)',icon:'ti-atom'},
+  Chaos:{color:'var(--chaos)',icon:'ti-moon'},
+  Anima:{color:'var(--anima)',icon:'ti-leaf'},
+  Lakshana:{color:'var(--lakshana)',icon:'ti-sparkles'},
+};
+const ARC_META={
+  Condensate:'ti-settings',
+  Plasma:'ti-bolt',
+  Gas:'ti-circle',
+  Liquid:'ti-circle-dot',
+  Solid:'ti-hexagon',
+};
+function avatarColor(name){
+  const colors=['#7B5CF5','#D85A5A','#4E8FE8','#3BB37E','#D9A93C','#9B6BE0','#E85D9E','#3AA0A0'];
+  let hash=0; for(let i=0;i<name.length;i++) hash=name.charCodeAt(i)+((hash<<5)-hash);
+  return colors[Math.abs(hash)%colors.length];
+}
+function esperBadge(type){
+  const m=ESPER_META[type]||{color:'var(--text2)',icon:'ti-help'};
+  return `<span class="badge-type" style="color:${m.color}"><i class="ti ${m.icon}"></i>${type}</span>`;
+}
+function arcBadge(type){
+  const icon=ARC_META[type]||'ti-help';
+  return `<span class="badge-type" style="color:var(--text2)"><i class="ti ${icon}"></i>${type}</span>`;
+}
+function avatar(name){
+  const initial=name.split(' ').map(w=>w[0]).slice(0,2).join('');
+  return `<div class="avatar" style="background:${avatarColor(name)}">${initial}</div>`;
+}
+
+// ─── Data ────────────────────────────────────────────────────────────────────
+// Rarity (4★ / 5★) determined from the official character-select background
+// tiers (purple = 4★, gold = 5★).
+const CHARACTERS=[
+  {name:"Adler",rarity:4,esper:"Incantation",arc:"Condensate",faction:"Eibon Antique Shop",date:"April 29, 2026",version:"1.0"},
+  {name:"Aurelia",rarity:4,esper:"Psyche",arc:"Plasma",faction:"Tamamochi Street Resident Association",date:"April 29, 2026",version:"1.0"},
+  {name:"Baicang",rarity:5,esper:"Incantation",arc:"Condensate",faction:"Bureau of Anomaly Control",date:"April 29, 2026",version:"1.0"},
+  {name:"Chaos",rarity:5,esper:"Lakshana",arc:"Condensate",faction:"Bureau of Anomaly Control",date:"June 24, 2026",version:"1.1"},
+  {name:"Chiz",rarity:5,esper:"Cosmos",arc:"Gas",faction:"Dvořák Family",date:"April 29, 2026",version:"1.0"},
+  {name:"Daffodill",rarity:5,esper:"Chaos",arc:"Liquid",faction:"Eibon Antique Shop",date:"April 29, 2026",version:"1.0"},
+  {name:"Edgar",rarity:4,esper:"Cosmos",arc:"Liquid",faction:"Eibon Antique Shop",date:"April 29, 2026",version:"1.0"},
+  {name:"Esper Zero",rarity:5,esper:"Cosmos",arc:"Solid",faction:"Eibon Antique Shop",date:"April 29, 2026",version:"1.0"},
+  {name:"Fadia",rarity:5,esper:"Psyche",arc:"Condensate",faction:"Bureau of Anomaly Control",date:"April 29, 2026",version:"1.0"},
+  {name:"Haniel",rarity:4,esper:"Psyche",arc:"Solid",faction:"Sterry Express",date:"April 29, 2026",version:"1.0"},
+  {name:"Hathor",rarity:5,esper:"Lakshana",arc:"Plasma",faction:"Sterry Express",date:"April 29, 2026",version:"1.0"},
+  {name:"Hotori",rarity:5,esper:"Cosmos",arc:"Solid",faction:"Eibon Antique Shop",date:"May 13, 2026",version:"1.0"},
+  {name:"Jiuyuan",rarity:5,esper:"Anima",arc:"Solid",faction:"Sterry Express",date:"April 29, 2026",version:"1.0"},
+  {name:"Lacrimosa",rarity:5,esper:"Chaos",arc:"Liquid",faction:"Bureau of Anomaly Control",date:"June 03, 2026",version:"1.1"},
+  {name:"Mint",rarity:4,esper:"Anima",arc:"Liquid",faction:"Bureau of Anomaly Control",date:"April 29, 2026",version:"1.0"},
+  {name:"Nanally",rarity:5,esper:"Anima",arc:"Plasma",faction:"Eibon Antique Shop",date:"April 29, 2026",version:"1.0"},
+  {name:"Sakiri",rarity:5,esper:"Incantation",arc:"Gas",faction:"Eibon Antique Shop",date:"April 29, 2026",version:"1.0"},
+  {name:"Skia",rarity:4,esper:"Lakshana",arc:"Gas",faction:"Bureau of Anomaly Control",date:"April 29, 2026",version:"1.0"},
+];
+const UPCOMING=[
+  {name:"Iroi",rarity:5,esper:"Anima",arc:"Liquid",faction:"Bureau of Anomaly Control",date:"July 29, 2026",version:"1.2"},
+  {name:"Shinku",rarity:5,esper:"Cosmos",arc:"Condensate",faction:"Bureau of Anomaly Control",date:"July 08, 2026",version:"1.2"},
+];
+
+// ─── Render ──────────────────────────────────────────────────────────────────
+function starsHTML(rarity){
+  return `<span class="rarity-stars r${rarity}">${'★'.repeat(rarity)}</span>`;
+}
+function rowHTML(c, isUpcoming=false){
+  return `<tr data-name="${c.name.toLowerCase()}" data-esper="${c.esper}" data-arc="${c.arc}" data-rarity="${c.rarity}" data-faction="${c.faction.toLowerCase()}" onclick="openDetail('${c.name}')" style="cursor:pointer">
+    <td>${avatar(c.name)}</td>
+    <td class="name-cell"><span class="char-name">${c.name}</span></td>
+    <td>${starsHTML(c.rarity)}</td>
+    <td>${esperBadge(c.esper)}</td>
+    <td>${arcBadge(c.arc)}</td>
+    <td class="faction">${c.faction}</td>
+    <td class="date-cell">${c.date}</td>
+    <td class="${isUpcoming?'upcoming-version':'version-tag'}">${c.version}</td>
+  </tr>`;
+}
+function cardHTML(c){
+  const m=ESPER_META[c.esper]||{color:'#fff',icon:'ti-help'};
+  const arcIcon=ARC_META[c.arc]||'ti-help';
+  const initial=c.name.split(' ').map(w=>w[0]).slice(0,2).join('');
+  const showVersion=c.version!=='1.0';
+  return `<div class="gcard r${c.rarity}" data-name="${c.name.toLowerCase()}" data-esper="${c.esper}" data-arc="${c.arc}" data-rarity="${c.rarity}" data-faction="${c.faction.toLowerCase()}" onclick="openDetail('${c.name}')" style="cursor:pointer">
+    <div class="gcard-avatar">${initial}</div>
+    <div class="gcard-badges">
+      <div class="gcard-icon esper" style="--icon-color:${m.color}"><i class="ti ${m.icon}"></i></div>
+      <div class="gcard-icon arc"><i class="ti ${arcIcon}"></i></div>
+    </div>
+    ${showVersion?`<div class="gcard-version">${c.version}</div>`:''}
+    <div class="gcard-foot">
+      <div class="gcard-name">${c.name}</div>
+      <div class="gcard-stars">${'★'.repeat(c.rarity)}</div>
+    </div>
+  </div>`;
+}
+function render(){
+  document.getElementById('charTableBody').innerHTML=CHARACTERS.map(c=>rowHTML(c)).join('');
+  document.getElementById('upcomingTableBody').innerHTML=UPCOMING.map(c=>rowHTML(c,true)).join('');
+  document.getElementById('galleryGridMain').innerHTML=CHARACTERS.map(c=>cardHTML(c)).join('');
+  document.getElementById('galleryGridUpcoming').innerHTML=UPCOMING.map(c=>cardHTML(c)).join('');
+  document.getElementById('upcomingCount').textContent=UPCOMING.length;
+}
+render();
+
+// ─── View toggle ─────────────────────────────────────────────────────────────
+function setView(view){
+  const isGrid=view==='grid';
+  document.getElementById('btnTableView').classList.toggle('active',!isGrid);
+  document.getElementById('btnGridView').classList.toggle('active',isGrid);
+  document.getElementById('tableWrapMain').style.display=isGrid?'none':'block';
+  document.getElementById('tableWrapUpcoming').style.display=isGrid?'none':'block';
+  document.getElementById('galleryWrapMain').classList.toggle('active',isGrid);
+  document.getElementById('galleryWrapUpcoming').classList.toggle('active',isGrid);
+  filterTable();
+}
+
+// ─── Search / filter ────────────────────────────────────────────────────────
+function filterTable(){
+  const q=document.getElementById('searchInput').value.toLowerCase().trim();
+  const esper=document.getElementById('esperFilter').value;
+  const arc=document.getElementById('arcFilter').value;
+  const rarity=document.getElementById('rarityFilter').value;
+  const isGrid=document.getElementById('galleryWrapMain').classList.contains('active');
+
+  const rows=document.querySelectorAll('#charTableBody tr');
+  let visible=0;
+  rows.forEach(r=>{
+    const show=matchesFilters(r.dataset,q,esper,arc,rarity);
+    r.classList.toggle('row-hidden', !show);
+    if(show) visible++;
+  });
+  document.getElementById('emptyMsg').style.display=(!isGrid && visible===0)?'block':'none';
+
+  const cards=document.querySelectorAll('#galleryGridMain .gcard');
+  let gVisible=0;
+  cards.forEach(c=>{
+    const show=matchesFilters(c.dataset,q,esper,arc,rarity);
+    c.style.display=show?'':'none';
+    if(show) gVisible++;
+  });
+  document.getElementById('emptyMsgGrid').style.display=(isGrid && gVisible===0)?'block':'none';
+}
+function matchesFilters(ds,q,esper,arc,rarity){
+  const matchesQ=!q || ds.name.includes(q) || ds.faction.includes(q);
+  const matchesEsper=!esper || ds.esper===esper;
+  const matchesArc=!arc || ds.arc===arc;
+  const matchesRarity=!rarity || ds.rarity===rarity;
+  return matchesQ && matchesEsper && matchesArc && matchesRarity;
+}
+
+// ─── Sort ────────────────────────────────────────────────────────────────────
+let sortState={col:null,dir:1};
+function sortTable(colIdx){
+  const ths=document.querySelectorAll('#charTable thead th');
+  ths.forEach(th=>th.classList.remove('sort-asc','sort-desc'));
+  if(sortState.col===colIdx) sortState.dir*=-1; else { sortState.col=colIdx; sortState.dir=1; }
+  ths[colIdx].classList.add(sortState.dir===1?'sort-asc':'sort-desc');
+
+  const tbody=document.getElementById('charTableBody');
+  const rows=Array.from(tbody.querySelectorAll('tr'));
+  const keyMap={1:'name',2:'rarity',3:'esper',4:'arc',5:'faction'};
+  rows.sort((a,b)=>{
+    let av,bv;
+    if(colIdx===6){ av=new Date(a.children[6].textContent); bv=new Date(b.children[6].textContent); }
+    else if(colIdx===7){ av=parseFloat(a.children[7].textContent); bv=parseFloat(b.children[7].textContent); }
+    else if(colIdx===2){ av=parseInt(a.dataset.rarity); bv=parseInt(b.dataset.rarity); }
+    else { av=a.dataset[keyMap[colIdx]]||''; bv=b.dataset[keyMap[colIdx]]||''; }
+    if(av<bv) return -1*sortState.dir;
+    if(av>bv) return 1*sortState.dir;
+    return 0;
+  });
+  rows.forEach(r=>tbody.appendChild(r));
+}
+
+// ─── Character Detail Modal ─────────────────────────────────────────────────
+// Full per-character kit data. Only Baicang is fully populated (transcribed
+// from reference screenshots) — every other character uses the same tab
+// structure with a "not added yet" placeholder until that data is supplied.
+const CHAR_DETAILS={
+  "Baicang":{
+    skills:[
+      {icon:'ti-message-circle',title:'Walk the Talk'},
+      {icon:'ti-flower',title:'Generous Guidance'},
+      {icon:'ti-feather',title:'Judgment of Autumn'},
+      {icon:'ti-hourglass',title:'Break Time Over'},
+    ],
+    passives:[
+      {icon:'ti-mask',title:'Moderate Mischief'},
+      {icon:'ti-eye',title:'Moderate Working'},
+    ],
+    lifeSkills:[
+      {icon:'ti-chart-line',title:'Thriving Daily',
+        levels:[
+          "Baicang increases traffic by <b>18</b>.",
+          "Baicang reduces ingredient consumption rate by <b>1%</b>.",
+          "In Owner's Selection, combos persist when customers lose patience or get hit by hammers.",
+          "Baicang reduces ingredient consumption rate by <b>1%</b>.",
+          "Baicang increases traffic by <b>27</b>.",
+        ]},
+    ],
+    awakening:[
+      {icon:'ti-anchor',title:'A1: Yo, Captain!'},
+      {icon:'ti-trees',title:'A2: Soul Caller'},
+      {icon:'ti-feather',title:'A3: Curses Spoken Into Being'},
+      {icon:'ti-wand',title:'A4: Or Perhaps Blessings'},
+      {icon:'ti-anchor',title:'A5: In Honor of Moonlight'},
+      {icon:'ti-anchor',title:'A6: White Aspect'},
+      {icon:'ti-atom-2',title:'Earth Sequence',tag:'RESONANCE'},
+      {icon:'ti-atom-2',title:'Remained',tag:'RESONANCE'},
+    ],
+    breakthrough:{
+      materials:[
+        {icon:'ti-moon-2',name:'BLURRED NUMERAL',qty:17,acq:['Monster Drop (Forest Path)','Simulation Center']},
+        {icon:'ti-feather',name:'NEST GUARD FRAGMENT',qty:86,acq:['World Boss: Nestbound Bird']},
+        {icon:'ti-help-circle',name:'UNSOLVED NUMERAL',qty:18,acq:['Monster Drop (Forest Path)','Simulation Center']},
+        {icon:'ti-atom',name:'DISTORTED NUMERAL',qty:15,acq:['Monster Drop (Forest Path)','Simulation Center']},
+      ],
+      currency:525000,
+    },
+  },
+};
+// Favorite-gift data (affinity gained per gift + total gold to max affinity).
+// Affinity/Total figures are transcribed reliably; a few gift item names were
+// hard to make out at source resolution — double-check those against the game.
+const CHAR_GIFTS={
+  "Fadia":{icon:'ti-glass',name:'Melting Ice',cost:5400,affinity:400,total:756000},
+  "Nanally":{icon:'ti-device-mobile',name:'Blocky',cost:5400,affinity:200,total:1512000},
+  "Jiuyuan":{icon:'ti-flask',name:'Moon Vase',cost:3000,affinity:200,total:840000},
+  "Lacrimosa":{icon:'ti-book',name:'Chill Girl',cost:4000,affinity:200,total:1120000},
+  "Daffodill":{icon:'ti-file-text',name:'Firewire',cost:10000,affinity:400,total:1400000},
+  "Hotori":{icon:'ti-flask',name:'Vase Yellow',cost:3600,affinity:200,total:1008000},
+  "Chiz":{icon:'ti-flower',name:'Flourish',cost:3000,affinity:200,total:840000},
+  "Edgar":{icon:'ti-device-mobile',name:'Snack Fly',cost:5400,affinity:200,total:1120000},
+  "Baicang":{icon:'ti-sun',name:'Backyard Joy',cost:4500,affinity:200,total:1260000},
+  "Sakiri":{icon:'ti-device-mobile',name:'Fever Dream',cost:5000,affinity:200,total:1400000},
+  "Adler":{icon:'ti-device-mobile',name:'Golden Dream',cost:3600,affinity:200,total:1008000},
+  "Hathor":{icon:'ti-device-mobile',name:'Fever Dream',cost:5000,affinity:200,total:1400000},
+  "Skia":{icon:'ti-book',name:'Chill Girl',cost:4000,affinity:200,total:1120000},
+  "Mint":{icon:'ti-flower',name:'Wilt',cost:3000,affinity:200,total:840000},
+  "Haniel":{icon:'ti-flower',name:'Flourish',cost:3000,affinity:200,total:840000},
+  "Aurelia":{icon:'ti-flower',name:'Flourish',cost:3000,affinity:200,total:840000},
+};
+const DTAB_DEFS=[
+  {key:'skills',label:'Skills',icon:'ti-crosshair'},
+  {key:'console',label:'Console',icon:'ti-plug'},
+  {key:'passives',label:'Passives',icon:'ti-shield'},
+  {key:'lifeSkills',label:'Life Skills',icon:'ti-heart'},
+  {key:'awakening',label:'Awakening',icon:'ti-arrow-big-up-lines'},
+  {key:'breakthrough',label:'Breakthrough',icon:'ti-book-2'},
+  {key:'gifts',label:'Gifts',icon:'ti-gift'},
+];
+let currentDetail=null, currentTab='skills';
+
+function getDetails(name){
+  return CHAR_DETAILS[name]||{skills:[],passives:[],lifeSkills:[],awakening:[],breakthrough:{materials:[],currency:0}};
+}
+function openDetail(name){
+  const c=[...CHARACTERS,...UPCOMING].find(x=>x.name===name);
+  if(!c) return;
+  currentDetail=c; currentTab='skills';
+  const m=ESPER_META[c.esper]||{color:'#fff',icon:'ti-help'};
+  const arcIcon=ARC_META[c.arc]||'ti-help';
+  document.getElementById('dPoster').className=`dposter r${c.rarity}`;
+  document.getElementById('dPosterBadges').innerHTML=
+    `<div class="dposter-badge" style="color:${m.color}"><i class="ti ${m.icon}"></i></div>
+     <div class="dposter-badge"><i class="ti ${arcIcon}"></i></div>`;
+  document.getElementById('dPosterStars').innerHTML=`<span style="color:inherit">${'★'.repeat(c.rarity)}</span>`;
+  document.getElementById('dName').textContent=c.name;
+  document.getElementById('dSub').textContent=`${c.esper} · ${c.arc} · ${c.faction}`;
+  renderTabs(); renderPane();
+  document.getElementById('detailOverlay').classList.add('active');
+  document.body.style.overflow='hidden';
+}
+function closeDetail(){
+  document.getElementById('detailOverlay').classList.remove('active');
+  document.body.style.overflow='';
+}
+function renderTabs(){
+  const d=getDetails(currentDetail.name);
+  document.getElementById('dTabs').innerHTML=DTAB_DEFS.map(t=>{
+    const count=(t.key==='console'||t.key==='gifts')?null:(t.key==='breakthrough'?d.breakthrough.materials.length:d[t.key].length);
+    return `<div class="dtab${currentTab===t.key?' active':''}${t.key==='gifts'?' wide':''}" onclick="switchTab('${t.key}')">
+      <i class="ti ${t.icon}"></i>${t.label}${count!==null?`<span class="dcount">${count}</span>`:''}
+    </div>`;
+  }).join('');
+}
+function switchTab(key){ currentTab=key; renderTabs(); renderPane(); }
+
+function accItemHTML(item, idx, innerHTML){
+  return `<div class="dacc-item" data-idx="${idx}">
+    <div class="dacc-head" onclick="toggleAcc(this)">
+      <div class="dacc-icon"><i class="ti ${item.icon||'ti-star'}"></i></div>
+      <div class="detail-title-wrap" style="flex:1">
+        <div class="dacc-title">${item.title}</div>
+        ${item.tag?`<span class="dacc-tag">${item.tag}</span>`:''}
+      </div>
+      <i class="ti ti-chevron-down dacc-chev"></i>
+    </div>
+    <div class="dacc-content"><div class="dacc-inner">${innerHTML}</div></div>
+  </div>`;
+}
+function toggleAcc(headEl){ headEl.closest('.dacc-item').classList.toggle('open'); }
+function expandAll(){ document.querySelectorAll('.dacc-item').forEach(el=>el.classList.add('open')); }
+function collapseAll(){ document.querySelectorAll('.dacc-item').forEach(el=>el.classList.remove('open')); }
+
+function renderPane(){
+  const d=getDetails(currentDetail.name);
+  const pane=document.getElementById('dPane');
+
+  if(currentTab==='console'){
+    let squares=''; for(let i=0;i<49;i++) squares+=`<div style="opacity:${(Math.sin(i*12.9898)*43758.5453)%1>0.5?0.9:0.35}"></div>`;
+    pane.innerHTML=`<div class="dconsole-wrap">
+      <div class="dconsole">
+        <div class="dconsole-notch"></div>
+        <div class="dconsole-screen">${squares}</div>
+        <div class="dconsole-dial"></div>
+      </div>
+    </div>
+    <div class="dconsole-note">Console puzzle layout — solve to unlock rewards.</div>`;
+    return;
+  }
+
+  if(currentTab==='gifts'){
+    const g=CHAR_GIFTS[currentDetail.name];
+    if(!g){ pane.innerHTML=`<div class="dacc-inner placeholder" style="padding:16px 0">No gift data added yet for ${currentDetail.name}.</div>`; return; }
+    pane.innerHTML=`
+    <div class="dgift-card">
+      <div class="dgift-icon"><i class="ti ${g.icon}"></i></div>
+      <div>
+        <div class="dgift-name">${g.name}</div>
+        <div class="dgift-cost"><i class="ti ti-fish"></i>${g.cost.toLocaleString()}</div>
+      </div>
+    </div>
+    <div class="dgift-stats">
+      <div class="dgift-stat"><div class="dgift-stat-label">AFFINITY / GIFT</div><div class="dgift-stat-val pink">${g.affinity}</div></div>
+      <div class="dgift-stat"><div class="dgift-stat-label">TOTAL TO MAX</div><div class="dgift-stat-val gold">${g.total.toLocaleString()}</div></div>
+    </div>
+    <div class="dgift-note">Favorite gift — gives bonus affinity when given. Total is the estimated gold cost to max out affinity using this gift.</div>`;
+    return;
+  }
+
+  if(currentTab==='breakthrough'){
+    const mats=d.breakthrough.materials;
+    if(mats.length===0){ pane.innerHTML=`<div class="dacc-inner placeholder">Breakthrough materials not added yet.</div>`; return; }
+    pane.innerHTML=`<div class="dmats">${mats.map(m=>`
+      <div class="dmat-card">
+        <div class="dmat-head">
+          <div class="dmat-icon"><i class="ti ${m.icon}"></i></div>
+          <div>
+            <div class="dmat-name">${m.name}</div>
+            <div class="dmat-qty">x${m.qty}</div>
+          </div>
+        </div>
+        <div class="dmat-acq">ACQUISITION:</div>
+        <ul class="dmat-list">${m.acq.map(a=>`<li>${a}</li>`).join('')}</ul>
+      </div>`).join('')}</div>
+    <div class="dcurrency">
+      <div class="dcurrency-label">Required Currency</div>
+      <div class="dcurrency-val"><div class="dcurrency-icon"><i class="ti ti-currency-dollar"></i></div>${d.breakthrough.currency.toLocaleString()}</div>
+    </div>`;
+    return;
+  }
+
+  // accordion-style tabs: skills, passives, lifeSkills, awakening
+  const items=d[currentTab]||[];
+  if(items.length===0){
+    pane.innerHTML=`<div class="dacc"><div class="dacc-inner placeholder" style="padding:16px 0">No ${DTAB_DEFS.find(t=>t.key===currentTab).label.toLowerCase()} data added yet for ${currentDetail.name}.</div></div>`;
+    return;
+  }
+  let toolbar=`<div class="dtoolbar"><button onclick="expandAll()"><i class="ti ti-chevron-up"></i>Expand All</button><button onclick="collapseAll()"><i class="ti ti-chevron-down"></i>Collapse All</button></div>`;
+  let body='';
+  if(currentTab==='lifeSkills'){
+    body=items.map((it,idx)=>{
+      const inner = it.levels ? it.levels.map((lv,i)=>`<div class="dlvl"><span class="num">Level ${i+1}</span>: ${lv}</div>`).join('') : `<span class="placeholder">No details yet.</span>`;
+      return accItemHTML(it, idx, inner);
+    }).join('');
+  } else {
+    body=items.map((it,idx)=>accItemHTML(it, idx, it.desc?it.desc:`<span class="placeholder">No details yet.</span>`)).join('');
+  }
+  pane.innerHTML=toolbar+`<div class="dacc">${body}</div>`;
+}
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeDetail(); });
+
+</script>
+</body>
+</html>
