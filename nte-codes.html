@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NTE Game Codes — Neverness to Everness</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0a0a0b;--card:#141416;--card2:#1a1a1d;--border:#232326;
+  --text:#EDEDEF;--text2:#8f8f96;--text3:#5a5a60;
+  --accent:#7B5CF5;--red:#E5484D;--red-bg:rgba(229,72,77,.14);
+  --green:#3BB37E;--green-bg:rgba(59,179,126,.14);
+  --amber:#D9A93C;--amber-bg:rgba(217,169,60,.14);
+}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh}
+.wrap{max-width:1040px;margin:0 auto;padding:clamp(2rem,6vw,3.5rem) clamp(1rem,4vw,1.5rem) 4rem}
+
+/* header */
+.eyebrow{display:flex;justify-content:center;margin-bottom:20px}
+.eyebrow span{border:1px solid var(--border);border-radius:20px;padding:6px 16px;font-size:10.5px;font-weight:700;letter-spacing:1.2px;color:var(--text2)}
+h1{text-align:center;font-size:clamp(24px,5vw,34px);font-weight:800;letter-spacing:.5px;margin-bottom:12px}
+.sub{text-align:center;color:var(--text2);font-size:13.5px;max-width:480px;margin:0 auto 40px;line-height:1.6}
+.sub b{color:var(--text)}
+
+/* section heading */
+.sect-head{display:flex;align-items:center;gap:10px;margin:0 0 16px;padding-top:8px}
+.sect-head .dot{width:8px;height:8px;border-radius:50%}
+.sect-head.active .dot{background:var(--green);box-shadow:0 0 8px var(--green)}
+.sect-head.expired .dot{background:var(--text3)}
+.sect-head h2{font-size:13px;font-weight:700;letter-spacing:.8px;color:var(--text2);text-transform:uppercase}
+.sect-head .count{font-size:11px;color:var(--text3);font-weight:600}
+
+/* grid */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;margin-bottom:44px}
+
+/* card */
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;cursor:pointer;transition:border-color .15s,transform .1s;position:relative}
+.card:hover{border-color:#38383d}
+.card:active{transform:scale(.98)}
+.card.is-expired{opacity:.55}
+.card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:14px}
+.code-text{font-family:'Courier New',monospace;font-size:15.5px;font-weight:700;letter-spacing:.5px;display:flex;align-items:center;gap:8px}
+.copy-ic{width:22px;height:22px;border-radius:6px;background:var(--card2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--text2);flex-shrink:0}
+.status-tag{font-size:9.5px;font-weight:800;letter-spacing:.5px;padding:3px 8px;border-radius:5px;white-space:nowrap;flex-shrink:0}
+.status-tag.active{background:var(--green-bg);color:var(--green)}
+.status-tag.soon{background:var(--amber-bg);color:var(--amber)}
+.status-tag.expired{background:var(--red-bg);color:var(--red)}
+
+.rewards-label{font-size:9.5px;font-weight:700;letter-spacing:.8px;color:var(--text3);margin-bottom:8px}
+.rewards{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+.reward-row{display:flex;align-items:center;gap:10px;background:var(--card2);border-radius:8px;padding:8px 10px}
+.reward-ic{width:26px;height:26px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;color:#fff}
+.reward-qty{font-size:12.5px;font-weight:700}
+.reward-name{font-size:10.5px;color:var(--text2);margin-top:1px}
+
+.card-foot{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text3);border-top:1px solid var(--border);padding-top:10px}
+.card-foot i{font-size:12px}
+.source-tag{margin-left:auto;font-size:9.5px;color:var(--text3)}
+
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--card2);border:1px solid var(--border);color:var(--text);padding:10px 18px;border-radius:9px;font-size:13px;font-weight:600;display:flex;align-items:center;gap:8px;opacity:0;pointer-events:none;transition:all .2s;z-index:50}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast i{color:var(--green)}
+
+.how-to{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px 22px;margin-top:8px}
+.how-to h3{font-size:13px;font-weight:700;letter-spacing:.5px;color:var(--text2);text-transform:uppercase;margin-bottom:14px}
+.how-to ol{list-style:none;display:flex;flex-direction:column;gap:10px}
+.how-to li{display:flex;gap:12px;font-size:13px;color:var(--text2);line-height:1.5}
+.how-to li b{color:var(--text);font-weight:700}
+.step-num{width:20px;height:20px;border-radius:50%;background:var(--card2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:700;color:var(--text2);flex-shrink:0}
+.note{font-size:11.5px;color:var(--text3);margin-top:14px;line-height:1.6}
+
+@media(max-width:520px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="eyebrow"><span>REDEEMABLE REWARDS</span></div>
+  <h1>ACTIVE GAME CODES</h1>
+  <p class="sub">Unlock premium rewards including <b>Annulith</b>, <b>Hunter Guides</b>, and <b>Beetle Coins</b>. Click any code to copy it instantly.</p>
+
+  <div class="sect-head active">
+    <div class="dot"></div>
+    <h2>Active Codes</h2>
+    <span class="count" id="activeCount"></span>
+  </div>
+  <div class="grid" id="activeGrid"></div>
+
+  <div class="sect-head expired">
+    <div class="dot"></div>
+    <h2>Expired Codes</h2>
+    <span class="count" id="expiredCount"></span>
+  </div>
+  <div class="grid" id="expiredGrid"></div>
+
+  <div class="how-to">
+    <h3>How to Redeem</h3>
+    <ol>
+      <li><span class="step-num">1</span>Open Neverness to Everness and tap the <b>Menu</b> button in the top-right corner.</li>
+      <li><span class="step-num">2</span>Select <b>Redeem Code</b> from the menu options.</li>
+      <li><span class="step-num">3</span>Paste the code into the box and tap <b>Confirm</b>.</li>
+      <li><span class="step-num">4</span>Check your in-game <b>mailbox</b> to claim the rewards — it can take a moment to arrive.</li>
+    </ol>
+    <div class="note">Codes are case-sensitive and can only be redeemed once per account. Expired codes are kept here for reference only — they will no longer work in-game.</div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"><i class="ti ti-check"></i><span id="toastText">Copied!</span></div>
+
+<script>
+// Reward icon + color per item type
+const REWARD_META={
+  'Annulith':{icon:'ti-diamond',color:'#7B5CF5'},
+  'Rising Hunter Guide':{icon:'ti-book',color:'#4E8FE8'},
+  'Rising Hunter Guides':{icon:'ti-book',color:'#4E8FE8'},
+  'Senior Hunter Guide':{icon:'ti-book-2',color:'#4E8FE8'},
+  'Senior Hunter Guides':{icon:'ti-book-2',color:'#4E8FE8'},
+  'Elite Hunter Guide':{icon:'ti-books',color:'#4E8FE8'},
+  'Elite Hunter Guides':{icon:'ti-books',color:'#4E8FE8'},
+  'Light Dye':{icon:'ti-color-swatch',color:'#3BB37E'},
+  'Colorless Dye':{icon:'ti-color-swatch',color:'#9E9AC0'},
+  'Chaotic Dye':{icon:'ti-color-swatch',color:'#9B6BE0'},
+  'Colorless Dyes':{icon:'ti-color-swatch',color:'#9E9AC0'},
+  'Light Dyes':{icon:'ti-color-swatch',color:'#3BB37E'},
+  'Beetle Coins':{icon:'ti-coin',color:'#D9A93C'},
+  'Fons':{icon:'ti-currency-dollar',color:'#4EC8D9'},
+  'DynamiK Zero':{icon:'ti-bolt',color:'#D85A5A'},
+  'Clicky Fries':{icon:'ti-french-fries',color:'#D9A93C'},
+  'Tomato Basil Macaroni':{icon:'ti-soup',color:'#D85A5A'},
+  'Manhole Thug':{icon:'ti-gift',color:'#8f8f96'},
+  'Gubichi Original Flavor Chips':{icon:'ti-gift',color:'#8f8f96'},
+};
+function rewardMeta(name){ return REWARD_META[name]||{icon:'ti-gift',color:'#8f8f96'}; }
+
+// Parses "100 Annulith, 5 Rising Hunter Guides, ..." into structured rows
+function parseRewards(str){
+  return str.split(',').map(s=>s.trim()).map(part=>{
+    const m=part.match(/^([\d,]+)\s+(.+)$/);
+    if(!m) return {qty:'',name:part};
+    return {qty:m[1],name:m[2]};
+  });
+}
+
+// ─── Data — sourced from public NTE code trackers, current as of July 2026 ──
+const ACTIVE=[
+  {code:'SHINKU0708',status:'soon',rewards:'100 Annulith, 5 Rising Hunter Guides, 5 Light Dye, 4,000 Beetle Coins',source:'V1.2 Livestream'},
+  {code:'999NIGHTS',status:'soon',rewards:'100 Annulith, 5 Senior Hunter Guides, 5 Colorless Dye, 6,000 Beetle Coins',source:'V1.2 Livestream'},
+  {code:'IROI0729',status:'soon',rewards:'100 Annulith, 2 Elite Hunter Guides, 2 Chaotic Dye, 12,000 Beetle Coins',source:'V1.2 Livestream'},
+  {code:'NTEFREE',status:'active',rewards:'30,000 Fons',source:'Global Launch'},
+  {code:'NTEWINFONS',status:'active',rewards:'20,000 Fons',source:'Community Event'},
+  {code:'NTEFUNGAME',status:'active',rewards:'10,000 Fons',source:'Launch Celebration'},
+  {code:'NTENENE',status:'active',rewards:'10,000 Fons, 10 DynamiK Zero, 10 Clicky Fries',source:'Launch Celebration'},
+  {code:'NTEGIFT',status:'active',rewards:'50 Annulith, 5 Rising Hunter Guides, 5 Light Dyes',source:'Global Launch'},
+  {code:'NTEvtuber',status:'active',rewards:'50,000 Fons, 50,000 Beetle Coins',source:'VTuber Collaboration'},
+];
+const EXPIRED=[
+  {code:'LACRIMOSA0603',rewards:'30 Annulith, 1 Tomato Basil Macaroni, 20,000 Fons',source:'V1.1 Launch',expired:'Jun 23, 2026'},
+  {code:'DREAMWALK0603',rewards:'100 Annulith, 5 Rising Hunter Guides, 5 Light Dye, 4,000 Beetle Coins',source:'V1.1 Livestream',expired:'Jun 27, 2026'},
+  {code:'TOMATO100',rewards:'100 Annulith, 5 Senior Hunter Guides, 5 Colorless Dye, 6,000 Beetle Coins',source:'V1.1 Livestream',expired:'Jun 27, 2026'},
+  {code:'RACENOLIMIT',rewards:'100 Annulith, 2 Elite Hunter Guides, 2 Chaotic Dye, 12,000 Beetle Coins',source:'V1.1 Livestream',expired:'Jun 27, 2026'},
+  {code:'NTE429vtuber',rewards:'30,000 Fons, 30,000 Beetle Coins',source:'VTuber Collaboration',expired:'May 31, 2026'},
+  {code:'NTEvtuber200',rewards:'10,000 Fons, 10,000 Beetle Coins',source:'VTuber Collaboration',expired:'May 31, 2026'},
+  {code:'NTE0429',rewards:'100 Annulith, 2 Elite Hunter Guides, 2 Chaotic Dye, 12,000 Beetle Coins',source:'Launch Day',expired:'May 13, 2026'},
+  {code:'NTENANALLYGO',rewards:'100 Annulith, 5 Senior Hunter Guides, 5 Colorless Dye, 6,000 Beetle Coins',source:'Launch Day',expired:'May 13, 2026'},
+  {code:'NTENOWTOENJOY',rewards:'100 Annulith, 5 Rising Hunter Guides, 5 Colorless Dye, 4,000 Beetle Coins',source:'Launch Day',expired:'May 13, 2026'},
+  {code:'NTEHAVEFUN',rewards:'3 Rising Hunter Guides, 3 Colorless Dye, 3 Manhole Thug',source:'Launch Event',expired:'May 6, 2026'},
+  {code:'504980102FKGOVNS',rewards:'30 Annulith, 1 Gubichi Original Flavor Chips, 20,000 Beetle Coins',source:'Special Event',expired:'May 13, 2026'},
+];
+
+function rewardRowsHTML(str){
+  return parseRewards(str).map(r=>{
+    const m=rewardMeta(r.name);
+    return `<div class="reward-row">
+      <div class="reward-ic" style="background:${m.color}">${r.qty?`<span style="font-size:10px;font-weight:800">x${r.qty}</span>`:`<i class="ti ${m.icon}"></i>`}</div>
+      <div>
+        ${r.qty?`<div class="reward-qty">x${r.qty}</div>`:''}
+        <div class="reward-name">${r.name}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function activeCardHTML(item){
+  const tag = item.status==='soon'
+    ? `<span class="status-tag soon">EXPIRING SOON</span>`
+    : `<span class="status-tag active">ACTIVE</span>`;
+  return `<div class="card" onclick="copyCode('${item.code}')">
+    <div class="card-top">
+      <div class="code-text">${item.code}<div class="copy-ic"><i class="ti ti-copy"></i></div></div>
+      ${tag}
+    </div>
+    <div class="rewards-label">REWARDS</div>
+    <div class="rewards">${rewardRowsHTML(item.rewards)}</div>
+    <div class="card-foot"><i class="ti ti-info-circle"></i>${item.source}</div>
+  </div>`;
+}
+function expiredCardHTML(item){
+  return `<div class="card is-expired" onclick="copyCode('${item.code}')">
+    <div class="card-top">
+      <div class="code-text">${item.code}<div class="copy-ic"><i class="ti ti-copy"></i></div></div>
+      <span class="status-tag expired">EXPIRED</span>
+    </div>
+    <div class="rewards-label">REWARDS</div>
+    <div class="rewards">${rewardRowsHTML(item.rewards)}</div>
+    <div class="card-foot"><i class="ti ti-clock-x"></i>Expired ${item.expired}<span class="source-tag">${item.source}</span></div>
+  </div>`;
+}
+
+function render(){
+  document.getElementById('activeGrid').innerHTML=ACTIVE.map(activeCardHTML).join('');
+  document.getElementById('expiredGrid').innerHTML=EXPIRED.map(expiredCardHTML).join('');
+  document.getElementById('activeCount').textContent=`(${ACTIVE.length})`;
+  document.getElementById('expiredCount').textContent=`(${EXPIRED.length})`;
+}
+render();
+
+function copyCode(code){
+  navigator.clipboard.writeText(code).catch(()=>{});
+  const toast=document.getElementById('toast');
+  document.getElementById('toastText').textContent=`Copied "${code}"`;
+  toast.classList.add('show');
+  clearTimeout(window._toastTimer);
+  window._toastTimer=setTimeout(()=>toast.classList.remove('show'),1800);
+}
+</script>
+</body>
+</html>
