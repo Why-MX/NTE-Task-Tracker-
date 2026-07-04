@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NTE Vehicles Database — Neverness to Everness</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0F0E17;--bg2:#1A1825;--bg3:#221F32;--border:#2E2A44;
+  --text:#EBE9F8;--text2:#9E9AC0;--text3:#5C5880;
+  --accent:#7B5CF5;--accent2:#534AB7;--pink:#E85D9E;
+  --mamba:#3BB37E;--porsche:#D85A5A;--novus:#4E8FE8;--terrax:#D9A93C;--regalia:#E85D9E;
+  --radius:10px;
+  --app-pad: clamp(0.75rem, 4vw, 1.5rem);
+}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh}
+.app{max-width:1100px;margin:0 auto;padding:clamp(1rem,4vw,2rem) var(--app-pad) 5rem}
+
+/* header */
+.header{display:flex;align-items:center;gap:14px;margin-bottom:1rem;flex-wrap:wrap;row-gap:10px}
+.logo{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 0 24px rgba(123,92,245,.25)}
+.logo i{font-size:22px;color:#fff}
+.header-text h1{font-size:clamp(17px,4vw,22px);font-weight:700;letter-spacing:-.3px}
+.header-text p{font-size:12px;color:var(--text2);margin-top:2px}
+.sub{color:var(--text2);font-size:13px;max-width:560px;margin:0 0 24px;line-height:1.6}
+
+/* toolbar */
+.toolbar{display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap}
+.search-wrap{position:relative;flex:1;min-width:200px}
+.search-wrap i{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--text3);font-size:16px}
+.search-input{width:100%;padding:10px 12px 10px 36px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:13px;font-family:inherit}
+.search-input:focus{outline:none;border-color:var(--accent)}
+.filter-select{padding:10px 12px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:13px;font-family:inherit;cursor:pointer}
+.filter-select:focus{outline:none;border-color:var(--accent)}
+
+/* stats strip */
+.stats{display:flex;gap:10px;margin-bottom:24px;flex-wrap:wrap}
+.stat-chip{background:var(--bg2);border:1px solid var(--border);border-radius:9px;padding:9px 14px;font-size:12px;color:var(--text2);display:flex;align-items:center;gap:7px}
+.stat-chip b{color:var(--text);font-weight:700}
+
+/* grid */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
+.vcard{background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:border-color .15s,transform .1s}
+.vcard:hover{border-color:var(--accent2);transform:translateY(-2px)}
+.vcard-img{position:relative;aspect-ratio:4/3;background:linear-gradient(155deg,var(--bg3),#1c1928);display:flex;align-items:center;justify-content:center}
+.vcard-img i{font-size:44px;color:var(--vc,var(--text3));opacity:.9}
+.price-badge{position:absolute;top:9px;right:9px;background:rgba(10,9,16,.75);backdrop-filter:blur(3px);color:#fff;font-size:10px;font-weight:800;padding:4px 8px;border-radius:6px;letter-spacing:.2px;text-align:right;line-height:1.3}
+.event-badge{position:absolute;top:9px;left:9px;background:linear-gradient(135deg,#E5484D,#B5303A);color:#fff;font-size:9px;font-weight:800;padding:4px 8px;border-radius:6px;letter-spacing:.4px;display:flex;align-items:center;gap:4px;box-shadow:0 0 12px rgba(229,72,77,.4)}
+.event-badge i{font-size:10px}
+.event-note{display:flex;align-items:center;gap:5px;font-size:10.5px;color:#F0997B;font-weight:600;margin-top:8px}
+.event-note i{font-size:11px}
+.vcard-body{padding:12px 14px 14px}
+.brand-tag{display:inline-block;font-size:9.5px;font-weight:700;letter-spacing:.6px;color:var(--vc,var(--text3));background:color-mix(in srgb, var(--vc,var(--text3)) 16%, transparent);padding:3px 8px;border-radius:5px;margin-bottom:7px}
+.vname{font-size:14.5px;font-weight:700;margin-bottom:9px}
+.speed-pill{display:inline-flex;flex-direction:column;align-items:center;background:var(--bg3);border-radius:8px;padding:6px 14px}
+.speed-label{font-size:8.5px;font-weight:700;letter-spacing:.6px;color:var(--text3)}
+.speed-val{font-size:12.5px;font-weight:700;color:var(--text);margin-top:1px}
+
+.empty-msg{grid-column:1/-1;text-align:center;padding:40px;color:var(--text3);font-size:13px}
+
+@media(max-width:480px){
+  .grid{grid-template-columns:repeat(2,1fr)}
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="header">
+    <div class="logo"><i class="ti ti-car"></i></div>
+    <div class="header-text">
+      <h1>Vehicles Database</h1>
+      <p>Neverness to Everness — City of Hethereau</p>
+    </div>
+  </div>
+  <p class="sub">Comprehensive technical specifications and customization database for all vehicles in the City of Hethereau.</p>
+
+  <div class="toolbar">
+    <div class="search-wrap">
+      <i class="ti ti-search"></i>
+      <input id="searchInput" class="search-input" placeholder="Search by name…" oninput="render()">
+    </div>
+    <select id="brandFilter" class="filter-select" onchange="render()">
+      <option value="">All Brands</option>
+      <option value="Mamba">Mamba</option>
+      <option value="Porsche">Porsche</option>
+      <option value="Novus">Novus</option>
+      <option value="TerraX">TerraX</option>
+      <option value="Regalia">Regalia</option>
+    </select>
+    <select id="typeFilter" class="filter-select" onchange="render()">
+      <option value="">All Types</option>
+      <option value="Car">Car</option>
+      <option value="Motorcycle">Motorcycle</option>
+      <option value="Moped">Moped</option>
+      <option value="Kart">Kart</option>
+      <option value="Van">Van</option>
+      <option value="Wheelchair">Wheelchair</option>
+    </select>
+  </div>
+
+  <div class="stats">
+    <div class="stat-chip"><i class="ti ti-car"></i>Total Vehicles: <b id="statTotal"></b></div>
+    <div class="stat-chip"><i class="ti ti-gauge"></i>Fastest: <b id="statFastest"></b></div>
+    <div class="stat-chip"><i class="ti ti-coin"></i>Most Expensive: <b id="statPricey"></b></div>
+  </div>
+
+  <div class="grid" id="grid"></div>
+
+</div>
+
+<script>
+const BRAND_COLOR={Mamba:'var(--mamba)',Porsche:'var(--porsche)',Novus:'var(--novus)',TerraX:'var(--terrax)',Regalia:'var(--regalia)'};
+
+// ─── Data — transcribed from the in-game Vehicles Database screen ──────────
+const VEHICLES=[
+  {name:'Rover A1',brand:'Mamba',type:'Moped',icon:'ti-scooter',price:null,speed:40},
+  {name:'Porsche 918 Spyder',brand:'Porsche',type:'Car',icon:'ti-car',price:null,speed:212,limited:true},
+  {name:'K01',brand:'',type:'Kart',icon:'ti-steering-wheel',price:'$25.99 or 6.8M Fons',speed:80},
+  {name:'B100',brand:'',type:'Van',icon:'ti-bus',price:'20K Fons',speed:132},
+  {name:'Tomorrow Rush',brand:'',type:'Wheelchair',icon:'ti-wheelchair',price:'30K Fons',speed:50},
+  {name:'C2000',brand:'Novus',type:'Car',icon:'ti-car',price:'50K Fons',speed:130},
+  {name:'G3',brand:'TerraX',type:'Car',icon:'ti-car',price:'200K Fons',speed:138},
+  {name:'Novis ST-X 950',brand:'Regalia',type:'Motorcycle',icon:'ti-motorbike',price:'250K Fons',speed:140},
+  {name:'ST79',brand:'Mamba',type:'Car',icon:'ti-car',price:'600K Fons',speed:155},
+  {name:'M1000',brand:'Novus',type:'Car',icon:'ti-car',price:'900K Fons',speed:146},
+  {name:'Griffin',brand:'Regalia',type:'Car',icon:'ti-car',price:'1.50M Fons',speed:170},
+  {name:'Enforcer',brand:'TerraX',type:'Car',icon:'ti-car',price:'1.72M Fons',speed:172},
+  {name:'Griffin Volante',brand:'Regalia',type:'Car',icon:'ti-car',price:'1.80M Fons',speed:170},
+  {name:'Blizzard-V4',brand:'Regalia',type:'Motorcycle',icon:'ti-motorbike',price:'3M Fons',speed:180},
+  {name:'Pursuit V8',brand:'Regalia',type:'Car',icon:'ti-car',price:'4M Fons',speed:180},
+  {name:'LaVelox',brand:'Regalia',type:'Car',icon:'ti-car',price:'10.80M Fons',speed:191},
+  {name:'Pendragon',brand:'Regalia',type:'Car',icon:'ti-car',price:'12M Fons',speed:202},
+];
+
+function cardHTML(v){
+  const color=BRAND_COLOR[v.brand]||'var(--text3)';
+  return `<div class="vcard">
+    <div class="vcard-img" style="--vc:${color}">
+      <i class="ti ${v.icon}"></i>
+      ${v.limited?`<div class="event-badge"><i class="ti ti-clock-bolt"></i>EVENT</div>`:''}
+      ${v.price?`<div class="price-badge">${v.price}</div>`:''}
+    </div>
+    <div class="vcard-body">
+      ${v.brand?`<div class="brand-tag" style="--vc:${color}">${v.brand.toUpperCase()}</div>`:''}
+      <div class="vname">${v.name}</div>
+      <div class="speed-pill">
+        <div class="speed-label">TOP SPEED</div>
+        <div class="speed-val">${v.speed} km/h</div>
+      </div>
+      ${v.limited?`<div class="event-note"><i class="ti ti-alert-triangle"></i>Limited-time collab — not sold in dealerships</div>`:''}
+    </div>
+  </div>`;
+}
+
+function render(){
+  const q=document.getElementById('searchInput').value.toLowerCase().trim();
+  const brand=document.getElementById('brandFilter').value;
+  const type=document.getElementById('typeFilter').value;
+  const filtered=VEHICLES.filter(v=>
+    (!q || v.name.toLowerCase().includes(q)) &&
+    (!brand || v.brand===brand) &&
+    (!type || v.type===type)
+  );
+  const grid=document.getElementById('grid');
+  grid.innerHTML = filtered.length
+    ? filtered.map(cardHTML).join('')
+    : `<div class="empty-msg">No vehicles match your filters.</div>`;
+}
+
+function renderStats(){
+  document.getElementById('statTotal').textContent=VEHICLES.length;
+  const fastest=VEHICLES.reduce((a,b)=>b.speed>a.speed?b:a);
+  document.getElementById('statFastest').textContent=`${fastest.name} (${fastest.speed} km/h)`;
+  const priced=VEHICLES.filter(v=>v.price && /Fons/.test(v.price));
+  const parseFons=p=>{
+    const m=p.match(/([\d.]+)([KM]?)\s*Fons/);
+    if(!m) return 0;
+    let n=parseFloat(m[1]);
+    if(m[2]==='K') n*=1000; if(m[2]==='M') n*=1000000;
+    return n;
+  };
+  const pricey=priced.reduce((a,b)=>parseFons(b.price)>parseFons(a.price)?b:a);
+  document.getElementById('statPricey').textContent=`${pricey.name} (${pricey.price})`;
+}
+
+renderStats();
+render();
+</script>
+</body>
+</html>
