@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NTE Cosmetics — Neverness to Everness</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0F0E17;--bg2:#1A1825;--bg3:#221F32;--border:#2E2A44;
+  --text:#EBE9F8;--text2:#9E9AC0;--text3:#5C5880;
+  --accent:#7B5CF5;--accent2:#534AB7;--pink:#E85D9E;
+  --s-rank:#D9A93C;--a-rank:#C15FE0;
+  --radius:10px;
+  --app-pad: clamp(0.75rem, 4vw, 1.5rem);
+}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh}
+.app{max-width:1100px;margin:0 auto;padding:clamp(1rem,4vw,2rem) var(--app-pad) 5rem}
+
+/* header */
+.header{display:flex;align-items:center;gap:14px;margin-bottom:1rem;flex-wrap:wrap;row-gap:10px}
+.logo{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 0 24px rgba(123,92,245,.25)}
+.logo i{font-size:22px;color:#fff}
+.header-text h1{font-size:clamp(17px,4vw,22px);font-weight:700;letter-spacing:-.3px}
+.header-text p{font-size:12px;color:var(--text2);margin-top:2px}
+.sub{color:var(--text2);font-size:13px;max-width:620px;margin:0 0 20px;line-height:1.6}
+
+/* tabs */
+.ctabs{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap}
+.ctab{display:flex;align-items:center;gap:7px;padding:9px 16px;background:var(--bg2);border:1px solid var(--border);border-radius:9px;font-size:13px;font-weight:600;color:var(--text2);cursor:pointer;transition:all .15s}
+.ctab i{font-size:15px}
+.ctab.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.ctab:not(.active):hover{border-color:var(--text3);color:var(--text)}
+.ctab .ctab-count{background:rgba(255,255,255,.12);font-size:10px;font-weight:700;padding:1px 6px;border-radius:8px}
+.ctab.active .ctab-count{background:rgba(255,255,255,.22)}
+
+/* toolbar */
+.toolbar{display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap}
+.search-wrap{position:relative;flex:1;min-width:200px}
+.search-wrap i{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--text3);font-size:16px}
+.search-input{width:100%;padding:10px 12px 10px 36px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:13px;font-family:inherit}
+.search-input:focus{outline:none;border-color:var(--accent)}
+.filter-select{padding:10px 12px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:13px;font-family:inherit;cursor:pointer}
+.filter-select:focus{outline:none;border-color:var(--accent)}
+
+.result-count{font-size:11px;color:var(--text3);font-weight:600;letter-spacing:.4px;margin-bottom:14px;text-transform:uppercase}
+
+/* grid */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+.ccard{background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:border-color .15s,transform .1s}
+.ccard:hover{border-color:var(--accent2);transform:translateY(-2px)}
+.ccard-img{aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;position:relative;background:linear-gradient(155deg,var(--bg3),#1c1928)}
+.ccard-img i{font-size:34px;color:var(--text3)}
+.ccard-tag{position:absolute;top:8px;right:8px;font-size:9px;font-weight:800;letter-spacing:.4px;padding:3px 7px;border-radius:6px}
+.ccard-tag.default{background:rgba(59,179,126,.16);color:#5DCAA5}
+.ccard-tag.premium{background:rgba(217,169,60,.16);color:var(--s-rank)}
+.ccard-tag.limited{background:rgba(232,93,158,.16);color:var(--pink)}
+.ccard-tag.bond{background:rgba(193,95,224,.16);color:var(--a-rank)}
+.ccard-body{padding:11px 13px 13px}
+.ccard-name{font-size:12.5px;font-weight:700;line-height:1.3;margin-bottom:4px}
+.ccard-source{font-size:10.5px;color:var(--text2);display:flex;align-items:center;gap:5px}
+.ccard-source i{font-size:11px;color:var(--text3)}
+
+.empty-msg{grid-column:1/-1;text-align:center;padding:40px;color:var(--text3);font-size:13px}
+
+.note-box{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:16px 18px;margin-bottom:20px;font-size:12.5px;color:var(--text2);line-height:1.6;display:flex;gap:12px}
+.note-box i{font-size:16px;color:var(--accent);flex-shrink:0;margin-top:1px}
+
+@media(max-width:480px){.grid{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="header">
+    <div class="logo"><i class="ti ti-shirt"></i></div>
+    <div class="header-text">
+      <h1>Cosmetics</h1>
+      <p>Neverness to Everness — Outfits · Gliders · Vehicle Liveries</p>
+    </div>
+  </div>
+  <p class="sub">Browse every confirmed Outfit, Glider, and Vehicle Livery. These are purely visual — none of them change stats, skills, or combat performance.</p>
+
+  <div class="ctabs" id="cTabs"></div>
+
+  <div class="toolbar">
+    <div class="search-wrap">
+      <i class="ti ti-search"></i>
+      <input id="searchInput" class="search-input" placeholder="Search cosmetics…" oninput="render()">
+    </div>
+    <select id="sourceFilter" class="filter-select" onchange="render()">
+      <option value="">All Sources</option>
+      <option value="Default">Default</option>
+      <option value="Fashion Shop">Fashion Shop</option>
+      <option value="Bond Level 10">Bond Level 10</option>
+      <option value="Gacha / Limited Banner">Gacha / Limited Banner</option>
+      <option value="Story / Event">Story / Event</option>
+    </select>
+  </div>
+
+  <div id="noteBox"></div>
+
+  <div class="result-count" id="resultCount"></div>
+  <div class="grid" id="grid"></div>
+
+</div>
+
+<script>
+const TABS=[
+  {key:'outfits',label:'Outfits',icon:'ti-shirt'},
+  {key:'gliders',label:'Gliders',icon:'ti-parachute'},
+  {key:'liveries',label:'Vehicle Liveries',icon:'ti-car'},
+];
+let currentTab='outfits';
+
+const SOURCE_META={
+  'Default':{cls:'default',icon:'ti-circle-check'},
+  'Fashion Shop':{cls:'premium',icon:'ti-shopping-bag'},
+  'Bond Level 10':{cls:'bond',icon:'ti-heart'},
+  'Gacha / Limited Banner':{cls:'limited',icon:'ti-ticket'},
+  'Story / Event':{cls:'default',icon:'ti-book'},
+};
+
+// ─── Data — confirmed cosmetic names sourced from public NTE cosmetic
+// trackers. Character attribution and rarity aren't confirmed for every
+// individual outfit/livery, so those show a generic source tag rather than
+// a guessed one.
+const GLIDERS=[
+  {name:'Chuppa',icon:'ti-parachute',source:'Default'},
+  {name:'Skycurrent',icon:'ti-parachute',source:'Default',note:"Aurelia-exclusive — unlocks automatically when she joins your roster"},
+  {name:'Ace',icon:'ti-parachute',source:'Fashion Shop'},
+  {name:'Order Guardian EX',icon:'ti-parachute',source:'Fashion Shop',note:'300 Riftcrystals — cheapest paid glider'},
+  {name:'Orchid Breeze',icon:'ti-parachute',source:'Fashion Shop'},
+  {name:'Skyrider',icon:'ti-parachute',source:'Fashion Shop'},
+  {name:'Tomato Duo',icon:'ti-parachute',source:'Fashion Shop'},
+  {name:'Wayward Fish Streamer',icon:'ti-parachute',source:'Gacha / Limited Banner'},
+  {name:'Zero-G Gag',icon:'ti-parachute',source:'Gacha / Limited Banner'},
+  {name:'Underboss-of-the-Underboss',icon:'ti-parachute',source:'Gacha / Limited Banner',note:"Tied to Nanally's launch limited banner"},
+];
+
+const LIVERIES=[
+  {name:'Original',icon:'ti-car',source:'Default',note:'Default livery included with each vehicle'},
+  {name:'City Trails',icon:'ti-car',source:'Fashion Shop'},
+  {name:'Midnight Ghost',icon:'ti-car',source:'Fashion Shop'},
+  {name:'Speed Legendary',icon:'ti-car',source:'Fashion Shop'},
+  {name:'ST999',icon:'ti-car',source:'Fashion Shop'},
+  {name:'Beyond-Tomorrow Engine',icon:'ti-engine',source:'Fashion Shop'},
+  {name:'Overmorrow Engine',icon:'ti-engine',source:'Fashion Shop'},
+  {name:'Agent Arrival - Set',icon:'ti-car',source:'Gacha / Limited Banner'},
+  {name:'Autumn Haze - Livery',icon:'ti-car',source:'Fashion Shop'},
+  {name:'Blue Channel - Livery',icon:'ti-car',source:'Fashion Shop'},
+  {name:'Cheers to Departure - Livery',icon:'ti-car',source:'Gacha / Limited Banner'},
+  {name:'Crimson Alert - Livery',icon:'ti-car',source:'Fashion Shop'},
+  {name:'Dark Flame Striker - Livery',icon:'ti-car',source:'Fashion Shop'},
+  {name:"Eibon's Blue Phantom - Livery",icon:'ti-car',source:'Fashion Shop'},
+  {name:'Golden Breeze - Livery',icon:'ti-car',source:'Fashion Shop'},
+  {name:"Heaven's Inferno Supreme - Livery",icon:'ti-car',source:'Gacha / Limited Banner'},
+  {name:'Hound Blitz - Livery',icon:'ti-car',source:'Fashion Shop'},
+  {name:'Midnight Rose - Livery',icon:'ti-car',source:'Fashion Shop'},
+  {name:'Mint Rush - Livery',icon:'ti-car',source:'Story / Event',note:"Mint-themed livery"},
+  {name:'Night Wanderer - Livery',icon:'ti-car',source:'Fashion Shop'},
+  {name:'Patrol Trainee on Duty',icon:'ti-car',source:'Story / Event'},
+  {name:'Pinky Paws',icon:'ti-car',source:'Story / Event',note:'Pink Paws Heist reward'},
+  {name:'Sakiri Roll! - Livery',icon:'ti-car',source:'Story / Event',note:'Sakiri-themed livery'},
+  {name:'Swift Cab - Livery',icon:'ti-car',source:'Fashion Shop'},
+  {name:'Swift Cab - Roof Light',icon:'ti-car',source:'Fashion Shop'},
+  {name:'Tiger Incoming! - Livery',icon:'ti-car',source:'Gacha / Limited Banner'},
+  {name:'Tomato Cruise - Livery',icon:'ti-car',source:'Story / Event',note:'Lacrimosa-themed livery'},
+  {name:'Warp Light - Livery',icon:'ti-car',source:'Fashion Shop'},
+];
+
+const OUTFITS=[
+  {name:'Beginning of the Story',icon:'ti-shirt',source:'Default',note:'Default appearance'},
+  {name:'City Wanderer',icon:'ti-shirt',source:'Fashion Shop'},
+  {name:'Graffiti in Progress',icon:'ti-shirt',source:'Fashion Shop'},
+  {name:'Hunter Off Duty',icon:'ti-shirt',source:'Fashion Shop'},
+  {name:'Perfect Partners',icon:'ti-shirt',source:'Gacha / Limited Banner'},
+  {name:'School Musings',icon:'ti-shirt',source:'Fashion Shop'},
+  {name:'Unconventional Attire',icon:'ti-shirt',source:'Story / Event',note:"Esper Zero — unlocked via a jail encounter"},
+  {name:'Agent in Training',icon:'ti-shirt',source:'Fashion Shop'},
+  {name:'All-Seeing',icon:'ti-shirt',source:'Fashion Shop'},
+  {name:'Azure Sea Serenade',icon:'ti-shirt',source:'Fashion Shop'},
+  {name:'City Glimmer',icon:'ti-shirt',source:'Fashion Shop'},
+  {name:'Clear Skies',icon:'ti-shirt',source:'Fashion Shop',note:"Mint — signature-Arc themed outfit"},
+  {name:'CSU Prodigy',icon:'ti-shirt',source:'Fashion Shop'},
+  {name:'Family Boss',icon:'ti-shirt',source:'Bond Level 10',note:'Nanally'},
+  {name:'Five Aggregates',icon:'ti-shirt',source:'Fashion Shop'},
+  {name:'Fluffy Flying Tiger',icon:'ti-shirt',source:'Fashion Shop'},
+  {name:'Gilded Rhapsody',icon:'ti-shirt',source:'Fashion Shop'},
+  {name:'Liquid Desire',icon:'ti-shirt',source:'Fashion Shop'},
+  {name:'New Moon Lullaby',icon:'ti-shirt',source:'Fashion Shop'},
+  {name:"Nightingale's Crescendo",icon:'ti-shirt',source:'Fashion Shop'},
+  {name:'On Duty',icon:'ti-shirt',source:'Fashion Shop'},
+  {name:'Phoenix Kick',icon:'ti-shirt',source:'Fashion Shop'},
+  {name:'Piano Key Sonatina',icon:'ti-shirt',source:'Fashion Shop'},
+  {name:'Priceless Orchid',icon:'ti-shirt',source:'Fashion Shop'},
+  {name:'Pumpkin Magic',icon:'ti-shirt',source:'Story / Event'},
+  {name:'Pursuer',icon:'ti-shirt',source:'Fashion Shop'},
+  {name:'Recreational Courtyard',icon:'ti-shirt',source:'Fashion Shop'},
+  {name:'Reverse Fairy Tale',icon:'ti-shirt',source:'Fashion Shop'},
+  {name:'Self in the Mirror',icon:'ti-shirt',source:'Fashion Shop'},
+  {name:'Self-Discipline Time',icon:'ti-shirt',source:'Fashion Shop'},
+  {name:'Tales of the Night',icon:'ti-shirt',source:'Fashion Shop'},
+  {name:'Teddy and the Hungry Ghost',icon:'ti-shirt',source:'Story / Event'},
+  {name:'The Popular Kid',icon:'ti-shirt',source:'Fashion Shop'},
+  {name:'The Tomato Story',icon:'ti-shirt',source:'Default',note:"Lacrimosa's default outfit"},
+  {name:'To Mary',icon:'ti-shirt',source:'Fashion Shop'},
+  {name:'Two-Tone Thorns',icon:'ti-shirt',source:'Bond Level 10',note:'Hathor'},
+  {name:'Under the Bright Moon',icon:'ti-shirt',source:'Fashion Shop'},
+  {name:'Velvet Spring Day',icon:'ti-shirt',source:'Fashion Shop'},
+  {name:'Verdant Grace',icon:'ti-shirt',source:'Fashion Shop'},
+  {name:'Weekday Bubbles',icon:'ti-shirt',source:'Fashion Shop'},
+  {name:'With Oriole Song',icon:'ti-shirt',source:'Bond Level 10',note:'Chiz'},
+  {name:'Working Hours',icon:'ti-shirt',source:'Bond Level 10',note:'Jiuyuan'},
+  {name:"Yesterday's Melody",icon:'ti-shirt',source:'Fashion Shop'},
+];
+
+function dataFor(tab){
+  if(tab==='outfits') return OUTFITS;
+  if(tab==='gliders') return GLIDERS;
+  return LIVERIES;
+}
+
+function renderTabs(){
+  document.getElementById('cTabs').innerHTML=TABS.map(t=>`
+    <div class="ctab${currentTab===t.key?' active':''}" onclick="switchTab('${t.key}')">
+      <i class="ti ${t.icon}"></i>${t.label}<span class="ctab-count">${dataFor(t.key).length}</span>
+    </div>`).join('');
+}
+function switchTab(key){
+  currentTab=key;
+  document.getElementById('searchInput').value='';
+  document.getElementById('sourceFilter').value='';
+  renderTabs();
+  renderNote();
+  render();
+}
+function renderNote(){
+  const box=document.getElementById('noteBox');
+  if(currentTab==='outfits'){
+    box.innerHTML=`<div class="note-box"><i class="ti ti-info-circle"></i>Outfits are character-specific and cannot be mixed or matched — each is a full set. Chiz, Mint, Nanally, Fadia, and Jiuyuan each have a free outfit unlocked at Bond Level 10.</div>`;
+  } else if(currentTab==='gliders'){
+    box.innerHTML=`<div class="note-box"><i class="ti ti-info-circle"></i>Gliders are account-wide and equipped per character from the traversal menu — except Skycurrent, which is locked to Aurelia.</div>`;
+  } else {
+    box.innerHTML=`<div class="note-box"><i class="ti ti-info-circle"></i>Vehicle Liveries are custom paint and decal packages applied through Vehicle Customization. They don't affect a vehicle's stats.</div>`;
+  }
+}
+
+function cardHTML(item){
+  const m=SOURCE_META[item.source]||{cls:'default',icon:'ti-question-mark'};
+  return `<div class="ccard">
+    <div class="ccard-img">
+      <i class="ti ${item.icon}"></i>
+      <div class="ccard-tag ${m.cls}">${item.source.toUpperCase()}</div>
+    </div>
+    <div class="ccard-body">
+      <div class="ccard-name">${item.name}</div>
+      <div class="ccard-source"><i class="ti ${m.icon}"></i>${item.note||item.source}</div>
+    </div>
+  </div>`;
+}
+
+function render(){
+  const q=document.getElementById('searchInput').value.toLowerCase().trim();
+  const src=document.getElementById('sourceFilter').value;
+  const items=dataFor(currentTab);
+  const filtered=items.filter(i=>{
+    const text=(i.name+(i.note||'')).toLowerCase();
+    return (!q||text.includes(q)) && (!src||i.source===src);
+  });
+  document.getElementById('resultCount').textContent=`Found ${filtered.length} ${TABS.find(t=>t.key===currentTab).label}`;
+  const grid=document.getElementById('grid');
+  grid.innerHTML=filtered.length?filtered.map(cardHTML).join(''):`<div class="empty-msg">No cosmetics match your filters.</div>`;
+}
+
+renderTabs();
+renderNote();
+render();
+</script>
+</body>
+</html>
