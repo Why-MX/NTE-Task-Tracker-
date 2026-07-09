@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NTE Cartridge Database — Neverness to Everness</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0F0E17;--bg2:#1A1825;--bg3:#221F32;--border:#2E2A44;
+  --text:#EBE9F8;--text2:#9E9AC0;--text3:#5C5880;
+  --accent:#7B5CF5;--accent2:#534AB7;--pink:#E85D9E;
+  --incant:#D85A5A;--psyche:#4E8FE8;--cosmos:#B7B3D6;--chaos:#9B6BE0;--anima:#3BB37E;--lakshana:#D9A93C;--mental:#E85D9E;
+  --gold:#D9A93C;
+  --radius:10px;
+  --app-pad: clamp(0.75rem, 4vw, 1.5rem);
+}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh}
+.app{max-width:1100px;margin:0 auto;padding:clamp(1rem,4vw,2rem) var(--app-pad) 5rem}
+
+/* header */
+.header{display:flex;align-items:center;gap:14px;margin-bottom:1rem;flex-wrap:wrap;row-gap:10px}
+.logo{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 0 24px rgba(123,92,245,.25)}
+.logo i{font-size:22px;color:#fff}
+.header-text h1{font-size:clamp(17px,4vw,22px);font-weight:700;letter-spacing:-.3px}
+.header-text p{font-size:12px;color:var(--text2);margin-top:2px}
+.sub{color:var(--text2);font-size:13px;max-width:600px;margin:0 0 24px;line-height:1.6}
+
+/* toolbar */
+.toolbar{display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap}
+.search-wrap{position:relative;flex:1;min-width:200px}
+.search-wrap i{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--text3);font-size:16px}
+.search-input{width:100%;padding:10px 12px 10px 36px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:13px;font-family:inherit}
+.search-input:focus{outline:none;border-color:var(--accent)}
+.filter-select{padding:10px 12px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:13px;font-family:inherit;cursor:pointer}
+.filter-select:focus{outline:none;border-color:var(--accent)}
+
+.result-count{font-size:11px;color:var(--text3);font-weight:600;letter-spacing:.4px;margin-bottom:14px;text-transform:uppercase}
+
+/* grid */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px}
+.ccard{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:16px;transition:border-color .15s}
+.ccard:hover{border-color:var(--accent2)}
+.ccard-head{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.cicon{width:38px;height:38px;border-radius:9px;background:linear-gradient(160deg,#F0B15F,var(--gold));display:flex;align-items:center;justify-content:center;font-size:17px;color:#241a05;flex-shrink:0}
+.cname{font-size:14.5px;font-weight:700}
+
+.cbonus{display:flex;gap:10px;padding:10px 0;border-top:1px solid var(--border)}
+.cbonus:first-of-type{border-top:none}
+.cbonus-tag{flex-shrink:0;font-size:10px;font-weight:800;color:var(--text3);background:var(--bg3);border-radius:6px;padding:2px 7px;height:fit-content;margin-top:1px}
+.cbonus-text{font-size:12.5px;color:var(--text2);line-height:1.6}
+.cbonus-text b{font-weight:700}
+.dmg-stat{text-decoration:underline;text-decoration-style:dotted;text-underline-offset:2px}
+
+.creq{display:flex;align-items:center;gap:8px;margin-top:14px;padding-top:12px;border-top:1px solid var(--border)}
+.creq-label{font-size:9px;font-weight:700;letter-spacing:.5px;color:var(--text3)}
+.creq-icons{display:flex;gap:6px}
+.creq-icon{width:22px;height:22px;border-radius:50%;background:var(--psyche);display:flex;align-items:center;justify-content:center;font-size:10px;color:#fff}
+
+.empty-msg{grid-column:1/-1;text-align:center;padding:40px;color:var(--text3);font-size:13px}
+
+@media(max-width:480px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="header">
+    <div class="logo"><i class="ti ti-cpu"></i></div>
+    <div class="header-text">
+      <h1>Cartridge Database</h1>
+      <p>Neverness to Everness — Modules · Cartridge set bonuses</p>
+    </div>
+  </div>
+  <p class="sub">Browse every Cartridge set and its 2-piece / 4-piece bonuses. Equip matching Modules to activate a set's effects.</p>
+
+  <div class="toolbar">
+    <div class="search-wrap">
+      <i class="ti ti-search"></i>
+      <input id="searchInput" class="search-input" placeholder="Search cartridges or effects…" oninput="render()">
+    </div>
+    <select id="dmgFilter" class="filter-select" onchange="render()">
+      <option value="">All DMG Types</option>
+      <option value="Incantation">Incantation</option>
+      <option value="Psyche">Psyche</option>
+      <option value="Chaos">Chaos</option>
+      <option value="Anima">Anima</option>
+      <option value="Cosmos">Cosmos</option>
+      <option value="Mental">Mental</option>
+      <option value="Lakshana">Lakshana</option>
+      <option value="Stat">Flat Stat (DEF/HP/ATK)</option>
+    </select>
+  </div>
+
+  <div class="result-count" id="resultCount"></div>
+  <div class="grid" id="grid"></div>
+
+</div>
+
+<script>
+const DMG_COLOR={
+  Incantation:'var(--incant)',Psyche:'var(--psyche)',Chaos:'var(--chaos)',
+  Anima:'var(--anima)',Cosmos:'var(--cosmos)',Mental:'var(--mental)',Lakshana:'var(--lakshana)',
+};
+
+// ─── Data — transcribed from the in-game Modules / Cartridge database ──────
+const CARTRIDGES=[
+  {name:'Crimson: Twin Butterflies',icon:'ti-butterfly',dmgType:'Incantation',
+    two:'<span class="dmg-stat" style="color:var(--incant)">Incantation DMG</span> +10%',
+    four:'Increases wearer\'s ATK by 6% when a nearby enemy takes <span class="dmg-stat" style="color:var(--incant)">Incantation DMG</span> from the Team, up to 6 stacks. Each stack lasts 10s. Effect remains active when the character is off-field.'},
+  {name:"Devil's Blood: Curse",icon:'ti-drop-circle',dmgType:'Psyche',
+    two:'<span class="dmg-stat" style="color:var(--psyche)">Psyche DMG</span> +10%',
+    four:'Increases wearer\'s DMG by 18%. The bonus becomes 36% against units affected by <u>Nova</u> or <u>Stain</u>.'},
+  {name:'Diabolos',icon:'ti-flame',dmgType:'Chaos',
+    two:'<span class="dmg-stat" style="color:var(--chaos)">Chaos DMG</span> +10%',
+    four:'Ignores 12% of enemies\' <span class="dmg-stat" style="color:var(--chaos)">Chaos RES</span>. Ignores 24% of enemies\' <span class="dmg-stat" style="color:var(--chaos)">Chaos RES</span> for 20s after the wearer participates in <u>Nova</u> or <u>Scorch</u> reactions.'},
+  {name:'Fireflies and the Forest',icon:'ti-bug',dmgType:'Anima',
+    two:'<span class="dmg-stat" style="color:var(--anima)">Anima DMG</span> +10%',
+    four:'Increases wearer\'s CRIT DMG by 8% when a nearby enemy takes <span class="dmg-stat" style="color:var(--anima)">Anima DMG</span> from the Team, up to 7 stacks. Each stack lasts 10s. Effect remains active when the character is off-field.'},
+  {name:"Kingdom's Guard",icon:'ti-shield-check',dmgType:'Stat',
+    two:'DEF +15%',
+    four:"Increases wearer's shields by 20%."},
+  {name:'Lost Radiance',icon:'ti-sparkles',dmgType:'Cosmos',
+    two:'<span class="dmg-stat" style="color:var(--cosmos)">Cosmos DMG</span> +10%',
+    four:'Ignores 25% of enemies\' DEF for 20s after the wearer casts Ultimate. Effect does not stack.'},
+  {name:'Quiet Manor',icon:'ti-home',dmgType:'Mental',
+    two:'<span class="dmg-stat" style="color:var(--mental)">Mental DMG</span> +10%',
+    four:'Grants wearer a 12% <span class="dmg-stat" style="color:var(--mental)">Mental DMG</span> Bonus per Basic Attack, up to 3 stacks. Each stack lasts 6s.'},
+  {name:'Shadow Creed',icon:'ti-mask',dmgType:'Stat',
+    two:'ATK +10%',
+    four:"Increases wearer's ATK by 25% for 20s after casting a Skill."},
+  {name:'Speedy Hedgehog',icon:'ti-bolt',dmgType:'Stat',
+    two:'Charge Efficiency +12%',
+    four:"Increases all allies' ATK by 15% for 20s after the wearer casts Ultimate. Effect does not stack."},
+  {name:'Street Boxer',icon:'ti-boxing-glove',dmgType:'Lakshana',
+    two:'<span class="dmg-stat" style="color:var(--lakshana)">Lakshana DMG</span> +10%',
+    four:'Increases Crit Chance by 14%. Team triggering <u>Remora</u> or <u>Stain</u> increases the bonus to 14% for 20s.'},
+  {name:"Thea's Night Tavern",icon:'ti-beer',dmgType:'Stat',
+    two:'HP +10%',
+    four:"Increases wearer's Healing Bonus by 20%."},
+  {name:'Tiny Big Adventure',icon:'ti-map-2',dmgType:'Stat',
+    two:'HP +10%',
+    four:"Increases wearer's Max HP by 4% when taking damage, up to 10 stacks. Each stack lasts 10s. Casting Ultimate instantly grants 10 stacks."},
+];
+
+function cardHTML(c){
+  return `<div class="ccard">
+    <div class="ccard-head">
+      <div class="cicon"><i class="ti ${c.icon}"></i></div>
+      <div class="cname">${c.name}</div>
+    </div>
+    <div class="cbonus"><div class="cbonus-tag">(2)</div><div class="cbonus-text">${c.two}</div></div>
+    <div class="cbonus"><div class="cbonus-tag">(4)</div><div class="cbonus-text">${c.four}</div></div>
+    <div class="creq">
+      <div class="creq-label">REQUIRED PIECES</div>
+      <div class="creq-icons">
+        <div class="creq-icon"><i class="ti ti-hexagon-letter-a"></i></div>
+        <div class="creq-icon"><i class="ti ti-hexagon-letter-b"></i></div>
+        <div class="creq-icon"><i class="ti ti-hexagon-letter-c"></i></div>
+        <div class="creq-icon"><i class="ti ti-hexagon-letter-d"></i></div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function render(){
+  const q=document.getElementById('searchInput').value.toLowerCase().trim();
+  const dmg=document.getElementById('dmgFilter').value;
+  const filtered=CARTRIDGES.filter(c=>{
+    const text=(c.name+c.two+c.four).toLowerCase();
+    const matchesQ=!q||text.includes(q);
+    const matchesDmg=!dmg||c.dmgType===dmg;
+    return matchesQ&&matchesDmg;
+  });
+  document.getElementById('resultCount').textContent=`Found ${filtered.length} Cartridge${filtered.length===1?'':'s'}`;
+  const grid=document.getElementById('grid');
+  grid.innerHTML=filtered.length?filtered.map(cardHTML).join(''):`<div class="empty-msg">No cartridges match your filters.</div>`;
+}
+
+render();
+</script>
+</body>
+</html>
