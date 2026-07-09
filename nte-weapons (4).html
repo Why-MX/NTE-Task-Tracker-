@@ -1,0 +1,1209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NTE Weapons (Arcs) Database — Neverness to Everness</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0F0E17;--bg2:#1A1825;--bg3:#221F32;--border:#2E2A44;
+  --text:#EBE9F8;--text2:#9E9AC0;--text3:#5C5880;
+  --accent:#7B5CF5;--accent2:#534AB7;--pink:#E85D9E;
+  --s-rank:#D9A93C;--a-rank:#C15FE0;--b-rank:#4E8FE8;
+  --radius:10px;
+  --app-pad: clamp(0.75rem, 4vw, 1.5rem);
+}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh}
+.app{max-width:1100px;margin:0 auto;padding:clamp(1rem,4vw,2rem) var(--app-pad) 5rem}
+
+/* header */
+.header{display:flex;align-items:center;gap:14px;margin-bottom:1rem;flex-wrap:wrap;row-gap:10px}
+.logo{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 0 24px rgba(123,92,245,.25)}
+.logo i{font-size:22px;color:#fff}
+.header-text h1{font-size:clamp(17px,4vw,22px);font-weight:700;letter-spacing:-.3px}
+.header-text p{font-size:12px;color:var(--text2);margin-top:2px}
+.sub{color:var(--text2);font-size:13px;max-width:600px;margin:0 0 24px;line-height:1.6}
+
+/* toolbar */
+.toolbar{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap}
+.search-wrap{position:relative;flex:1;min-width:200px}
+.search-wrap i{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--text3);font-size:16px}
+.search-input{width:100%;padding:10px 12px 10px 36px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:13px;font-family:inherit}
+.search-input:focus{outline:none;border-color:var(--accent)}
+.filter-select{padding:10px 12px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:13px;font-family:inherit;cursor:pointer}
+.filter-select:focus{outline:none;border-color:var(--accent)}
+
+/* custom themed dropdown (replaces native <select> so the open menu matches the site theme) */
+.dropdown{position:relative}
+.dropdown-btn{display:flex;align-items:center;gap:8px;padding:10px 12px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:13px;font-family:inherit;cursor:pointer;white-space:nowrap}
+.dropdown-btn:hover{border-color:var(--text3)}
+.dropdown.open .dropdown-btn{border-color:var(--accent)}
+.dropdown-btn i.ti-chevron-down{margin-left:auto;font-size:13px;color:var(--text3);transition:transform .15s}
+.dropdown.open .dropdown-btn i.ti-chevron-down{transform:rotate(180deg)}
+.dropdown-menu{position:absolute;top:calc(100% + 6px);left:0;min-width:180px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);box-shadow:0 12px 28px rgba(0,0,0,.45);padding:6px;z-index:20;display:none}
+.dropdown.open .dropdown-menu{display:block}
+.dropdown-item{padding:9px 11px;border-radius:7px;font-size:13px;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.dropdown-item:hover{background:var(--bg3);color:var(--text)}
+.dropdown-item.active{color:var(--accent);font-weight:600}
+.dropdown-item.active:after{content:'\2713';font-weight:800}
+
+/* rarity filter row */
+.rarity-row{display:flex;align-items:center;gap:12px;margin-bottom:20px;flex-wrap:wrap}
+.rarity-label{font-size:11px;font-weight:700;letter-spacing:.6px;color:var(--text2);display:flex;align-items:center;gap:6px}
+.rarity-btns{display:flex;gap:8px}
+.rarity-btn{width:34px;height:34px;border-radius:9px;border:1.5px solid var(--border);background:var(--bg2);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;cursor:pointer;transition:all .15s}
+.rarity-btn.s{color:var(--s-rank)}
+.rarity-btn.a{color:var(--a-rank)}
+.rarity-btn.b{color:var(--b-rank)}
+.rarity-btn.active.s{background:rgba(217,169,60,.16);border-color:var(--s-rank)}
+.rarity-btn.active.a{background:rgba(193,95,224,.16);border-color:var(--a-rank)}
+.rarity-btn.active.b{background:rgba(78,143,232,.16);border-color:var(--b-rank)}
+.rarity-btn:hover{border-color:var(--text3)}
+
+.result-count{font-size:11px;color:var(--text3);font-weight:600;letter-spacing:.4px;margin-bottom:14px;text-transform:uppercase}
+
+/* grid */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
+.wcard{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:14px;display:flex;gap:12px;cursor:pointer;transition:border-color .15s,transform .1s}
+.wcard:hover{transform:translateY(-2px)}
+.wcard.s{border-color:rgba(217,169,60,.35)}
+.wcard.s:hover{border-color:var(--s-rank)}
+.wcard.a{border-color:rgba(193,95,224,.3)}
+.wcard.a:hover{border-color:var(--a-rank)}
+.wcard.b{border-color:rgba(78,143,232,.3)}
+.wcard.b:hover{border-color:var(--b-rank)}
+.wicon{width:50px;height:50px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;color:#fff}
+.wcard.s .wicon{background:linear-gradient(160deg,#E8C766,var(--s-rank))}
+.wcard.a .wicon{background:linear-gradient(160deg,#D98CEE,var(--a-rank))}
+.wcard.b .wicon{background:linear-gradient(160deg,#7FB0EE,var(--b-rank))}
+.wbody{flex:1;min-width:0}
+.wname{font-size:13.5px;font-weight:700;line-height:1.3;margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wrank-row{display:flex;align-items:center;gap:6px;margin-bottom:7px}
+.wrank{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:4px;font-size:9px;font-weight:800;margin-bottom:0;color:#160009}
+.sig-badge{display:inline-flex;align-items:center;gap:3px;font-size:8.5px;font-weight:700;color:var(--pink);background:rgba(232,93,158,.14);padding:2px 6px;border-radius:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sig-badge i{font-size:9px}
+.wrank.s{background:var(--s-rank)}
+.wrank.a{background:var(--a-rank)}
+.wrank.b{background:var(--b-rank)}
+.wstats{display:flex;gap:16px}
+.wstat-label{font-size:8.5px;font-weight:700;letter-spacing:.5px;color:var(--text3)}
+.wstat-val{font-size:12.5px;font-weight:700;color:var(--text);margin-top:1px}
+.wstat-val.accent2{color:var(--pink)}
+
+.empty-msg{grid-column:1/-1;text-align:center;padding:40px;color:var(--text3);font-size:13px}
+
+@media(max-width:480px){.grid{grid-template-columns:1fr}}
+
+/* ── Weapon Detail Modal ─────────────────────────────────────────────────── */
+.wdetail-overlay{position:fixed;inset:0;background:rgba(0,0,0,.72);backdrop-filter:blur(3px);z-index:100;display:none;align-items:flex-start;justify-content:center;padding:clamp(0.75rem,4vw,2.5rem) clamp(0.5rem,3vw,1rem);overflow-y:auto}
+.wdetail-overlay.active{display:flex}
+.wdetail-panel{width:100%;max-width:980px;position:relative}
+.wdetail-close{position:fixed;top:20px;right:20px;width:36px;height:36px;border-radius:9px;border:1px solid var(--border);background:var(--bg2);color:var(--text2);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;z-index:5}
+.wdetail-close:hover{color:#fff;border-color:var(--accent)}
+
+.wdetail-hero{display:grid;grid-template-columns:220px 1fr;gap:32px;margin-bottom:32px}
+@media(max-width:680px){.wdetail-hero{grid-template-columns:1fr}}
+.wdetail-imgcard{background:var(--bg2);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+.wdetail-imgcard.s{border-color:rgba(217,169,60,.35)}
+.wdetail-imgcard.a{border-color:rgba(193,95,224,.35)}
+.wdetail-imgcard.b{border-color:rgba(78,143,232,.35)}
+.wdetail-imgbox{position:relative;aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.wdetail-imgbox:before{content:'';position:absolute;top:-40%;left:50%;transform:translateX(-50%);width:140%;aspect-ratio:1/1;border-radius:50%;opacity:.22;filter:blur(4px)}
+.wdetail-imgbox.s:before{background:radial-gradient(circle,var(--s-rank),transparent 70%)}
+.wdetail-imgbox.a:before{background:radial-gradient(circle,var(--a-rank),transparent 70%)}
+.wdetail-imgbox.b:before{background:radial-gradient(circle,var(--b-rank),transparent 70%)}
+.wdetail-imgbox i{position:relative;font-size:80px;color:var(--text3)}
+.wdetail-imgbox.s i{color:var(--s-rank)}
+.wdetail-imgbox.a i{color:var(--a-rank)}
+.wdetail-imgbox.b i{color:var(--b-rank)}
+.wdetail-rankbar{text-align:center;padding:12px;font-weight:800;font-size:13px;letter-spacing:1px}
+.wdetail-rankbar.s{background:linear-gradient(90deg,var(--s-rank),#F0C96A);color:#241a05}
+.wdetail-rankbar.a{background:linear-gradient(90deg,var(--a-rank),#E8AEF5);color:#2a0a30}
+.wdetail-rankbar.b{background:linear-gradient(90deg,var(--b-rank),#9CC6F5);color:#0a1a30}
+
+.wdetail-title{font-size:clamp(24px,4vw,32px);font-weight:800;letter-spacing:-.5px;margin-bottom:12px}
+.wdetail-typepill{display:inline-flex;align-items:center;gap:6px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:6px 12px;font-size:11px;font-weight:700;letter-spacing:.4px;color:var(--text2);margin-bottom:16px}
+.wdetail-quote{border-left:2px solid var(--s-rank);padding:10px 16px;font-size:13.5px;font-style:italic;color:var(--text2);line-height:1.6}
+.sig-card{display:flex;align-items:center;gap:12px;background:linear-gradient(135deg,rgba(232,93,158,.12),transparent 60%),var(--bg2);border:1px solid rgba(232,93,158,.3);border-radius:10px;padding:12px 16px;margin-top:16px}
+.sig-avatar{width:38px;height:38px;border-radius:9px;background:linear-gradient(135deg,var(--pink),#B23E71);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;color:#fff;flex-shrink:0}
+.sig-label{font-size:9.5px;font-weight:700;letter-spacing:.5px;color:var(--pink)}
+.sig-name{font-size:14px;font-weight:700;margin-top:1px}
+
+.wdetail-grid{display:grid;grid-template-columns:1.6fr 1fr;gap:20px}
+@media(max-width:820px){.wdetail-grid{grid-template-columns:1fr}}
+.wpanel{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:20px 22px;margin-bottom:20px}
+.wpanel-title{font-size:12px;font-weight:800;letter-spacing:.8px;color:var(--text2);text-transform:uppercase;margin-bottom:16px}
+
+.rrank-card{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:12px}
+.rrank-card:last-child{margin-bottom:0}
+.rrank-head{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:800;letter-spacing:.6px;color:var(--s-rank);margin-bottom:10px;padding-bottom:10px;border-bottom:1px dashed var(--border)}
+.rrank-head .dot{width:6px;height:6px;border-radius:50%;background:var(--s-rank)}
+.rrank-desc{font-size:12.5px;color:var(--text2);line-height:1.7}
+.rrank-desc b{color:var(--s-rank);font-weight:700}
+.rrank-desc b.green{color:#5DCAA5}
+
+.metric-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.metric-box{background:var(--bg3);border-radius:10px;padding:12px 14px;border-left:2px solid var(--border)}
+.metric-box.pink{border-left-color:var(--pink)}
+.metric-box.green{border-left-color:#5DCAA5}
+.metric-label{font-size:9px;font-weight:700;letter-spacing:.5px;color:var(--text3);margin-bottom:4px}
+.metric-val{font-size:15px;font-weight:800;display:flex;align-items:center;gap:6px}
+.metric-val.gold{color:var(--s-rank)}
+.metric-val.pink{color:var(--pink)}
+.metric-val.green{color:#5DCAA5}
+.metric-val i{font-size:13px;margin-right:5px}
+
+.bt-mats{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.bt-mat{position:relative;width:48px;height:48px;border-radius:9px;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--text2)}
+.bt-mat-qty{position:absolute;bottom:-5px;right:-5px;background:var(--s-rank);color:#241a05;font-size:9px;font-weight:800;padding:1px 5px;border-radius:5px}
+.bt-currency{display:flex;align-items:center;justify-content:space-between;border-left:2px solid var(--s-rank);padding:10px 14px;background:var(--bg3);border-radius:0 8px 8px 0}
+.bt-currency-label{font-size:12px;color:var(--text2)}
+.bt-currency-val{font-size:17px;font-weight:800;color:var(--s-rank)}
+
+.obtain-tags{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+.obtain-tag{font-size:9.5px;font-weight:800;letter-spacing:.4px;padding:5px 10px;border-radius:6px}
+.obtain-tag.boss{background:rgba(216,90,90,.16);color:#E88585}
+.obtain-tag.gacha{background:rgba(217,169,60,.16);color:var(--s-rank)}
+.obtain-tag.shop{background:rgba(78,143,232,.16);color:#7FB0EE}
+.boss-card{background:linear-gradient(135deg,rgba(229,72,77,.10),transparent 60%),var(--bg3);border:1px solid rgba(229,72,77,.28);border-radius:10px;padding:14px;display:flex;gap:12px}
+.drop-locs{margin-top:16px}
+.drop-locs-title{font-size:10px;font-weight:700;letter-spacing:.6px;color:var(--text3);margin-bottom:10px}
+.drop-loc-row{display:flex;align-items:center;gap:9px;font-size:12.5px;color:var(--text2);padding:8px 0;border-top:1px solid var(--border)}
+.drop-loc-row:first-of-type{border-top:none}
+.drop-loc-row i{font-size:12px;color:var(--s-rank);flex-shrink:0}
+.boss-icon{width:44px;height:44px;border-radius:8px;background:var(--bg);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:20px;color:#E88585;flex-shrink:0}
+.boss-label{font-size:9px;font-weight:800;letter-spacing:.5px;color:#E88585;margin-bottom:2px}
+.boss-name{font-size:13.5px;font-weight:700;margin-bottom:4px}
+.boss-desc{font-size:11.5px;color:var(--text2);line-height:1.5}
+.placeholder-note{font-size:12.5px;color:var(--text3);font-style:italic;padding:8px 0}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="header">
+    <div class="logo"><i class="ti ti-sword"></i></div>
+    <div class="header-text">
+      <h1>Weapons (Arcs) Database</h1>
+      <p>Neverness to Everness — all catalogued Arcs</p>
+    </div>
+  </div>
+  <p class="sub">Browse the complete collection of Arcs — powerful weapons that enhance your characters' abilities. Search or filter by rarity to find the right one.</p>
+
+  <div class="toolbar">
+    <div class="search-wrap">
+      <i class="ti ti-search"></i>
+      <input id="searchInput" class="search-input" placeholder="Search database…" oninput="render()">
+    </div>
+    <div class="dropdown" id="sortDropdown">
+      <div class="dropdown-btn" onclick="toggleDropdown(event)">
+        <i class="ti ti-arrows-sort"></i>
+        <span id="sortLabel">Sort by Rarity</span>
+        <i class="ti ti-chevron-down"></i>
+      </div>
+      <div class="dropdown-menu" id="sortMenu">
+        <div class="dropdown-item active" data-value="rarity" onclick="selectSort(this)">Sort by Rarity</div>
+        <div class="dropdown-item" data-value="name" onclick="selectSort(this)">Sort by Name</div>
+        <div class="dropdown-item" data-value="atk" onclick="selectSort(this)">Sort by ATK</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="rarity-row">
+    <div class="rarity-label"><i class="ti ti-filter"></i>FILTER RARITY:</div>
+    <div class="rarity-btns">
+      <div class="rarity-btn s active" data-rank="S" onclick="toggleRank(this)">S</div>
+      <div class="rarity-btn a active" data-rank="A" onclick="toggleRank(this)">A</div>
+      <div class="rarity-btn b active" data-rank="B" onclick="toggleRank(this)">B</div>
+    </div>
+  </div>
+
+  <div class="result-count" id="resultCount"></div>
+  <div class="grid" id="grid"></div>
+
+</div>
+
+<div class="wdetail-overlay" id="wdetailOverlay" onclick="if(event.target===this) closeWDetail()">
+  <div class="wdetail-close" onclick="closeWDetail()"><i class="ti ti-x"></i></div>
+  <div class="wdetail-panel">
+    <div class="wdetail-hero">
+      <div>
+        <div class="wdetail-imgcard" id="wdImgCard">
+          <div class="wdetail-imgbox" id="wdImgBox"><i class="ti ti-sword"></i></div>
+          <div class="wdetail-rankbar" id="wdRankBar"></div>
+        </div>
+      </div>
+      <div>
+        <div class="wdetail-title" id="wdName"></div>
+        <div class="wdetail-typepill" id="wdTypeIconWrap"><span id="wdType"></span></div>
+        <div class="wdetail-quote" id="wdQuote"></div>
+        <div id="wdSignature"></div>
+      </div>
+    </div>
+
+    <div class="wdetail-grid">
+      <div>
+        <div class="wpanel">
+          <div class="wpanel-title">Refinement Resonances</div>
+          <div id="wdResonances"></div>
+        </div>
+      </div>
+      <div>
+        <div class="wpanel">
+          <div class="wpanel-title">Metrics</div>
+          <div class="metric-grid" id="wdMetrics"></div>
+        </div>
+        <div class="wpanel">
+          <div class="wpanel-title">Breakthrough Total</div>
+          <div id="wdBreakthrough"></div>
+        </div>
+        <div class="wpanel">
+          <div class="wpanel-title">How to Obtain</div>
+          <div id="wdObtain"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const RANK_ORDER={S:0,A:1,B:2};
+
+// ─── Data — transcribed from the in-game Weapons (Arcs) Database ───────────
+// Custom SVG glyphs matching the game's official Arc-type icon set (same set used on the character directory page)
+const ARC_SVG={
+  Condensate:'<g fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4.5h10M7 19.5h10"/><path d="M8 4.5c0 3.5 4 5.5 4 7.5s-4 4-4 7.5M16 4.5c0 3.5-4 5.5-4 7.5s4 4 4 7.5"/></g>',
+  Bose:'<g fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4.5h10M7 19.5h10"/><path d="M8 4.5c0 3.5 4 5.5 4 7.5s-4 4-4 7.5M16 4.5c0 3.5-4 5.5-4 7.5s4 4 4 7.5"/></g>',
+  Gas:'<g fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M12 4a8 8 0 0 1 8 8"/><path d="M12 4a8 8 0 0 0-8 8"/><path d="M4 12a8 8 0 0 0 8 8"/><path d="M20 12a8 8 0 0 1-8 8"/></g><circle cx="12" cy="12" r="1.8"/>',
+  Plasma:'<circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M13.2 5.8 8.4 13h3.6l-1 5.2 5-7.4h-3.7z"/>',
+  Liquid:'<path d="M4 12a8 8 0 0 1 8-8 4 4 0 0 1 0 8 4 4 0 0 0 0 8 8 8 0 0 1-8-8z"/>',
+  Solid:'<path d="M12 2.2 20 7v10l-8 4.8L4 17V7z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="m12 8 4 4-4 4-4-4z"/>',
+};
+function svgIcon(markup, size=16){
+  return `<svg viewBox="0 0 24 24" width="${size}" height="${size}" fill="currentColor" xmlns="http://www.w3.org/2000/svg" style="display:block">${markup}</svg>`;
+}
+function arcTypeIcon(type, size=15){
+  return ARC_SVG[type] ? svgIcon(ARC_SVG[type], size) : '';
+}
+
+const ARCS=[
+  {name:"Good Boy's Grand Adventure",rank:'S',atk:474,stat:'ATK',val:'45%',type:'Gas',quote:"A good boy never forgets his adventures, no matter how far the road takes him.",
+    detail:{
+      resonances:[
+        "Increases the wearer's ATK by 35%. Unlocks Arc: Loyal Companion — summons a spectral dog that fights alongside the wearer, dealing Anima DMG based on the wearer's ATK.",
+        "Increases the wearer's ATK by 38%. Unlocks Arc: Loyal Companion — summons a spectral dog that fights alongside the wearer, dealing Anima DMG based on the wearer's ATK.",
+        "Increases the wearer's ATK by 41%. Unlocks Arc: Loyal Companion — summons a spectral dog that fights alongside the wearer, dealing Anima DMG based on the wearer's ATK.",
+        "Increases the wearer's ATK by 44%. Unlocks Arc: Loyal Companion — summons a spectral dog that fights alongside the wearer, dealing Anima DMG based on the wearer's ATK.",
+        "Increases the wearer's ATK by 45%. Unlocks Arc: Loyal Companion — summons a spectral dog that fights alongside the wearer, dealing Anima DMG based on the wearer's ATK.",
+      ],
+      breakthrough:{
+        materials:[
+          {icon:'ti-square-rounded',qty:14},
+          {icon:'ti-moon-2',qty:14},
+          {icon:'ti-square-rounded-check',qty:18},
+          {icon:'ti-help-circle',qty:18},
+          {icon:'ti-diamond',qty:18},
+          {icon:'ti-atom',qty:18},
+        ],
+        currency:420000,
+      },
+      obtain:{
+        tags:['Gacha Pool','Gacha Exchange Shop'],
+        bossName:null,
+        dropLocations:['Miracle Box Gacha (Exchange Shop)'],
+      },
+    }},
+  {name:'Camellia Society',rank:'S',atk:666,stat:'Crit Rate',val:'12%',signature:'Baicang',type:'Bose',
+    quote:"Though I'm not supposed to let my composure slip onto the petals… that flower really cut deep.",
+    detail:{
+      resonances:[
+        "Increases <b>CRIT DMG</b> by <b class=\"green\">12%</b> for 5s when the wearer's HP is reduced without taking damage, up to 4 stacks. Unlocks Arc: Silent Garden. Consumes 5% of current HP and randomly performs one of the following attacks (CD 25s) in Arc: Silent Garden: Harsh Rebuke: Rains merciless rebukes like leaves in a storm, dealing 5 instances of Incantation DMG of <b class=\"green\">24%</b> ATK. Incessant Nagging: Pierces targets with sharp, cutting words like thorns, dealing 6 instances of Incantation DMG of <b class=\"green\">18%</b> ATK; the final instance deals double damage.",
+        "Increases <b>CRIT DMG</b> by <b class=\"green\">14%</b> for 5s when the wearer's HP is reduced without taking damage, up to 4 stacks. Unlocks Arc: Silent Garden. Consumes 5% of current HP and randomly performs one of the following attacks (CD 25s) in Arc: Silent Garden: Harsh Rebuke: Rains merciless rebukes like leaves in a storm, dealing 5 instances of Incantation DMG of <b class=\"green\">28%</b> ATK. Incessant Nagging: Pierces targets with sharp, cutting words like thorns, dealing 6 instances of Incantation DMG of <b class=\"green\">21%</b> ATK; the final instance deals double damage.",
+        "Increases <b>CRIT DMG</b> by <b class=\"green\">16%</b> for 5s when the wearer's HP is reduced without taking damage, up to 4 stacks. Unlocks Arc: Silent Garden. Consumes 5% of current HP and randomly performs one of the following attacks (CD 25s) in Arc: Silent Garden: Harsh Rebuke: Rains merciless rebukes like leaves in a storm, dealing 5 instances of Incantation DMG of <b class=\"green\">32%</b> ATK. Incessant Nagging: Pierces targets with sharp, cutting words like thorns, dealing 6 instances of Incantation DMG of <b class=\"green\">24%</b> ATK; the final instance deals double damage.",
+        "Increases <b>CRIT DMG</b> by <b class=\"green\">18%</b> for 5s when the wearer's HP is reduced without taking damage, up to 4 stacks. Unlocks Arc: Silent Garden. Consumes 5% of current HP and randomly performs one of the following attacks (CD 25s) in Arc: Silent Garden: Harsh Rebuke: Rains merciless rebukes like leaves in a storm, dealing 5 instances of Incantation DMG of <b class=\"green\">36%</b> ATK. Incessant Nagging: Pierces targets with sharp, cutting words like thorns, dealing 6 instances of Incantation DMG of <b class=\"green\">27%</b> ATK; the final instance deals double damage.",
+        "Increases <b>CRIT DMG</b> by <b class=\"green\">20%</b> for 5s when the wearer's HP is reduced without taking damage, up to 4 stacks. Unlocks Arc: Silent Garden. Consumes 5% of current HP and randomly performs one of the following attacks (CD 25s) in Arc: Silent Garden: Harsh Rebuke: Rains merciless rebukes like leaves in a storm, dealing 5 instances of Incantation DMG of <b class=\"green\">40%</b> ATK. Incessant Nagging: Pierces targets with sharp, cutting words like thorns, dealing 6 instances of Incantation DMG of <b class=\"green\">30%</b> ATK; the final instance deals double damage.",
+      ],
+      breakthrough:{
+        materials:[
+          {icon:'ti-square-rounded',qty:14},
+          {icon:'ti-moon-2',qty:14},
+          {icon:'ti-square-rounded-check',qty:18},
+          {icon:'ti-help-circle',qty:18},
+          {icon:'ti-diamond',qty:18},
+          {icon:'ti-atom',qty:18},
+        ],
+        currency:420000,
+      },
+      obtain:{
+        tags:['Boss First Defeat','Gacha Pool','Gacha Exchange Shop'],
+        bossName:'Serenity',
+        bossDesc:'Defeat the Guardian Boss to claim this weapon.',
+        dropLocations:['Anomaly Vision: Camellia Society (First Clear)','Miracle Box Gacha (Exchange Shop)'],
+      },
+    }},
+  {name:'Day Off',rank:'S',atk:512,stat:'Charge Efficiency',val:'33%',type:'Solid',quote:"Even heroes need a day off once in a while.",
+    detail:{
+      resonances:[
+        "Increases the wearer's Charge Efficiency by 30%. Unlocks Arc: Eclipse — the wearer's next Basic Attack after casting a Skill deals bonus Cosmos DMG.",
+        "Increases the wearer's Charge Efficiency by 31%. Unlocks Arc: Eclipse — the wearer's next Basic Attack after casting a Skill deals bonus Cosmos DMG.",
+        "Increases the wearer's Charge Efficiency by 32%. Unlocks Arc: Eclipse — the wearer's next Basic Attack after casting a Skill deals bonus Cosmos DMG.",
+        "Increases the wearer's Charge Efficiency by 32.5%. Unlocks Arc: Eclipse — the wearer's next Basic Attack after casting a Skill deals bonus Cosmos DMG.",
+        "Increases the wearer's Charge Efficiency by 33%. Unlocks Arc: Eclipse — the wearer's next Basic Attack after casting a Skill deals bonus Cosmos DMG.",
+      ],
+      breakthrough:{
+        materials:[
+          {icon:'ti-square-rounded',qty:14},
+          {icon:'ti-moon-2',qty:14},
+          {icon:'ti-square-rounded-check',qty:18},
+          {icon:'ti-help-circle',qty:18},
+          {icon:'ti-diamond',qty:18},
+          {icon:'ti-atom',qty:18},
+        ],
+        currency:420000,
+      },
+      obtain:{
+        tags:['Gacha Pool','Gacha Exchange Shop'],
+        bossName:null,
+        dropLocations:['Miracle Box Gacha (Exchange Shop)'],
+      },
+    }},
+  {name:'Ready-Ready',rank:'S',atk:570,stat:'Crit Rate',val:'24%',signature:'Nanally',type:'Plasma',quote:"Ready or not, here she comes.",
+    detail:{
+      resonances:[
+        "Increases the wearer's Crit Rate by 18%. Unlocks Arc: Underboss — grants a follow-up Anima hit after the wearer's Ultimate.",
+        "Increases the wearer's Crit Rate by 19.5%. Unlocks Arc: Underboss — grants a follow-up Anima hit after the wearer's Ultimate.",
+        "Increases the wearer's Crit Rate by 21%. Unlocks Arc: Underboss — grants a follow-up Anima hit after the wearer's Ultimate.",
+        "Increases the wearer's Crit Rate by 22.5%. Unlocks Arc: Underboss — grants a follow-up Anima hit after the wearer's Ultimate.",
+        "Increases the wearer's Crit Rate by 24%. Unlocks Arc: Underboss — grants a follow-up Anima hit after the wearer's Ultimate.",
+      ],
+      breakthrough:{
+        materials:[
+          {icon:'ti-square-rounded',qty:14},
+          {icon:'ti-moon-2',qty:14},
+          {icon:'ti-square-rounded-check',qty:18},
+          {icon:'ti-help-circle',qty:18},
+          {icon:'ti-diamond',qty:18},
+          {icon:'ti-atom',qty:18},
+        ],
+        currency:420000,
+      },
+      obtain:{
+        tags:['Signature Arc','Gacha Pool'],
+        bossName:null,
+        dropLocations:['Nanally Character/Weapon Banner'],
+      },
+    }},
+  {name:'Blow up the Crowd',rank:'S',atk:512,stat:'ATK',val:'27.5%',signature:'Haniel',type:'Solid',quote:"Sometimes the biggest impression is the loudest one.",
+    detail:{
+      resonances:[
+        "Increases the wearer's ATK by 22%. Unlocks Arc: Ovation — deals bonus Psyche DMG after casting a Redirect Skill.",
+        "Increases the wearer's ATK by 23.5%. Unlocks Arc: Ovation — deals bonus Psyche DMG after casting a Redirect Skill.",
+        "Increases the wearer's ATK by 25%. Unlocks Arc: Ovation — deals bonus Psyche DMG after casting a Redirect Skill.",
+        "Increases the wearer's ATK by 26.25%. Unlocks Arc: Ovation — deals bonus Psyche DMG after casting a Redirect Skill.",
+        "Increases the wearer's ATK by 27.5%. Unlocks Arc: Ovation — deals bonus Psyche DMG after casting a Redirect Skill.",
+      ],
+      breakthrough:{
+        materials:[
+          {icon:'ti-square-rounded',qty:14},
+          {icon:'ti-moon-2',qty:14},
+          {icon:'ti-square-rounded-check',qty:18},
+          {icon:'ti-help-circle',qty:18},
+          {icon:'ti-diamond',qty:18},
+          {icon:'ti-atom',qty:18},
+        ],
+        currency:420000,
+      },
+      obtain:{
+        tags:['Signature Arc','Gacha Pool'],
+        bossName:null,
+        dropLocations:['Haniel Character/Weapon Banner'],
+      },
+    }},
+  {name:'Youthful Fantasy',rank:'S',atk:570,stat:'ATK',val:'30%',signature:'Daffodill',type:'Liquid',quote:"Youth is a fleeting fantasy — better to chase it while it lasts.",
+    detail:{
+      resonances:[
+        "Increases the wearer's ATK by 24%. Unlocks Arc: Daydream — restores HP to the wearer over time while below 50% HP.",
+        "Increases the wearer's ATK by 25.5%. Unlocks Arc: Daydream — restores HP to the wearer over time while below 50% HP.",
+        "Increases the wearer's ATK by 27%. Unlocks Arc: Daydream — restores HP to the wearer over time while below 50% HP.",
+        "Increases the wearer's ATK by 28.5%. Unlocks Arc: Daydream — restores HP to the wearer over time while below 50% HP.",
+        "Increases the wearer's ATK by 30%. Unlocks Arc: Daydream — restores HP to the wearer over time while below 50% HP.",
+      ],
+      breakthrough:{
+        materials:[
+          {icon:'ti-square-rounded',qty:14},
+          {icon:'ti-moon-2',qty:14},
+          {icon:'ti-square-rounded-check',qty:18},
+          {icon:'ti-help-circle',qty:18},
+          {icon:'ti-diamond',qty:18},
+          {icon:'ti-atom',qty:18},
+        ],
+        currency:420000,
+      },
+      obtain:{
+        tags:['Signature Arc','Gacha Pool'],
+        bossName:null,
+        dropLocations:['Daffodill Character/Weapon Banner'],
+      },
+    }},
+  {name:'Contemplative Cat',rank:'S',atk:512,stat:'Crit DMG',val:'44%',signature:'Chiz',type:'Gas',quote:"A cat that thinks too much still lands on its feet.",
+    detail:{
+      resonances:[
+        "Increases the wearer's Crit DMG by 36%. Unlocks Arc: Grain Market — the wearer's Redirect Skill deals bonus Cosmos DMG based on accumulated Grain.",
+        "Increases the wearer's Crit DMG by 38%. Unlocks Arc: Grain Market — the wearer's Redirect Skill deals bonus Cosmos DMG based on accumulated Grain.",
+        "Increases the wearer's Crit DMG by 40%. Unlocks Arc: Grain Market — the wearer's Redirect Skill deals bonus Cosmos DMG based on accumulated Grain.",
+        "Increases the wearer's Crit DMG by 42%. Unlocks Arc: Grain Market — the wearer's Redirect Skill deals bonus Cosmos DMG based on accumulated Grain.",
+        "Increases the wearer's Crit DMG by 44%. Unlocks Arc: Grain Market — the wearer's Redirect Skill deals bonus Cosmos DMG based on accumulated Grain.",
+      ],
+      breakthrough:{
+        materials:[
+          {icon:'ti-square-rounded',qty:14},
+          {icon:'ti-moon-2',qty:14},
+          {icon:'ti-square-rounded-check',qty:18},
+          {icon:'ti-help-circle',qty:18},
+          {icon:'ti-diamond',qty:18},
+          {icon:'ti-atom',qty:18},
+        ],
+        currency:420000,
+      },
+      obtain:{
+        tags:['Signature Arc','Gacha Pool'],
+        bossName:null,
+        dropLocations:['Chiz Character/Weapon Banner'],
+      },
+    }},
+  {name:'Your Happiness is Priceless',rank:'S',atk:512,stat:'DEF',val:'38.5%',type:'Solid',quote:"Mm, mm-hmm, mm-hmm-hmm-hmm-hmm-hmm-hmm! (Give me Fons— You'll be happy, and I'll be happy too!)",
+    detail:{
+      resonances:[
+        "Increases HP by 24%. Grants one of the following random effects when the wearer casts an Ultimate: 1. Recovers 20% of Max HP for the team member with the lowest HP percentage. 2. Grants a Shield equal to 20% of the wearer's Max HP for 15s. 3. Recovers 10% HP for all team members. Triggers once every 30s.",
+        "Increases HP by 28%. Grants one of the following random effects when the wearer casts an Ultimate: 1. Recovers 25% of Max HP for the team member with the lowest HP percentage. 2. Grants a Shield equal to 25% of the wearer's Max HP for 15s. 3. Recovers 12.5% HP for all team members. Triggers once every 30s.",
+        "Increases HP by 32%. Grants one of the following random effects when the wearer casts an Ultimate: 1. Recovers 30% of Max HP for the team member with the lowest HP percentage. 2. Grants a Shield equal to 30% of the wearer's Max HP for 15s. 3. Recovers 15% HP for all team members. Triggers once every 30s.",
+        "Increases HP by 36%. Grants one of the following random effects when the wearer casts an Ultimate: 1. Recovers 35% of Max HP for the team member with the lowest HP percentage. 2. Grants a Shield equal to 35% of the wearer's Max HP for 15s. 3. Recovers 17.5% HP for all team members. Triggers once every 30s.",
+        "Increases HP by 40%. Grants one of the following random effects when the wearer casts an Ultimate: 1. Recovers 40% of Max HP for the team member with the lowest HP percentage. 2. Grants a Shield equal to 40% of the wearer's Max HP for 15s. 3. Recovers 20% HP for all team members. Triggers once every 30s.",
+      ],
+      breakthrough:{
+        materials:[
+          {icon:'ti-square-rounded',qty:14},
+          {icon:'ti-moon-2',qty:14},
+          {icon:'ti-square-rounded-check',qty:18},
+          {icon:'ti-help-circle',qty:18},
+          {icon:'ti-diamond',qty:18},
+          {icon:'ti-atom',qty:18},
+        ],
+        currency:420000,
+      },
+      obtain:{
+        tags:['Mall Purchase (Mhm! Coins)'],
+        bossName:null,
+        dropLocations:['Arc Exchange (100 Mhm! Coins) — earned at Nacupeda\'s Pool, Bridge Crossings'],
+      },
+    }},
+  {name:'Raging Flames',rank:'S',atk:481,stat:'Crit DMG',val:'24%',signature:'Hathor',type:'Plasma',quote:"Let it burn — some things are only beautiful while they're on fire.",
+    detail:{
+      resonances:[
+        "Increases the wearer's Crit DMG by 16%. Unlocks Arc: Overdrive — the wearer's Emergency Delivery state deals bonus Lakshana DMG.",
+        "Increases the wearer's Crit DMG by 18%. Unlocks Arc: Overdrive — the wearer's Emergency Delivery state deals bonus Lakshana DMG.",
+        "Increases the wearer's Crit DMG by 20%. Unlocks Arc: Overdrive — the wearer's Emergency Delivery state deals bonus Lakshana DMG.",
+        "Increases the wearer's Crit DMG by 22%. Unlocks Arc: Overdrive — the wearer's Emergency Delivery state deals bonus Lakshana DMG.",
+        "Increases the wearer's Crit DMG by 24%. Unlocks Arc: Overdrive — the wearer's Emergency Delivery state deals bonus Lakshana DMG.",
+      ],
+      breakthrough:{
+        materials:[
+          {icon:'ti-square-rounded',qty:14},
+          {icon:'ti-moon-2',qty:14},
+          {icon:'ti-square-rounded-check',qty:18},
+          {icon:'ti-help-circle',qty:18},
+          {icon:'ti-diamond',qty:18},
+          {icon:'ti-atom',qty:18},
+        ],
+        currency:420000,
+      },
+      obtain:{
+        tags:['Signature Arc','Gacha Pool'],
+        bossName:null,
+        dropLocations:['Hathor Character/Weapon Banner'],
+      },
+    }},
+  {name:'Eternal Waltz',rank:'S',atk:424,stat:'HP',val:'41.2%',signature:'Fadia',type:'Bose',quote:"Round and round we go, forever locked in this eternal waltz.",
+    detail:{
+      resonances:[
+        "Increases Max HP by 20%. Increases Mental DMG dealt by 10%. Unlocks Arc: Furnace of Guilt — drains a portion of the target's Max HP.",
+        "Increases Max HP by 23%. Increases Mental DMG dealt by 12%. Unlocks Arc: Furnace of Guilt — drains a portion of the target's Max HP.",
+        "Increases Max HP by 26%. Increases Mental DMG dealt by 14%. Unlocks Arc: Furnace of Guilt — drains a portion of the target's Max HP.",
+        "Increases Max HP by 29%. Increases Mental DMG dealt by 16%. Unlocks Arc: Furnace of Guilt — drains a portion of the target's Max HP.",
+        "Increases Max HP by 32%. Increases Mental DMG dealt by 18%. Unlocks Arc: Furnace of Guilt — drains a portion of the target's Max HP.",
+      ],
+      breakthrough:{
+        materials:[
+          {icon:'ti-square-rounded',qty:14},
+          {icon:'ti-moon-2',qty:14},
+          {icon:'ti-square-rounded-check',qty:18},
+          {icon:'ti-help-circle',qty:18},
+          {icon:'ti-diamond',qty:18},
+          {icon:'ti-atom',qty:18},
+        ],
+        currency:420000,
+      },
+      obtain:{
+        tags:['Signature Arc','Gacha Pool'],
+        bossName:null,
+        dropLocations:['Fadia Character/Weapon Banner'],
+      },
+    }},
+  {name:"Hethereau's Keeper",rank:'S',atk:512,stat:'ATK',val:'27.5%',type:'Solid',quote:"Someone has to watch over this city while everyone else sleeps.",
+    detail:{
+      resonances:[
+        "Increases the wearer's ATK by 22%. Unlocks Arc: Vigil — grants a shield to the active character when HP drops below 30%.",
+        "Increases the wearer's ATK by 23.5%. Unlocks Arc: Vigil — grants a shield to the active character when HP drops below 30%.",
+        "Increases the wearer's ATK by 25%. Unlocks Arc: Vigil — grants a shield to the active character when HP drops below 30%.",
+        "Increases the wearer's ATK by 26.25%. Unlocks Arc: Vigil — grants a shield to the active character when HP drops below 30%.",
+        "Increases the wearer's ATK by 27.5%. Unlocks Arc: Vigil — grants a shield to the active character when HP drops below 30%.",
+      ],
+      breakthrough:{
+        materials:[
+          {icon:'ti-square-rounded',qty:14},
+          {icon:'ti-moon-2',qty:14},
+          {icon:'ti-square-rounded-check',qty:18},
+          {icon:'ti-help-circle',qty:18},
+          {icon:'ti-diamond',qty:18},
+          {icon:'ti-atom',qty:18},
+        ],
+        currency:420000,
+      },
+      obtain:{
+        tags:['Gacha Pool','Gacha Exchange Shop'],
+        bossName:null,
+        dropLocations:['Miracle Box Gacha (Exchange Shop)'],
+      },
+    }},
+  {name:'Fluff of Fortitude',rank:'S',atk:512,stat:'ATK',val:'27.5%'},
+  {name:'Fluff of Ferocity',rank:'S',atk:512,stat:'ATK',val:'27.5%'},
+  {name:'Fluff of Finesse',rank:'S',atk:512,stat:'ATK',val:'27.5%'},
+  {name:'Fluff of Fleetness',rank:'S',atk:512,stat:'Crit DMG',val:'44%'},
+  {name:'Fluff of Fearlessness',rank:'S',atk:512,stat:'Crit Rate',val:'22%'},
+  {name:'Reality Refuge',rank:'S',atk:570,stat:'ATK',val:'30%',signature:'Jiuyuan'},
+  {name:'Tears Beneath the Mask',rank:'S',atk:512,stat:'ATK',val:'27.5%',signature:'Skia'},
+  {name:'Song of the Whale',rank:'S',atk:512,stat:'ATK',val:'27.5%'},
+  {name:'Marching Beyond Time',rank:'S',atk:570,stat:'Crit Rate',val:'24%'},
+  {name:'The Last Rose',rank:'S',atk:570,stat:'Crit Rate',val:'24%'},
+  {name:'The Rain That Shook the World',rank:'S',atk:512,stat:'Crit Rate',val:'22%',signature:'Esper Zero',type:'Solid',quote:"It emerged from a downpour that turned the world upside down.",
+    detail:{
+      resonances:[
+        "Deals 30% increased Cosmos DMG with the wearer's Redirect Skill and Ultimate. Increases the wearer's Cycle Intensity by 36 for 15s after casting a Redirect Skill. Resets the duration when triggered again.",
+        "Deals 33% increased Cosmos DMG with the wearer's Redirect Skill and Ultimate. Increases the wearer's Cycle Intensity by 45 for 15s after casting a Redirect Skill. Resets the duration when triggered again.",
+        "Deals 36% increased Cosmos DMG with the wearer's Redirect Skill and Ultimate. Increases the wearer's Cycle Intensity by 54 for 15s after casting a Redirect Skill. Resets the duration when triggered again.",
+        "Deals 39% increased Cosmos DMG with the wearer's Redirect Skill and Ultimate. Increases the wearer's Cycle Intensity by 63 for 15s after casting a Redirect Skill. Resets the duration when triggered again.",
+        "Deals 42% increased Cosmos DMG with the wearer's Redirect Skill and Ultimate. Increases the wearer's Cycle Intensity by 72 for 15s after casting a Redirect Skill. Resets the duration when triggered again.",
+      ],
+      breakthrough:{
+        materials:[
+          {icon:'ti-square-rounded',qty:14},
+          {icon:'ti-moon-2',qty:14},
+          {icon:'ti-square-rounded-check',qty:18},
+          {icon:'ti-help-circle',qty:18},
+          {icon:'ti-diamond',qty:18},
+          {icon:'ti-atom',qty:18},
+        ],
+        currency:420000,
+      },
+      obtain:{
+        tags:['Signature Arc','Paid Pack'],
+        bossName:null,
+        dropLocations:['Limited Press Arc Pack ($2.99, in-game Mall) — one-time purchase'],
+      },
+    }},
+  {name:'Stellar Veil',rank:'S',atk:512,stat:'ATK',val:'27.5%',signature:'Aurelia',type:'Plasma',quote:"At sunrise, the lost stars are merely homeward bound.",
+    detail:{
+      resonances:[
+        "Increases the wearer's Psyche DMG by 12%. Increases Crit DMG dealt by 2% for 5s when dealing Psyche DMG, up to 10 stacks. Triggers at most once every 0.1s.",
+        "Increases the wearer's Psyche DMG by 14.5%. Increases Crit DMG dealt by 2.4% for 5s when dealing Psyche DMG, up to 10 stacks. Triggers at most once every 0.1s.",
+        "Increases the wearer's Psyche DMG by 17%. Increases Crit DMG dealt by 2.8% for 5s when dealing Psyche DMG, up to 10 stacks. Triggers at most once every 0.1s.",
+        "Increases the wearer's Psyche DMG by 19.5%. Increases Crit DMG dealt by 3.2% for 5s when dealing Psyche DMG, up to 10 stacks. Triggers at most once every 0.1s.",
+        "Increases the wearer's Psyche DMG by 21%. Increases Crit DMG dealt by 3.6% for 5s when dealing Psyche DMG, up to 10 stacks. Triggers at most once every 0.1s.",
+      ],
+      breakthrough:{
+        materials:[
+          {icon:'ti-square-rounded',qty:14},
+          {icon:'ti-moon-2',qty:14},
+          {icon:'ti-square-rounded-check',qty:18},
+          {icon:'ti-help-circle',qty:18},
+          {icon:'ti-diamond',qty:18},
+          {icon:'ti-atom',qty:18},
+        ],
+        currency:420000,
+      },
+      obtain:{
+        tags:['Signature Arc','Login Reward'],
+        bossName:null,
+        dropLocations:["Login Event (Day 10) — Aurelia's signature Arc"],
+      },
+    }},
+  {name:"What's Desired",rank:'S',atk:570,stat:'Crit Rate',val:'24%',type:'Bose',quote:"And so the epic begins, and everyone sets out on the journey. As for where the road ends, does it really matter?",
+    detail:{
+      resonances:[
+        "Increases the wearer's Lakshana DMG by 20%. Increases the wearer's CRIT DMG by 40% for 20s when they cast a Redirect Skill or Ultimate. Resets the duration when triggered again.",
+        "Increases the wearer's Lakshana DMG by 21.25%. Increases the wearer's CRIT DMG by 40% for 20s when they cast a Redirect Skill or Ultimate. Resets the duration when triggered again.",
+        "Increases the wearer's Lakshana DMG by 22.5%. Increases the wearer's CRIT DMG by 40% for 20s when they cast a Redirect Skill or Ultimate. Resets the duration when triggered again.",
+        "Increases the wearer's Lakshana DMG by 23.75%. Increases the wearer's CRIT DMG by 40% for 20s when they cast a Redirect Skill or Ultimate. Resets the duration when triggered again.",
+        "Increases the wearer's Lakshana DMG by 25%. Increases the wearer's CRIT DMG by 40% for 20s when they cast a Redirect Skill or Ultimate. Resets the duration when triggered again.",
+      ],
+      breakthrough:{
+        materials:[
+          {icon:'ti-square-rounded',qty:14},
+          {icon:'ti-moon-2',qty:14},
+          {icon:'ti-square-rounded-check',qty:18},
+          {icon:'ti-help-circle',qty:18},
+          {icon:'ti-diamond',qty:18},
+          {icon:'ti-atom',qty:18},
+        ],
+        currency:420000,
+      },
+      obtain:{
+        tags:['Signature Arc','Gacha Pool'],
+        bossName:null,
+        dropLocations:['Chaos Character/Weapon Banner (Arc Research Program)'],
+      },
+    }},
+  {name:'Umbrella',rank:'A',atk:395,stat:'DEF',val:'52.5%',signature:'Adler',type:'Bose',quote:"Remember to get enough sleep and check the weather forecast; remember to eat your meals and take an umbrella when going out.",
+    detail:{
+      resonances:[
+        "\"Rainman\" — Increases HP by 10%. Strengthens shields by 10% while the wearer's HP is above 50%.",
+        "\"Rainman\" — Increases HP by 12%. Strengthens shields by 12% while the wearer's HP is above 50%.",
+        "\"Rainman\" — Increases HP by 14%. Strengthens shields by 14% while the wearer's HP is above 50%.",
+        "\"Rainman\" — Increases HP by 16%. Strengthens shields by 16% while the wearer's HP is above 50%.",
+        "\"Rainman\" — Increases HP by 18%. Strengthens shields by 18% while the wearer's HP is above 50%.",
+      ],
+      breakthrough:{materials:[],currency:null},
+      obtain:{
+        tags:['Signature Arc','Commission Reward'],
+        bossName:null,
+        dropLocations:["\"Prepare for Rain\" Commission (guaranteed drop) — Adler's signature Arc"],
+      },
+    }},
+  {name:'Cosmos Daze, Wild Reverie',rank:'A',atk:475,stat:'ATK',val:'25%',type:'Gas',
+    detail:{
+      resonances:[
+        "\"Bopp\" — Increases the wearer's damage dealt by 18% for 10s after casting a Support Skill. Triggers at most once every 20s.",
+        "\"Bopp\" — Increases the wearer's damage dealt by 21% for 10s after casting a Support Skill. Triggers at most once every 20s.",
+        "\"Bopp\" — Increases the wearer's damage dealt by 24% for 10s after casting a Support Skill. Triggers at most once every 20s.",
+        "\"Bopp\" — Increases the wearer's damage dealt by 27% for 10s after casting a Support Skill. Triggers at most once every 20s.",
+        "\"Bopp\" — Increases the wearer's damage dealt by 30% for 10s after casting a Support Skill. Triggers at most once every 20s.",
+      ],
+      breakthrough:{materials:[],currency:null},
+      obtain:{
+        tags:['Gacha Pool','Gacha Exchange Shop'],
+        bossName:null,
+        dropLocations:["Miracle Box Gacha (Exchange Shop)"],
+      },
+    }},
+  {name:'Shiny Days',rank:'A',atk:475,stat:'ATK',val:'25%',type:'Liquid',
+    detail:{
+      resonances:[
+        "\"Film - MANISH\" — Increases Break Intensity by 48. Increases DMG by 10% against Broken units.",
+        "\"Film - MANISH\" — Increases Break Intensity by 57. Increases DMG by 12% against Broken units.",
+        "\"Film - MANISH\" — Increases Break Intensity by 66. Increases DMG by 14% against Broken units.",
+        "\"Film - MANISH\" — Increases Break Intensity by 75. Increases DMG by 16% against Broken units.",
+        "\"Film - MANISH\" — Increases Break Intensity by 84. Increases DMG by 18% against Broken units.",
+      ],
+      breakthrough:{materials:[],currency:null},
+      obtain:{
+        tags:['Gacha Pool','Gacha Exchange Shop'],
+        bossName:null,
+        dropLocations:["Miracle Box Gacha (Exchange Shop)"],
+      },
+    }},
+  {name:'The Forgotten',rank:'A',atk:475,stat:'HP',val:'25%',type:'Solid',
+    detail:{
+      resonances:[
+        "\"Picture Frame\" — Increases ATK by 20% when the wearer's HP is above 50%; increases DEF by 20% when HP is below 50%.",
+        "\"Picture Frame\" — Increases ATK by 24% when the wearer's HP is above 50%; increases DEF by 24% when HP is below 50%.",
+        "\"Picture Frame\" — Increases ATK by 28% when the wearer's HP is above 50%; increases DEF by 28% when HP is below 50%.",
+        "\"Picture Frame\" — Increases ATK by 32% when the wearer's HP is above 50%; increases DEF by 32% when HP is below 50%.",
+        "\"Picture Frame\" — Increases ATK by 36% when the wearer's HP is above 50%; increases DEF by 36% when HP is below 50%.",
+      ],
+      breakthrough:{materials:[],currency:null},
+      obtain:{
+        tags:['Gacha Pool','Gacha Exchange Shop'],
+        bossName:null,
+        dropLocations:["Miracle Box Gacha (Exchange Shop)"],
+      },
+    }},
+  {name:'Oraora!',rank:'A',atk:395,stat:'ATK',val:'37.5%',type:'Plasma',
+    detail:{
+      resonances:[
+        "\"Ora Puncher\" — Increases the wearer's Basic Attack damage by 2% for 10s each time a Basic Attack is used, up to 10 stacks. Tracks the duration of each stack independently.",
+        "\"Ora Puncher\" — Increases the wearer's Basic Attack damage by 2.4% for 10s each time a Basic Attack is used, up to 10 stacks. Tracks the duration of each stack independently.",
+        "\"Ora Puncher\" — Increases the wearer's Basic Attack damage by 2.8% for 10s each time a Basic Attack is used, up to 10 stacks. Tracks the duration of each stack independently.",
+        "\"Ora Puncher\" — Increases the wearer's Basic Attack damage by 3.2% for 10s each time a Basic Attack is used, up to 10 stacks. Tracks the duration of each stack independently.",
+        "\"Ora Puncher\" — Increases the wearer's Basic Attack damage by 3.6% for 10s each time a Basic Attack is used, up to 10 stacks. Tracks the duration of each stack independently.",
+      ],
+      breakthrough:{materials:[],currency:null},
+      obtain:{
+        tags:['Gacha Pool','Gacha Exchange Shop'],
+        bossName:null,
+        dropLocations:["Miracle Box Gacha (Exchange Shop)"],
+      },
+    }},
+  {name:'Mind Royale',rank:'A',atk:555,stat:'Break Intensity',val:'60',type:'Liquid',
+    detail:{
+      resonances:[
+        "\"Inspiration Terminator\" — Grants the wearer 10 Ultimate Energy when casting a Redirect Skill. Triggers up to once every 20s.",
+        "\"Inspiration Terminator\" — Grants the wearer 12 Ultimate Energy when casting a Redirect Skill. Triggers up to once every 20s.",
+        "\"Inspiration Terminator\" — Grants the wearer 14 Ultimate Energy when casting a Redirect Skill. Triggers up to once every 20s.",
+        "\"Inspiration Terminator\" — Grants the wearer 16 Ultimate Energy when casting a Redirect Skill. Triggers up to once every 20s.",
+        "\"Inspiration Terminator\" — Grants the wearer 18 Ultimate Energy when casting a Redirect Skill. Triggers up to once every 20s.",
+      ],
+      breakthrough:{materials:[],currency:null},
+      obtain:{
+        tags:['Gacha Pool','Gacha Exchange Shop'],
+        bossName:null,
+        dropLocations:["Miracle Box Gacha (Exchange Shop)"],
+      },
+    }},
+  {name:'The Good, The Bad, The Bitter',rank:'A',atk:475,stat:'HP',val:'25%',type:'Bose',
+    detail:{
+      resonances:[
+        "\"Bittercake\" — Increases the wearer's DEF by 26% for 10s when taking damage. Triggers at most once every 20s.",
+        "\"Bittercake\" — Increases the wearer's DEF by 31% for 10s when taking damage. Triggers at most once every 20s.",
+        "\"Bittercake\" — Increases the wearer's DEF by 36% for 10s when taking damage. Triggers at most once every 20s.",
+        "\"Bittercake\" — Increases the wearer's DEF by 41% for 10s when taking damage. Triggers at most once every 20s.",
+        "\"Bittercake\" — Increases the wearer's DEF by 46% for 10s when taking damage. Triggers at most once every 20s.",
+      ],
+      breakthrough:{materials:[],currency:null},
+      obtain:{
+        tags:['Gacha Pool','Gacha Exchange Shop'],
+        bossName:null,
+        dropLocations:["Miracle Box Gacha (Exchange Shop)"],
+      },
+    }},
+  {name:'The Great Thief',rank:'A',atk:475,stat:'Break Intensity',val:'120',type:'Bose',
+    detail:{
+      resonances:[
+        "\"Danzaburou\" — Increases Break Intensity by 70 for all characters of the same Esper Type as the wearer (including the wearer) when the team has 3 or more such characters. Effect does not stack.",
+        "\"Danzaburou\" — Increases Break Intensity by 84 for all characters of the same Esper Type as the wearer (including the wearer) when the team has 3 or more such characters. Effect does not stack.",
+        "\"Danzaburou\" — Increases Break Intensity by 98 for all characters of the same Esper Type as the wearer (including the wearer) when the team has 3 or more such characters. Effect does not stack.",
+        "\"Danzaburou\" — Increases Break Intensity by 112 for all characters of the same Esper Type as the wearer (including the wearer) when the team has 3 or more such characters. Effect does not stack.",
+        "\"Danzaburou\" — Increases Break Intensity by 126 for all characters of the same Esper Type as the wearer (including the wearer) when the team has 3 or more such characters. Effect does not stack.",
+      ],
+      breakthrough:{materials:[],currency:null},
+      obtain:{
+        tags:['Gacha Pool','Gacha Exchange Shop'],
+        bossName:null,
+        dropLocations:["Miracle Box Gacha (Exchange Shop)"],
+      },
+    }},
+  {name:'Watch Your Heads!',rank:'A',atk:475,stat:'Crit DMG',val:'40%',type:'Gas',
+    detail:{
+      resonances:[
+        "\"Ghostly Kite\" — Increases ATK by 10% and Lakshana DMG to targets affected by Remora and Stain by 10% for 15s after the wearer casts a Redirect Skill. Effect does not stack.",
+        "\"Ghostly Kite\" — Increases ATK by 12% and Lakshana DMG to targets affected by Remora and Stain by 12% for 15s after the wearer casts a Redirect Skill. Effect does not stack.",
+        "\"Ghostly Kite\" — Increases ATK by 14% and Lakshana DMG to targets affected by Remora and Stain by 14% for 15s after the wearer casts a Redirect Skill. Effect does not stack.",
+        "\"Ghostly Kite\" — Increases ATK by 16% and Lakshana DMG to targets affected by Remora and Stain by 16% for 15s after the wearer casts a Redirect Skill. Effect does not stack.",
+        "\"Ghostly Kite\" — Increases ATK by 18% and Lakshana DMG to targets affected by Remora and Stain by 18% for 15s after the wearer casts a Redirect Skill. Effect does not stack.",
+      ],
+      breakthrough:{materials:[],currency:null},
+      obtain:{
+        tags:['Gacha Pool','Gacha Exchange Shop'],
+        bossName:null,
+        dropLocations:["Miracle Box Gacha (Exchange Shop)"],
+      },
+    }},
+  {name:'Clear Skies',rank:'A',atk:475,stat:'ATK',val:'25%',signature:'Mint',type:'Liquid',
+    detail:{
+      resonances:[
+        "\"Paper Squadron\" — Increases Anima DMG dealt by the wearer's Redirect Skill and Ultimate by 20%.",
+        "\"Paper Squadron\" — Increases Anima DMG dealt by the wearer's Redirect Skill and Ultimate by 23.75%.",
+        "\"Paper Squadron\" — Increases Anima DMG dealt by the wearer's Redirect Skill and Ultimate by 27.5%.",
+        "\"Paper Squadron\" — Increases Anima DMG dealt by the wearer's Redirect Skill and Ultimate by 31.25%.",
+        "\"Paper Squadron\" — Increases Anima DMG dealt by the wearer's Redirect Skill and Ultimate by 35%.",
+      ],
+      breakthrough:{materials:[],currency:null},
+      obtain:{
+        tags:['Signature Arc','Gacha Pool'],
+        bossName:null,
+        dropLocations:["Mint Character/Weapon Banner"],
+      },
+    }},
+  {name:'Failing You, Heavy in My Heart',rank:'A',atk:475,stat:'Break Intensity',val:'120',type:'Gas',
+    detail:{
+      resonances:[
+        "\"Spider Knowledge Collector\" — Grants the wearer 1 stack of Spider Knowledge when dealing damage with Basic Attacks (up to 8 stacks, at most 1 every 0.5s). All stacks are consumed on Ultimate cast, increasing team ATK by 1% for 10s per stack (+2% extra at 8 stacks).",
+        "\"Spider Knowledge Collector\" — Grants the wearer 1 stack of Spider Knowledge when dealing damage with Basic Attacks (up to 8 stacks, at most 1 every 0.5s). All stacks are consumed on Ultimate cast, increasing team ATK by 1.15% for 10s per stack (+2.3% extra at 8 stacks).",
+        "\"Spider Knowledge Collector\" — Grants the wearer 1 stack of Spider Knowledge when dealing damage with Basic Attacks (up to 8 stacks, at most 1 every 0.5s). All stacks are consumed on Ultimate cast, increasing team ATK by 1.3% for 10s per stack (+2.6% extra at 8 stacks).",
+        "\"Spider Knowledge Collector\" — Grants the wearer 1 stack of Spider Knowledge when dealing damage with Basic Attacks (up to 8 stacks, at most 1 every 0.5s). All stacks are consumed on Ultimate cast, increasing team ATK by 1.45% for 10s per stack (+2.9% extra at 8 stacks).",
+        "\"Spider Knowledge Collector\" — Grants the wearer 1 stack of Spider Knowledge when dealing damage with Basic Attacks (up to 8 stacks, at most 1 every 0.5s). All stacks are consumed on Ultimate cast, increasing team ATK by 1.6% for 10s per stack (+3.2% extra at 8 stacks).",
+      ],
+      breakthrough:{materials:[],currency:null},
+      obtain:{
+        tags:['Gacha Pool','Gacha Exchange Shop'],
+        bossName:null,
+        dropLocations:["Miracle Box Gacha (Exchange Shop)"],
+      },
+    }},
+  {name:'Drawn Blade',rank:'A',atk:395,stat:'ATK',val:'37.5%',type:'Plasma',
+    detail:{
+      resonances:[
+        "\"Crimson Hexblade\" — Deals additional Incantation DMG equal to 200% of ATK when the wearer triggers a Parry Attack.",
+        "\"Crimson Hexblade\" — Deals additional Incantation DMG equal to 230% of ATK when the wearer triggers a Parry Attack.",
+        "\"Crimson Hexblade\" — Deals additional Incantation DMG equal to 260% of ATK when the wearer triggers a Parry Attack.",
+        "\"Crimson Hexblade\" — Deals additional Incantation DMG equal to 290% of ATK when the wearer triggers a Parry Attack.",
+        "\"Crimson Hexblade\" — Deals additional Incantation DMG equal to 320% of ATK when the wearer triggers a Parry Attack.",
+      ],
+      breakthrough:{materials:[],currency:null},
+      obtain:{
+        tags:['Gacha Pool','Gacha Exchange Shop'],
+        bossName:null,
+        dropLocations:["Miracle Box Gacha (Exchange Shop)"],
+      },
+    }},
+  {name:'A Time Will Come',rank:'A',atk:475,stat:'Crit Rate',val:'20%',type:'Bose',
+    detail:{
+      resonances:[
+        "\"Tidal Ascension\" — Grants the wearer 10% ATK, 10% DEF, and 10% HP when the team has at least 3 different Esper Types.",
+        "\"Tidal Ascension\" — Grants the wearer 12% ATK, 12% DEF, and 12% HP when the team has at least 3 different Esper Types.",
+        "\"Tidal Ascension\" — Grants the wearer 14% ATK, 14% DEF, and 14% HP when the team has at least 3 different Esper Types.",
+        "\"Tidal Ascension\" — Grants the wearer 16% ATK, 16% DEF, and 16% HP when the team has at least 3 different Esper Types.",
+        "\"Tidal Ascension\" — Grants the wearer 18% ATK, 18% DEF, and 18% HP when the team has at least 3 different Esper Types.",
+      ],
+      breakthrough:{materials:[],currency:null},
+      obtain:{
+        tags:['Gacha Pool','Gacha Exchange Shop'],
+        bossName:null,
+        dropLocations:["Miracle Box Gacha (Exchange Shop)"],
+      },
+    }},
+  {name:"The Fools' Spring",rank:'A',atk:395,stat:'DEF',val:'52.5%',type:'Bose',
+    detail:{
+      resonances:[
+        "\"Solifugae Vita\" — Increases ATK by 18% while the wearer has a Shield.",
+        "\"Solifugae Vita\" — Increases ATK by 21% while the wearer has a Shield.",
+        "\"Solifugae Vita\" — Increases ATK by 24% while the wearer has a Shield.",
+        "\"Solifugae Vita\" — Increases ATK by 27% while the wearer has a Shield.",
+        "\"Solifugae Vita\" — Increases ATK by 30% while the wearer has a Shield.",
+      ],
+      breakthrough:{materials:[],currency:null},
+      obtain:{
+        tags:['Gacha Pool','Gacha Exchange Shop'],
+        bossName:null,
+        dropLocations:["Miracle Box Gacha (Exchange Shop)"],
+      },
+    }},
+  {name:'Time Bandit',rank:'A',atk:475,stat:'HP',val:'25%',type:'Solid',
+    detail:{
+      resonances:[
+        "\"Picky\" — Increases Break Intensity by 90 for 10s after the wearer casts a Redirect Skill. Effect does not stack. Unlocks Arc: Picky — summons Picky to unlock all nearby lockable objects.",
+        "\"Picky\" — Increases Break Intensity by 108 for 10s after the wearer casts a Redirect Skill. Effect does not stack. Unlocks Arc: Picky — summons Picky to unlock all nearby lockable objects.",
+        "\"Picky\" — Increases Break Intensity by 126 for 10s after the wearer casts a Redirect Skill. Effect does not stack. Unlocks Arc: Picky — summons Picky to unlock all nearby lockable objects.",
+        "\"Picky\" — Increases Break Intensity by 144 for 10s after the wearer casts a Redirect Skill. Effect does not stack. Unlocks Arc: Picky — summons Picky to unlock all nearby lockable objects.",
+        "\"Picky\" — Increases Break Intensity by 162 for 10s after the wearer casts a Redirect Skill. Effect does not stack. Unlocks Arc: Picky — summons Picky to unlock all nearby lockable objects.",
+      ],
+      breakthrough:{materials:[],currency:null},
+      obtain:{
+        tags:['Gacha Pool','Gacha Exchange Shop'],
+        bossName:null,
+        dropLocations:["Miracle Box Gacha (Exchange Shop)"],
+      },
+    }},
+  {name:'Call of the Twisted City',rank:'A',atk:395,stat:'HP',val:'37.5%',signature:'Edgar',type:'Liquid',
+    detail:{
+      resonances:[
+        "\"Cardboard Castle\" — Increases Healing Bonus by 12% for 10s after the wearer casts a Redirect Skill. Effect does not stack.",
+        "\"Cardboard Castle\" — Increases Healing Bonus by 14% for 10s after the wearer casts a Redirect Skill. Effect does not stack.",
+        "\"Cardboard Castle\" — Increases Healing Bonus by 16% for 10s after the wearer casts a Redirect Skill. Effect does not stack.",
+        "\"Cardboard Castle\" — Increases Healing Bonus by 18% for 10s after the wearer casts a Redirect Skill. Effect does not stack.",
+        "\"Cardboard Castle\" — Increases Healing Bonus by 20% for 10s after the wearer casts a Redirect Skill. Effect does not stack.",
+      ],
+      breakthrough:{materials:[],currency:null},
+      obtain:{
+        tags:['Signature Arc','Gacha Pool'],
+        bossName:null,
+        dropLocations:["Edgar Character/Weapon Banner"],
+      },
+    }},
+  {name:'Dangerous Game',rank:'B',atk:380,stat:'Break Intensity',val:'96',type:'Bose',quote:"The higher the stakes, the sweeter the win.",
+    detail:{
+      resonances:[
+        "\"Decomposer\" — Increases the wearer's Break Intensity by 60 for 10s when reducing a target's Break. Triggers at most once every 20s.",
+        "\"Decomposer\" — Increases the wearer's Break Intensity by 66 for 10s when reducing a target's Break. Triggers at most once every 20s.",
+        "\"Decomposer\" — Increases the wearer's Break Intensity by 72 for 10s when reducing a target's Break. Triggers at most once every 20s.",
+        "\"Decomposer\" — Increases the wearer's Break Intensity by 78 for 10s when reducing a target's Break. Triggers at most once every 20s.",
+        "\"Decomposer\" — Increases the wearer's Break Intensity by 84 for 10s when reducing a target's Break. Triggers at most once every 20s.",
+      ],
+      breakthrough:{
+        materials:[
+          {icon:'ti-square-rounded',qty:8},
+          {icon:'ti-moon-2',qty:8},
+          {icon:'ti-square-rounded-check',qty:12},
+          {icon:'ti-help-circle',qty:12},
+          {icon:'ti-diamond',qty:12},
+          {icon:'ti-atom',qty:12},
+        ],
+        currency:null,
+      },
+      obtain:{
+        tags:['Gacha Pool','Gacha Exchange Shop'],
+        bossName:null,
+        dropLocations:['Arc Research Program (standard rate)','Beginner Arc Exchange Shop'],
+      },
+    }},
+  {name:'First Step to Success',rank:'B',atk:380,stat:'ATK',val:'20%',type:'Solid',quote:"Good self-control is the first step on the road to success.",
+    detail:{
+      resonances:[
+        "\"Noros\" — Increases the wearer's ATK by 12% for 10s when casting a Redirect Skill. Triggers up to once every 20s.",
+        "\"Noros\" — Increases the wearer's ATK by 13% for 10s when casting a Redirect Skill. Triggers up to once every 20s.",
+        "\"Noros\" — Increases the wearer's ATK by 14% for 10s when casting a Redirect Skill. Triggers up to once every 20s.",
+        "\"Noros\" — Increases the wearer's ATK by 15% for 10s when casting a Redirect Skill. Triggers up to once every 20s.",
+        "\"Noros\" — Increases the wearer's ATK by 16% for 10s when casting a Redirect Skill. Triggers up to once every 20s.",
+      ],
+      breakthrough:{
+        materials:[
+          {icon:'ti-square-rounded',qty:8},
+          {icon:'ti-moon-2',qty:8},
+          {icon:'ti-square-rounded-check',qty:12},
+          {icon:'ti-help-circle',qty:12},
+          {icon:'ti-diamond',qty:12},
+          {icon:'ti-atom',qty:12},
+        ],
+        currency:null,
+      },
+      obtain:{
+        tags:['Gacha Pool','Gacha Exchange Shop'],
+        bossName:null,
+        dropLocations:['Arc Research Program (standard rate)','Beginner Arc Exchange Shop'],
+      },
+    }},
+  {name:'Be Happy',rank:'B',atk:316,stat:'HP',val:'30%',type:'Gas',quote:"Simple joys make for a happy life.",
+    detail:{
+      resonances:[
+        "\"Huggy Vines\" — Restores the wearer's HP by 12% upon defeating an enemy. Triggers once every 20s.",
+        "\"Huggy Vines\" — Restores the wearer's HP by 14% upon defeating an enemy. Triggers once every 20s.",
+        "\"Huggy Vines\" — Restores the wearer's HP by 16% upon defeating an enemy. Triggers once every 20s.",
+        "\"Huggy Vines\" — Restores the wearer's HP by 18% upon defeating an enemy. Triggers once every 20s.",
+        "\"Huggy Vines\" — Restores the wearer's HP by 20% upon defeating an enemy. Triggers once every 20s.",
+      ],
+      breakthrough:{
+        materials:[
+          {icon:'ti-square-rounded',qty:8},
+          {icon:'ti-moon-2',qty:8},
+          {icon:'ti-square-rounded-check',qty:12},
+          {icon:'ti-help-circle',qty:12},
+          {icon:'ti-diamond',qty:12},
+          {icon:'ti-atom',qty:12},
+        ],
+        currency:null,
+      },
+      obtain:{
+        tags:['Gacha Pool','Gacha Exchange Shop'],
+        bossName:null,
+        dropLocations:['Arc Research Program (standard rate)','Beginner Arc Exchange Shop'],
+      },
+    }},
+  {name:'Us.',rank:'B',atk:380,stat:'ATK',val:'20%',type:'Plasma',quote:"I am... you... are... you, are... it, is... me... no, I... am... us.",
+    detail:{
+      resonances:[
+        "\"Protocore\" — Increases the wearer's Basic Attack damage by 12%.",
+        "\"Protocore\" — Increases the wearer's Basic Attack damage by 13%.",
+        "\"Protocore\" — Increases the wearer's Basic Attack damage by 14%.",
+        "\"Protocore\" — Increases the wearer's Basic Attack damage by 15%.",
+        "\"Protocore\" — Increases the wearer's Basic Attack damage by 16%.",
+      ],
+      breakthrough:{
+        materials:[
+          {icon:'ti-square-rounded',qty:8},
+          {icon:'ti-moon-2',qty:8},
+          {icon:'ti-square-rounded-check',qty:12},
+          {icon:'ti-help-circle',qty:12},
+          {icon:'ti-diamond',qty:12},
+          {icon:'ti-atom',qty:12},
+        ],
+        currency:null,
+      },
+      obtain:{
+        tags:['Gacha Pool','Gacha Exchange Shop'],
+        bossName:null,
+        dropLocations:['Arc Research Program (standard rate)','Beginner Arc Exchange Shop'],
+      },
+    }},
+  {name:'"Real Music"',rank:'B',atk:380,stat:'ATK',val:'20%',type:'Liquid',quote:"Waddaya mean ya prefer \"real music\"? Is this not \"real\" enough for yer taste?",
+    detail:{
+      resonances:[
+        "\"Haunted Record\" — Grants the wearer a 12% Redirect Skill DMG bonus.",
+        "\"Haunted Record\" — Grants the wearer a 13% Redirect Skill DMG bonus.",
+        "\"Haunted Record\" — Grants the wearer a 14% Redirect Skill DMG bonus.",
+        "\"Haunted Record\" — Grants the wearer a 15% Redirect Skill DMG bonus.",
+        "\"Haunted Record\" — Grants the wearer a 16% Redirect Skill DMG bonus.",
+      ],
+      breakthrough:{
+        materials:[
+          {icon:'ti-square-rounded',qty:8},
+          {icon:'ti-moon-2',qty:8},
+          {icon:'ti-square-rounded-check',qty:12},
+          {icon:'ti-help-circle',qty:12},
+          {icon:'ti-diamond',qty:12},
+          {icon:'ti-atom',qty:12},
+        ],
+        currency:null,
+      },
+      obtain:{
+        tags:['Gacha Pool','Gacha Exchange Shop'],
+        bossName:null,
+        dropLocations:['Arc Research Program (standard rate)','Beginner Arc Exchange Shop'],
+      },
+    }},
+];
+
+let currentSort='rarity';
+function toggleDropdown(e){
+  e.stopPropagation();
+  document.getElementById('sortDropdown').classList.toggle('open');
+}
+function selectSort(el){
+  currentSort=el.dataset.value;
+  document.getElementById('sortLabel').textContent=el.textContent;
+  document.querySelectorAll('#sortMenu .dropdown-item').forEach(i=>i.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('sortDropdown').classList.remove('open');
+  render();
+}
+document.addEventListener('click',()=>document.getElementById('sortDropdown').classList.remove('open'));
+
+function toggleRank(el){
+  el.classList.toggle('active');
+  render();
+}
+
+function cardHTML(w){
+  return `<div class="wcard ${w.rank.toLowerCase()}" onclick="openWDetail('${w.name.replace(/'/g,"\\'")}')">
+    <div class="wicon"><i class="ti ti-sword"></i></div>
+    <div class="wbody">
+      <div class="wrank-row">
+        <div class="wrank ${w.rank.toLowerCase()}">${w.rank}</div>
+        ${w.signature?`<div class="sig-badge"><i class="ti ti-user-star"></i>${w.signature}</div>`:''}
+      </div>
+      <div class="wname" title="${w.name}">${w.name}</div>
+      <div class="wstats">
+        <div><div class="wstat-label">ATK</div><div class="wstat-val">${w.atk}</div></div>
+        <div><div class="wstat-label">${w.stat.toUpperCase()}</div><div class="wstat-val accent2">${w.val}</div></div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function render(){
+  const q=document.getElementById('searchInput').value.toLowerCase().trim();
+  const sort=currentSort;
+  const activeRanks=[...document.querySelectorAll('.rarity-btn.active')].map(b=>b.dataset.rank);
+
+  let filtered=ARCS.filter(w=>
+    (!q || w.name.toLowerCase().includes(q)) &&
+    activeRanks.includes(w.rank)
+  );
+
+  if(sort==='name') filtered.sort((a,b)=>a.name.localeCompare(b.name));
+  else if(sort==='atk') filtered.sort((a,b)=>b.atk-a.atk);
+  else filtered.sort((a,b)=>RANK_ORDER[a.rank]-RANK_ORDER[b.rank] || b.atk-a.atk);
+
+  document.getElementById('resultCount').textContent=`Found ${filtered.length} Arc${filtered.length===1?'':'s'}`;
+  const grid=document.getElementById('grid');
+  grid.innerHTML = filtered.length
+    ? filtered.map(cardHTML).join('')
+    : `<div class="empty-msg">No Arcs match your filters.</div>`;
+}
+
+render();
+
+// ─── Weapon Detail Modal ─────────────────────────────────────────────────────
+function openWDetail(name){
+  const w=ARCS.find(a=>a.name===name);
+  if(!w) return;
+  const rankL=w.rank.toLowerCase();
+  document.getElementById('wdImgCard').className=`wdetail-imgcard ${rankL}`;
+  document.getElementById('wdImgBox').className=`wdetail-imgbox ${rankL}`;
+  document.getElementById('wdRankBar').className=`wdetail-rankbar ${rankL}`;
+  document.getElementById('wdRankBar').textContent=`${w.rank} RANK`;
+  document.getElementById('wdName').textContent=w.name;
+  document.getElementById('wdTypeIconWrap').innerHTML=`${arcTypeIcon(w.type,14)}<span id="wdType">${w.type||'—'}</span>`;
+  document.getElementById('wdQuote').textContent=w.quote||'No flavor text added yet for this Arc.';
+  document.getElementById('wdSignature').innerHTML = w.signature
+    ? `<div class="sig-card">
+        <div class="sig-avatar">${w.signature.split(' ').map(x=>x[0]).slice(0,2).join('')}</div>
+        <div><div class="sig-label">SIGNATURE ARC OF</div><div class="sig-name">${w.signature}</div></div>
+      </div>`
+    : '';
+
+  const d=w.detail;
+
+  // Refinement Resonances
+  const resPane=document.getElementById('wdResonances');
+  if(d&&d.resonances){
+    resPane.innerHTML=d.resonances.map((desc,i)=>`
+      <div class="rrank-card">
+        <div class="rrank-head"><span class="dot"></span>RANK ${i+1}</div>
+        <div class="rrank-desc">${desc}</div>
+      </div>`).join('');
+  } else {
+    resPane.innerHTML=`<div class="placeholder-note">No refinement resonance data added yet for ${w.name}.</div>`;
+  }
+
+  // Metrics (always available from base card data)
+  document.getElementById('wdMetrics').innerHTML=`
+    <div class="metric-box"><div class="metric-label">RARITY</div><div class="metric-val gold">${w.rank}</div></div>
+    <div class="metric-box"><div class="metric-label">TYPE</div><div class="metric-val">${arcTypeIcon(w.type,14)}${w.type||'—'}</div></div>
+    <div class="metric-box pink"><div class="metric-label">MAIN STAT</div><div class="metric-val pink">ATK ${w.atk}</div></div>
+    <div class="metric-box green"><div class="metric-label">SUB STAT</div><div class="metric-val green">${w.val} ${w.stat}</div></div>
+  `;
+
+  // Breakthrough Total
+  const btPane=document.getElementById('wdBreakthrough');
+  if(d&&d.breakthrough&&d.breakthrough.materials.length){
+    const cur=d.breakthrough.currency;
+    btPane.innerHTML=`
+      <div class="bt-mats">${d.breakthrough.materials.map(m=>`
+        <div class="bt-mat"><i class="ti ${m.icon}"></i><span class="bt-mat-qty">x${m.qty}</span></div>`).join('')}
+      </div>
+      <div class="bt-currency">
+        <span class="bt-currency-label">Fon</span>
+        <span class="bt-currency-val">${cur!=null?cur.toLocaleString():'Unconfirmed'}</span>
+      </div>`;
+  } else {
+    btPane.innerHTML=`<div class="placeholder-note">Breakthrough material quantities not confirmed yet for ${w.name}.</div>`;
+  }
+
+  // How to Obtain
+  const obPane=document.getElementById('wdObtain');
+  if(d&&d.obtain){
+    const tagClass=t=>/boss/i.test(t)?'boss':/gacha pool/i.test(t)?'gacha':'shop';
+    obPane.innerHTML=`
+      <div class="obtain-tags">${d.obtain.tags.map(t=>`<span class="obtain-tag ${tagClass(t)}">${t.toUpperCase()}</span>`).join('')}</div>
+      ${d.obtain.bossName?`
+      <div class="boss-card">
+        <div class="boss-icon"><i class="ti ti-skull"></i></div>
+        <div>
+          <div class="boss-label">GUARDIAN BOSS DROP</div>
+          <div class="boss-name">${d.obtain.bossName}</div>
+          <div class="boss-desc">${d.obtain.bossDesc}</div>
+        </div>
+      </div>`:''}
+      ${d.obtain.dropLocations?`
+      <div class="drop-locs">
+        <div class="drop-locs-title">DROP LOCATIONS &amp; CHANNELS</div>
+        ${d.obtain.dropLocations.map(loc=>`<div class="drop-loc-row"><i class="ti ti-sparkles"></i>${loc}</div>`).join('')}
+      </div>`:''}`;
+  } else {
+    obPane.innerHTML=`<div class="placeholder-note">No acquisition data added yet for ${w.name}.</div>`;
+  }
+
+  document.getElementById('wdetailOverlay').classList.add('active');
+  document.body.style.overflow='hidden';
+}
+function closeWDetail(){
+  document.getElementById('wdetailOverlay').classList.remove('active');
+  document.body.style.overflow='';
+}
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeWDetail(); });
+</script>
+</body>
+</html>
