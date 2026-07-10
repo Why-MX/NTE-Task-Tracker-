@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NTE Bond Calculator — Neverness to Everness</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0F0E17;--bg2:#1A1825;--bg3:#221F32;--border:#2E2A44;
+  --text:#EBE9F8;--text2:#9E9AC0;--text3:#5C5880;
+  --accent:#7B5CF5;--accent2:#534AB7;--pink:#E85D9E;
+  --green:#3BB37E;--gold:#D9A93C;--red:#D85A5A;
+  --radius:10px;
+  --app-pad: clamp(0.75rem, 4vw, 1.5rem);
+}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh}
+.app{max-width:760px;margin:0 auto;padding:clamp(1rem,4vw,2rem) var(--app-pad) 5rem}
+
+/* header */
+.header{display:flex;align-items:center;gap:14px;margin-bottom:1rem;flex-wrap:wrap;row-gap:10px}
+.logo{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 0 24px rgba(123,92,245,.25)}
+.logo i{font-size:22px;color:#fff}
+.header-text h1{font-size:clamp(17px,4vw,22px);font-weight:700;letter-spacing:-.3px}
+.header-text p{font-size:12px;color:var(--text2);margin-top:2px}
+.sub{color:var(--text2);font-size:13px;max-width:620px;margin:0 0 20px;line-height:1.6}
+
+.note-box{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:16px 18px;margin-bottom:22px;font-size:12.5px;color:var(--text2);line-height:1.6;display:flex;gap:12px}
+.note-box i{font-size:16px;color:var(--accent);flex-shrink:0;margin-top:1px}
+
+/* form panel */
+.panel{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:22px 24px;margin-bottom:20px}
+.panel-title{font-size:13px;font-weight:800;letter-spacing:.6px;color:var(--text2);text-transform:uppercase;margin-bottom:18px;display:flex;align-items:center;gap:8px}
+.panel-title i{color:var(--pink)}
+
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px}
+@media(max-width:520px){.form-row{grid-template-columns:1fr}}
+.field label{display:block;font-size:11px;font-weight:700;letter-spacing:.4px;color:var(--text3);margin-bottom:7px;text-transform:uppercase}
+.field select,.field input{width:100%;padding:11px 13px;background:var(--bg3);border:1px solid var(--border);border-radius:9px;color:var(--text);font-size:14px;font-family:inherit}
+.field select:focus,.field input:focus{outline:none;border-color:var(--accent)}
+.field .hint{font-size:10.5px;color:var(--text3);margin-top:5px}
+
+/* hide native number-input spinner arrows for a cleaner themed look */
+.field input[type="number"]::-webkit-outer-spin-button,
+.field input[type="number"]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.field input[type="number"]{-moz-appearance:textfield}
+
+/* custom stepper (replaces native spinner arrows with themed +/- buttons) */
+.stepper{display:flex;align-items:stretch;gap:0}
+.stepper input{border-radius:9px 0 0 9px;text-align:left;border-right:none}
+.stepper-btns{display:flex;flex-direction:column;border:1px solid var(--border);border-left:none;border-radius:0 9px 9px 0;overflow:hidden}
+.stepper-btn{flex:1;width:30px;background:var(--bg3);border:none;color:var(--text2);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:11px;padding:0}
+.stepper-btn:first-child{border-bottom:1px solid var(--border)}
+.stepper-btn:hover{background:var(--bg2);color:var(--text)}
+.stepper-btn:active{background:var(--accent);color:#fff}
+
+/* custom themed dropdown (replaces native <select> so the open menu matches the site theme) */
+.cdropdown{position:relative}
+.cdropdown-btn{display:flex;align-items:center;gap:8px;width:100%;padding:11px 13px;background:var(--bg3);border:1px solid var(--border);border-radius:9px;color:var(--text);font-size:14px;font-family:inherit;cursor:pointer}
+.cdropdown-btn:hover{border-color:var(--text3)}
+.cdropdown.open .cdropdown-btn{border-color:var(--accent)}
+.cdropdown-btn span{flex:1;text-align:left}
+.cdropdown-btn i.ti-chevron-down{font-size:14px;color:var(--text3);transition:transform .15s}
+.cdropdown.open .cdropdown-btn i.ti-chevron-down{transform:rotate(180deg)}
+.cdropdown-menu{position:absolute;top:calc(100% + 6px);left:0;right:0;max-height:280px;overflow-y:auto;background:var(--bg3);border:1px solid var(--border);border-radius:9px;box-shadow:0 12px 28px rgba(0,0,0,.45);padding:6px;z-index:30;display:none;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
+.cdropdown-menu::-webkit-scrollbar{width:6px}
+.cdropdown-menu::-webkit-scrollbar-track{background:transparent}
+.cdropdown-menu::-webkit-scrollbar-thumb{background:var(--border);border-radius:6px}
+.cdropdown-menu::-webkit-scrollbar-thumb:hover{background:var(--text3)}
+.cdropdown.open .cdropdown-menu{display:block}
+.cdropdown-item{padding:9px 11px;border-radius:7px;font-size:13.5px;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:space-between}
+.cdropdown-item:hover{background:var(--bg2);color:var(--text)}
+.cdropdown-item.active{color:var(--accent);font-weight:600}
+.cdropdown-item.active:after{content:'\2713';font-weight:800}
+
+.rate-options{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:8px}
+@media(max-width:520px){.rate-options{grid-template-columns:1fr}}
+.rate-opt{background:var(--bg3);border:1.5px solid var(--border);border-radius:9px;padding:10px 12px;cursor:pointer;text-align:center;transition:all .15s}
+.rate-opt.active{border-color:var(--accent);background:rgba(123,92,245,.12)}
+.rate-opt:hover:not(.active){border-color:var(--text3)}
+.rate-opt .rate-name{font-size:11.5px;font-weight:700;margin-bottom:2px}
+.rate-opt .rate-val{font-size:10px;color:var(--text3)}
+.rate-opt.active .rate-val{color:var(--accent)}
+
+/* results */
+.result-panel{background:var(--bg2);border:1px solid var(--accent);border-radius:14px;padding:22px 24px;margin-bottom:20px;display:none}
+.result-panel.show{display:block}
+.result-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px}
+@media(max-width:480px){.result-grid{grid-template-columns:1fr}}
+.result-box{background:var(--bg3);border-radius:11px;padding:14px 16px;text-align:center}
+.result-box .rval{font-size:22px;font-weight:800;color:var(--pink)}
+.result-box .rlbl{font-size:9.5px;font-weight:700;letter-spacing:.5px;color:var(--text3);margin-top:3px;text-transform:uppercase}
+
+.progress-track{background:var(--bg3);border-radius:8px;height:10px;overflow:hidden;margin-bottom:6px}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--pink));border-radius:8px;transition:width .3s}
+.progress-label{display:flex;justify-content:space-between;font-size:11px;color:var(--text3);margin-bottom:18px}
+
+.level-breakdown{display:flex;flex-direction:column;gap:8px}
+.lvl-row{display:flex;align-items:center;gap:12px;background:var(--bg3);border-radius:9px;padding:10px 14px}
+.lvl-row.done{opacity:.45}
+.lvl-badge{width:28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0}
+.lvl-row.done .lvl-badge{background:var(--green)}
+.lvl-info{flex:1;font-size:12.5px;color:var(--text2)}
+.lvl-info b{color:var(--text)}
+.lvl-days{font-size:11.5px;color:var(--gold);font-weight:700;white-space:nowrap}
+
+.calc-btn{width:100%;padding:13px;background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;border-radius:10px;color:#fff;font-size:14px;font-weight:700;font-family:inherit;cursor:pointer;margin-top:4px}
+.calc-btn:hover{opacity:.92}
+.error-msg{color:var(--red);font-size:12.5px;margin-top:10px;display:none}
+.error-msg.show{display:block}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="header">
+    <div class="logo"><i class="ti ti-calculator"></i></div>
+    <div class="header-text">
+      <h1>Bond Calculator</h1>
+      <p>Neverness to Everness — how many points, and how long, to reach a target Bond Level</p>
+    </div>
+  </div>
+  <p class="sub">Enter your character's current Bond Level and current Affinity progress within that level, pick a target level, and this works out exactly how much Affinity you still need — plus an estimated timeline based on your daily farming rate.</p>
+
+  <div class="note-box"><i class="ti ti-info-circle"></i>Per-level Affinity thresholds aren't officially published by the developer — the numbers used here come from a community datamine, and they sum to ~56,500 total for Level 1→10, which lines up closely with the widely-confirmed "~56,000 total Affinity to max a character" figure repeated across most guides. Treat exact per-level numbers as a well-corroborated estimate, not a guaranteed-official source.</div>
+
+  <div class="panel">
+    <div class="panel-title"><i class="ti ti-heart"></i>Current Progress</div>
+    <div class="form-row">
+      <div class="field">
+        <label>Current Bond Level</label>
+        <div class="cdropdown" id="curLevelDropdown">
+          <div class="cdropdown-btn" onclick="toggleCDropdown('curLevel',event)">
+            <span id="curLevelLabel">Level 1</span>
+            <i class="ti ti-chevron-down"></i>
+          </div>
+          <div class="cdropdown-menu" id="curLevelMenu"></div>
+        </div>
+      </div>
+      <div class="field">
+        <label>Affinity Earned in This Level</label>
+        <div class="stepper">
+          <input type="number" id="curPoints" min="0" value="0" placeholder="e.g. 250">
+          <div class="stepper-btns">
+            <button type="button" class="stepper-btn" onclick="stepCurPoints(1)"><i class="ti ti-chevron-up"></i></button>
+            <button type="button" class="stepper-btn" onclick="stepCurPoints(-1)"><i class="ti ti-chevron-down"></i></button>
+          </div>
+        </div>
+        <div class="hint" id="curLevelHint"></div>
+      </div>
+    </div>
+
+    <div class="panel-title" style="margin-top:6px"><i class="ti ti-target-arrow"></i>Target</div>
+    <div class="form-row">
+      <div class="field">
+        <label>Target Bond Level</label>
+        <div class="cdropdown" id="targetLevelDropdown">
+          <div class="cdropdown-btn" onclick="toggleCDropdown('targetLevel',event)">
+            <span id="targetLevelLabel">Level 2</span>
+            <i class="ti ti-chevron-down"></i>
+          </div>
+          <div class="cdropdown-menu" id="targetLevelMenu"></div>
+        </div>
+      </div>
+      <div class="field">
+        <label>Five-Star Paragon Bonus</label>
+        <div class="cdropdown" id="paragonBonusDropdown">
+          <div class="cdropdown-btn" onclick="toggleCDropdown('paragonBonus',event)">
+            <span id="paragonBonusLabel">Not leveled (+0%)</span>
+            <i class="ti ti-chevron-down"></i>
+          </div>
+          <div class="cdropdown-menu" id="paragonBonusMenu"></div>
+        </div>
+        <div class="hint">Esper Zero's life skill — only applies to gift-based Affinity.</div>
+      </div>
+    </div>
+
+    <div class="panel-title" style="margin-top:6px"><i class="ti ti-bolt"></i>Daily Farming Rate</div>
+    <div class="rate-options" id="rateOptions"></div>
+    <div class="field" id="customRateField" style="display:none;margin-top:8px">
+      <label>Custom Affinity / Day</label>
+      <div class="stepper">
+        <input type="number" id="customRate" min="1" placeholder="e.g. 850">
+        <div class="stepper-btns">
+          <button type="button" class="stepper-btn" onclick="stepCustomRate(10)"><i class="ti ti-chevron-up"></i></button>
+          <button type="button" class="stepper-btn" onclick="stepCustomRate(-10)"><i class="ti ti-chevron-down"></i></button>
+        </div>
+      </div>
+    </div>
+
+    <button class="calc-btn" onclick="calculate()"><i class="ti ti-calculator" style="margin-right:6px"></i>Calculate</button>
+    <div class="error-msg" id="errorMsg"></div>
+  </div>
+
+  <div class="result-panel" id="resultPanel">
+    <div class="panel-title"><i class="ti ti-chart-bar"></i>Results</div>
+    <div class="result-grid">
+      <div class="result-box"><div class="rval" id="resPoints">—</div><div class="rlbl">Affinity Still Needed</div></div>
+      <div class="result-box"><div class="rval" id="resDays">—</div><div class="rlbl">Estimated Days</div></div>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    <div class="progress-label"><span id="progressCur">0</span><span id="progressTotal">0</span></div>
+    <div class="level-breakdown" id="levelBreakdown"></div>
+  </div>
+
+</div>
+
+<script>
+// Cumulative-per-level Affinity thresholds (community datamine; sums to ~56,500,
+// consistent with the widely-cited "~56,000 total to max" figure).
+const LEVEL_THRESHOLDS={
+  1:500,   // 1 -> 2
+  2:1000,  // 2 -> 3
+  3:2000,  // 3 -> 4
+  4:3500,  // 4 -> 5
+  5:5000,  // 5 -> 6
+  6:7000,  // 6 -> 7
+  7:9500,  // 7 -> 8
+  8:12000, // 8 -> 9
+  9:16000, // 9 -> 10
+};
+
+const RATE_PRESETS=[
+  {key:'budget',name:'Budget Route',val:66,desc:'3 favorite gifts/day (22 Affinity each)'},
+  {key:'standard',name:'Standard Route',val:300,desc:'3 premium gifts/day (100 Affinity each)'},
+  {key:'custom',name:'Custom',val:null,desc:'Set your own daily rate'},
+];
+let selectedRate='standard';
+const dropdownState={curLevel:1, targetLevel:2, paragonBonus:0};
+
+function toggleCDropdown(id, e){
+  e.stopPropagation();
+  document.querySelectorAll('.cdropdown.open').forEach(d=>{ if(d.id!==id+'Dropdown') d.classList.remove('open'); });
+  document.getElementById(id+'Dropdown').classList.toggle('open');
+}
+document.addEventListener('click',()=>document.querySelectorAll('.cdropdown.open').forEach(d=>d.classList.remove('open')));
+
+function renderCDropdownMenu(id, options){
+  const menu=document.getElementById(id+'Menu');
+  menu.innerHTML=options.map(o=>`
+    <div class="cdropdown-item${dropdownState[id]==o.value?' active':''}" data-value="${o.value}" onclick="selectCDropdown('${id}',this)">${o.label}</div>
+  `).join('');
+}
+function selectCDropdown(id, el){
+  const value=el.dataset.value;
+  dropdownState[id]=isNaN(value) ? value : Number(value);
+  document.getElementById(id+'Label').textContent=el.textContent;
+  document.getElementById(id+'Dropdown').classList.remove('open');
+  renderAllCDropdowns();
+  if(id==='curLevel') onCurLevelChange();
+}
+function renderAllCDropdowns(){
+  renderCDropdownMenu('curLevel',[1,2,3,4,5,6,7,8,9].map(n=>({value:n,label:`Level ${n}`})));
+  const targetOpts=[];
+  for(let l=dropdownState.curLevel+1;l<=10;l++) targetOpts.push({value:l,label:`Level ${l}`});
+  renderCDropdownMenu('targetLevel',targetOpts);
+  renderCDropdownMenu('paragonBonus',[
+    {value:0,label:'Not leveled (+0%)'},
+    {value:5,label:'Leveled (+5% Affinity from gifts)'},
+  ]);
+}
+function stepCurPoints(dir){
+  const input=document.getElementById('curPoints');
+  const max=parseInt(input.max)||Infinity;
+  let val=(parseInt(input.value)||0)+dir*10;
+  val=Math.max(0,Math.min(max,val));
+  input.value=val;
+}
+function stepCustomRate(dir){
+  const input=document.getElementById('customRate');
+  let val=(parseInt(input.value)||0)+dir;
+  val=Math.max(1,val);
+  input.value=val;
+}
+
+function onCurLevelChange(){
+  const cur=dropdownState.curLevel;
+  if(dropdownState.targetLevel<=cur) dropdownState.targetLevel=cur+1;
+  const need=LEVEL_THRESHOLDS[cur];
+  document.getElementById('curLevelHint').textContent=`Needs ${need.toLocaleString()} to reach Level ${cur+1}`;
+  document.getElementById('curPoints').max=need;
+  renderAllCDropdowns();
+  document.getElementById('targetLevelLabel').textContent=`Level ${dropdownState.targetLevel}`;
+}
+
+function renderRateOptions(){
+  document.getElementById('rateOptions').innerHTML=RATE_PRESETS.map(r=>`
+    <div class="rate-opt${selectedRate===r.key?' active':''}" onclick="selectRate('${r.key}')">
+      <div class="rate-name">${r.name}</div>
+      <div class="rate-val">${r.val?r.val+'/day':'Custom'}</div>
+    </div>`).join('');
+  document.getElementById('customRateField').style.display = selectedRate==='custom' ? 'block' : 'none';
+}
+function selectRate(key){
+  selectedRate=key;
+  renderRateOptions();
+}
+
+function calculate(){
+  const errorEl=document.getElementById('errorMsg');
+  errorEl.classList.remove('show');
+
+  const curLevel=dropdownState.curLevel;
+  const curPoints=parseInt(document.getElementById('curPoints').value)||0;
+  const targetLevel=dropdownState.targetLevel;
+  const paragon=dropdownState.paragonBonus;
+
+  const curLevelNeed=LEVEL_THRESHOLDS[curLevel];
+  if(curPoints<0||curPoints>curLevelNeed){
+    errorEl.textContent=`Affinity earned in Level ${curLevel} must be between 0 and ${curLevelNeed.toLocaleString()}.`;
+    errorEl.classList.add('show');
+    return;
+  }
+
+  let rate;
+  if(selectedRate==='custom'){
+    rate=parseInt(document.getElementById('customRate').value);
+    if(!rate||rate<=0){
+      errorEl.textContent='Enter a valid custom daily Affinity rate.';
+      errorEl.classList.add('show');
+      return;
+    }
+  } else {
+    rate=RATE_PRESETS.find(r=>r.key===selectedRate).val;
+  }
+  // Apply Five-Star Paragon bonus (gift-based Affinity only — treat full rate as gift-based for estimate purposes)
+  const effectiveRate=rate*(1+paragon/100);
+
+  // Remaining need for current level
+  let remaining=curLevelNeed-curPoints;
+  // Add full thresholds for every level between curLevel+1 and targetLevel
+  for(let l=curLevel+1;l<targetLevel;l++){
+    remaining+=LEVEL_THRESHOLDS[l];
+  }
+
+  const days=Math.ceil(remaining/effectiveRate);
+
+  // Totals for progress bar (from level 1 baseline to target)
+  let totalSpan=0, doneSoFar=0;
+  for(let l=1;l<targetLevel;l++){
+    totalSpan+=LEVEL_THRESHOLDS[l];
+    if(l<curLevel) doneSoFar+=LEVEL_THRESHOLDS[l];
+  }
+  doneSoFar+=curPoints;
+  const pct=Math.min(100,(doneSoFar/totalSpan)*100);
+
+  document.getElementById('resPoints').textContent=remaining.toLocaleString();
+  document.getElementById('resDays').textContent=days.toLocaleString();
+  document.getElementById('progressFill').style.width=pct.toFixed(1)+'%';
+  document.getElementById('progressCur').textContent=`${doneSoFar.toLocaleString()} Affinity`;
+  document.getElementById('progressTotal').textContent=`${totalSpan.toLocaleString()} Affinity (Lv.${targetLevel})`;
+
+  // Per-level breakdown with cumulative day estimate
+  let acc=0;
+  const rows=[];
+  for(let l=curLevel;l<targetLevel;l++){
+    const need=LEVEL_THRESHOLDS[l];
+    const already = l===curLevel ? curPoints : 0;
+    const thisRemaining=need-already;
+    acc+=thisRemaining;
+    const cumDays=Math.ceil(acc/effectiveRate);
+    const isDone = thisRemaining<=0;
+    rows.push(`<div class="lvl-row${isDone?' done':''}">
+      <div class="lvl-badge">${l}→${l+1}</div>
+      <div class="lvl-info"><b>${need.toLocaleString()}</b> Affinity needed${already?` (${already.toLocaleString()} already earned)`:''}</div>
+      <div class="lvl-days">Day ${cumDays}</div>
+    </div>`);
+  }
+  document.getElementById('levelBreakdown').innerHTML=rows.join('');
+
+  document.getElementById('resultPanel').classList.add('show');
+}
+
+renderAllCDropdowns();
+onCurLevelChange();
+renderRateOptions();
+</script>
+</body>
+</html>
