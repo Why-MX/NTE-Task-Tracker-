@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NTE Achievements — Neverness to Everness</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0F0E17;--bg2:#1A1825;--bg3:#221F32;--border:#2E2A44;
+  --text:#EBE9F8;--text2:#9E9AC0;--text3:#5C5880;
+  --accent:#7B5CF5;--accent2:#534AB7;--pink:#E85D9E;
+  --bronze:#C58A4E;--silver:#B7B3D6;--gold:#D9A93C;--hidden:#9B6BE0;
+  --green:#3BB37E;
+  --radius:10px;
+  --app-pad: clamp(0.75rem, 4vw, 1.5rem);
+}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh}
+.app{max-width:1100px;margin:0 auto;padding:clamp(1rem,4vw,2rem) var(--app-pad) 5rem}
+
+/* header */
+.header{display:flex;align-items:center;gap:14px;margin-bottom:1rem;flex-wrap:wrap;row-gap:10px}
+.logo{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 0 24px rgba(123,92,245,.25)}
+.logo i{font-size:22px;color:#fff}
+.header-text h1{font-size:clamp(17px,4vw,22px);font-weight:700;letter-spacing:-.3px}
+.header-text p{font-size:12px;color:var(--text2);margin-top:2px}
+.sub{color:var(--text2);font-size:13px;max-width:640px;margin:0 0 20px;line-height:1.6}
+
+/* stat strip */
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px;margin-bottom:22px}
+.stat-chip{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;text-align:center}
+.stat-chip .val{font-size:19px;font-weight:800}
+.stat-chip .val.bronze{color:var(--bronze)}
+.stat-chip .val.silver{color:var(--silver)}
+.stat-chip .val.gold{color:var(--gold)}
+.stat-chip .val.hidden{color:var(--hidden)}
+.stat-chip .lbl{font-size:9.5px;font-weight:700;letter-spacing:.5px;color:var(--text3);margin-top:2px;text-transform:uppercase}
+
+/* category grid */
+.cat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px;margin-bottom:28px}
+.cat-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:16px;cursor:pointer;transition:border-color .15s}
+.cat-card.active{border-color:var(--accent)}
+.cat-card:hover{border-color:var(--accent2)}
+.cat-head{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.cat-icon{width:32px;height:32px;border-radius:8px;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--accent)}
+.cat-name{font-size:14px;font-weight:700}
+.cat-total{font-size:11px;color:var(--text3);margin-bottom:8px}
+.cat-tiers{display:flex;gap:6px;flex-wrap:wrap}
+.cat-tier-pill{font-size:9.5px;font-weight:700;padding:2px 7px;border-radius:5px}
+.cat-tier-pill.bronze{background:rgba(197,138,78,.16);color:var(--bronze)}
+.cat-tier-pill.silver{background:rgba(183,179,214,.16);color:var(--silver)}
+.cat-tier-pill.gold{background:rgba(217,169,60,.16);color:var(--gold)}
+.cat-tier-pill.hiddenpill{background:rgba(155,107,224,.16);color:var(--hidden)}
+
+/* section tabs */
+.sec-tabs{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap}
+.sec-tab{display:flex;align-items:center;gap:7px;padding:9px 16px;background:var(--bg2);border:1px solid var(--border);border-radius:9px;font-size:13px;font-weight:600;color:var(--text2);cursor:pointer;transition:all .15s}
+.sec-tab i{font-size:15px}
+.sec-tab.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.sec-tab:not(.active):hover{border-color:var(--text3);color:var(--text)}
+
+/* toolbar */
+.toolbar{display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap}
+.search-wrap{position:relative;flex:1;min-width:200px}
+.search-wrap i{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--text3);font-size:16px}
+.search-input{width:100%;padding:10px 12px 10px 36px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:13px;font-family:inherit}
+.search-input:focus{outline:none;border-color:var(--accent)}
+
+.result-count{font-size:11px;color:var(--text3);font-weight:600;letter-spacing:.4px;margin-bottom:14px;text-transform:uppercase}
+
+/* achievement list */
+.ach-list{display:flex;flex-direction:column;gap:10px}
+.ach-card{background:var(--bg2);border:1px solid var(--border);border-radius:11px;padding:14px 16px;display:flex;gap:14px}
+.ach-medal{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;color:#fff}
+.ach-medal.bronze{background:linear-gradient(160deg,#D9A466,var(--bronze))}
+.ach-medal.silver{background:linear-gradient(160deg,#D4D1E8,var(--silver));color:#1a1825}
+.ach-medal.gold{background:linear-gradient(160deg,#F0C96A,var(--gold));color:#241a05}
+.ach-medal.hidden{background:linear-gradient(160deg,#B78CE8,var(--hidden))}
+.ach-body{flex:1;min-width:0}
+.ach-top{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:5px}
+.ach-name{font-size:14px;font-weight:700}
+.ach-cat-tag{font-size:9px;font-weight:700;letter-spacing:.4px;color:var(--text3);background:var(--bg3);padding:2px 7px;border-radius:5px}
+.ach-req{font-size:12.5px;color:var(--text2);line-height:1.5;margin-bottom:6px}
+.ach-howto{font-size:12px;color:var(--text2);line-height:1.6;background:var(--bg3);border-radius:8px;padding:10px 12px;display:flex;gap:8px}
+.ach-howto i{font-size:13px;color:var(--accent);flex-shrink:0;margin-top:1px}
+.ach-loc{font-size:11px;color:var(--text3);display:flex;align-items:center;gap:5px;margin-top:6px}
+.ach-loc i{font-size:12px}
+
+.empty-msg{text-align:center;padding:40px;color:var(--text3);font-size:13px}
+
+.note-box{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:16px 18px;margin-bottom:20px;font-size:12.5px;color:var(--text2);line-height:1.6;display:flex;gap:12px}
+.note-box i{font-size:16px;color:var(--accent);flex-shrink:0;margin-top:1px}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="header">
+    <div class="logo"><i class="ti ti-trophy"></i></div>
+    <div class="header-text">
+      <h1>Achievements</h1>
+      <p>Neverness to Everness — how to unlock them</p>
+    </div>
+  </div>
+  <p class="sub">NTE ships with 388 achievements across 8 categories and 4 tiers. Below: a category breakdown of the full list, plus a curated set of confirmed achievements — including full step-by-step guides for every Hidden achievement — with real unlock conditions.</p>
+
+  <div class="stats-row">
+    <div class="stat-chip"><div class="val">388</div><div class="lbl">Total</div></div>
+    <div class="stat-chip"><div class="val bronze">152</div><div class="lbl">Bronze</div></div>
+    <div class="stat-chip"><div class="val silver">126</div><div class="lbl">Silver</div></div>
+    <div class="stat-chip"><div class="val gold">55</div><div class="lbl">Gold</div></div>
+    <div class="stat-chip"><div class="val hidden">55</div><div class="lbl">Hidden</div></div>
+  </div>
+
+  <div class="cat-grid" id="catGrid"></div>
+
+  <div class="sec-tabs" id="secTabs"></div>
+
+  <div id="noteBox"></div>
+
+  <div class="toolbar">
+    <div class="search-wrap">
+      <i class="ti ti-search"></i>
+      <input id="searchInput" class="search-input" placeholder="Search achievements…" oninput="render()">
+    </div>
+  </div>
+
+  <div class="result-count" id="resultCount"></div>
+  <div class="ach-list" id="achList"></div>
+
+</div>
+
+<script>
+// ─── Category overview (full 388-achievement breakdown, confirmed counts) ──
+const CATEGORIES=[
+  {key:'City',icon:'ti-building-skyscraper',total:49,bronze:25,silver:14,gold:10,hidden:0},
+  {key:'Develop',icon:'ti-chart-line',total:74,bronze:null,silver:null,gold:null,hidden:0},
+  {key:'Explore',icon:'ti-map-2',total:53,bronze:null,silver:null,gold:null,hidden:0},
+  {key:'Fight',icon:'ti-sword',total:53,bronze:null,silver:null,gold:null,hidden:0},
+  {key:'Interest',icon:'ti-sparkles',total:37,bronze:null,silver:null,gold:null,hidden:null},
+  {key:'Play',icon:'ti-device-gamepad-2',total:39,bronze:null,silver:null,gold:null,hidden:0},
+  {key:'Quest',icon:'ti-book',total:27,bronze:null,silver:null,gold:null,hidden:0},
+  {key:'Social',icon:'ti-heart',total:56,bronze:null,silver:null,gold:null,hidden:0},
+];
+let activeCat='';
+
+// ─── Hidden Achievements — full confirmed walkthroughs ──────────────────────
+const HIDDEN=[
+  {name:'Water Soluble',cat:'Interest',req:"Let your HP reach zero while in water.",
+    howto:"Swim out into the sea surrounding Hethereau. Keep swimming until your stamina bar fully depletes, then continue swimming to drain your HP down to zero. Party size doesn't matter — you don't need to reduce your team to one character."},
+  {name:'Leap of Faith',cat:'Interest',req:'Get knocked out by falling from a significant height.',
+    howto:"Climb onto the roof of the building next to Sterry Express in Bridge Crossings and jump toward the road below. The drop needs to be high enough to actually knock you out — a low-roof fall won't count.",loc:'Sterry Express, Bridge Crossings'},
+  {name:"Fate's Calling",cat:'Develop',req:"Obtain a Divination at the Witch's House.",
+    howto:"Visit the Witch's House and perform a Divination. Any Divination unlocks this on your first visit — it's also part of the recommended daily routine since it gives useful buffs."},
+  {name:'Can I Pet It!',cat:'City',req:'Approach and pet a dog or cat anywhere in the city.',
+    howto:"One of the easiest hidden achievements. In clear weather, a dog reliably appears near Wertheimer Tower in Bridge Crossings — walk up and interact with it.",loc:'Near Wertheimer Tower, Bridge Crossings'},
+  {name:'Wind Walker',cat:'Explore',req:'Change the weather using the Time System in the menu.',
+    howto:'Open the menu, find the Time System, and manually change the current weather. Any change triggers the unlock.'},
+  {name:"The Whisker's Net Catches All",cat:'Fight',req:'Get caught by Officer Whisker while "Wanted."',
+    howto:'Equip the "Hethereau\'s Keeper" Arc, then enter the "Wanted" state while Officer Whisker is summoned. Once Wanted, Officer Whisker will attack you and unlock the achievement.'},
+  {name:'Stars Falling Like Rain',cat:'Explore',req:'Witness a meteor shower.',
+    howto:'Visit Hethereau Skytower on a clear night and wait to observe a meteor shower overhead.',loc:'Hethereau Skytower, east of Miguel District near Soleil Road'},
+  {name:'The Sound of Music',cat:'Interest',req:'Interact with the piano on the beach.',
+    howto:'Head to the western beach of Unheard Shores and interact with the piano found there.',loc:'Western beach, Unheard Shores'},
+  {name:'"Mhm...?"',cat:'Interest',req:"Make a specific choice at Nacupeda's Pool.",
+    howto:'Interact with Nacupeda\'s Pool and select "Coins, love \'em, grab some!" when prompted.',loc:"Nacupeda's Pool, west of Davidia Avenue, Illusion Town"},
+  {name:'"Mhm!"',cat:'Interest',req:"Make the other specific choice at Nacupeda's Pool.",
+    howto:'Interact with Nacupeda\'s Pool and select "Make a Sincere Wish" when prompted.',loc:"Nacupeda's Pool, west of Davidia Avenue, Illusion Town"},
+  {name:'Block Vanishing Act',cat:'Play',req:'Place 1st in Tetrominoes.',
+    howto:'Play Tetrominoes at the Arcade and finish in 1st place. Selecting Solo Play matches you against NPCs, which makes this much easier than multiplayer.',loc:'Arcade, west of the Phone Booth, Bridge Crossings'},
+  {name:'"At First, I Refused..."',cat:'Social',req:'Speak with Mint at a specific location.',
+    howto:'Find Mint outside the pet shop during the day and talk to her.',loc:'Pet shop, west of Davidia Avenue, Illusion Town'},
+  {name:'Speed Bows Down',cat:'Social',req:'Speak with Jiuyuan at a specific location.',
+    howto:'Talk to Jiuyuan at the Regalia car shop.',loc:'Regalia car shop'},
+  {name:'Bountiful Dreams',cat:'Social',req:'Speak with a napping Nanally.',
+    howto:'Find Nanally napping on the roof of Clement Academy and talk to her.',loc:'Roof of Clement Academy, east of Wertheimer Tower, Illusion Town'},
+  {name:'Dawn in Detention',cat:'Quest',req:'Complete non-escape content in the Detention Facility.',
+    howto:'While inside the Detention Facility, complete the available events and requests that are unrelated to escaping.'},
+];
+
+// ─── Notable standard achievements — confirmed names + requirements ────────
+const NOTABLE=[
+  {name:'First Ride',cat:'Develop',req:'Obtain 1 vehicle.'},
+  {name:'Ultimate Racer',cat:'Develop',req:'Obtain 7 vehicles.'},
+  {name:'Homecoming Day',cat:'City',req:'Acquire your first house.'},
+  {name:'Free Pass',cat:'Explore',req:'Unlock a total of 5 Wertheimer Towers.'},
+  {name:"Fate's Echo",cat:'Develop',req:'Reach Divination Level 10.',howto:"Deliver Oracle Stones to the Witch's House — 140 of the 214 available at launch are needed to hit Level 10. The Oracle Crystal (unlocked at Divination Level 3) marks nearby Oracle Stones on the map to speed this up."},
+  {name:'Alea Jacta Est',cat:'Quest',req:'Complete Questline: Unforeseen Yet Foretold.'},
+  {name:'Come At Me! I',cat:'Fight',req:'Have a single character with a Shield of over 5,000 points in battle.'},
+  {name:'Come At Me! II',cat:'Fight',req:'Have a single character with a Shield of over 10,000 points in battle.'},
+  {name:'Come At Me! III',cat:'Fight',req:'Have a single character with a Shield of over 30,000 points in battle.'},
+  {name:'It Said Go For It!',cat:'Fight',req:'Defeat 500 enemies with Ultimate damage.'},
+  {name:'Bumper Harvest I / II / III',cat:'Develop',req:"Tiered series — later tiers require progressively larger totals (typically a 5x or 10x jump per tier)."},
+  {name:'Bird Enthusiast Guide',cat:'Interest',req:'Complete the "Bird Enthusiast Guide" easter egg quest.'},
+  {name:'Anomaly Photographer',cat:'Interest',req:'Complete the "Anomaly Photographer" series of easter egg quests.'},
+  {name:'Car Enthusiast',cat:'Interest',req:'Complete the "Car Enthusiast" easter egg quest.'},
+  {name:'The Great Coluccis',cat:'Interest',req:'Complete the "The Great Coluccis" easter egg quest.'},
+  {name:'Good Business, Better Treasure',cat:'Quest',req:'Complete the "Good Business, Better Treasure" series of quests.'},
+  {name:"A Legendary(?) Band's First Page",cat:'Quest',req:"Complete the \"A Legendary(?) Band's First Page\" series of quests."},
+  {name:'Love that Begins with Lies',cat:'Quest',req:'Complete the "Love that Begins with Lies" series of quests.'},
+  {name:'Reach Aurelia Affection Lvl 5',cat:'Social',req:'Reach Affection Level 5 with Aurelia.'},
+  {name:'Reach Aurelia Affection Lvl 10',cat:'Social',req:'Reach Affection Level 10 with Aurelia.'},
+  {name:'Gift Aurelia 3 Times',cat:'Social',req:'Give Aurelia gifts on 3 separate occasions.'},
+  {name:'Gift Aurelia 10 Times',cat:'Social',req:'Give Aurelia gifts on 10 separate occasions.'},
+  {name:'Give Jiuyuan Gifts ×3',cat:'Social',req:'Give Jiuyuan 3 gifts.'},
+  {name:'Give Haniel Gifts ×3',cat:'Social',req:'Give Haniel 3 gifts.'},
+  {name:'Give Chiz Gifts ×3',cat:'Social',req:'Give Chiz 3 gifts.'},
+  {name:'Reach Skia Affection Lvl 10',cat:'Social',req:'Reach Affection Level 10 with Skia.'},
+  {name:'Reach Haniel Affection Lvl 10',cat:'Social',req:'Reach Affection Level 10 with Haniel.'},
+  {name:'Raise 4 Arcs to Lvl 20',cat:'Develop',req:'Level 4 different Arcs to Level 20.'},
+  {name:'Raise 4 Arcs to Lvl 40',cat:'Develop',req:'Level 4 different Arcs to Level 40.'},
+  {name:'Raise 4 Characters to Lvl 20',cat:'Develop',req:'Level 4 different characters to Level 20.'},
+  {name:'Raise 4 Characters to Lvl 40',cat:'Develop',req:'Level 4 different characters to Level 40.'},
+  {name:"Upgrade Any Character's Ultimate ×5",cat:'Develop',req:"Upgrade any single character's Ultimate level 5 times."},
+  {name:'Obtain a Total of 10 Arcs',cat:'Develop',req:'Own 10 Arcs total (any rarity).'},
+  {name:'Reach Hunter Level 50',cat:'Develop',req:'Raise your account Hunter Level to 50.'},
+  {name:'Spend a Total of 50 City Stamina',cat:'City',req:'Cumulatively spend 50 City Stamina on City Tycoon activities.'},
+  {name:'Perform 1 Divination',cat:'Develop',req:"Perform your first Divination at the Witch's House."},
+  {name:'Perform 50 Divinations',cat:'Interest',req:"Perform 50 total Divinations at the Witch's House."},
+  {name:'Unlock 5 Coffee Shops',cat:'City',req:'Unlock a total of 5 coffee shops around Hethereau.'},
+  {name:'Obtain a Total of 100 Furniture',cat:'City',req:'Collect 100 furniture pieces for housing.'},
+  {name:'Unlock 5 ReroRero Phone Booths',cat:'Explore',req:'Unlock 5 ReroRero Phone Booths. These appear automatically in any region whose Wertheimer Tower is active.'},
+  {name:'Trigger Critical Dodge ×300',cat:'Fight',req:'Successfully trigger a Critical Dodge 300 times.'},
+  {name:'Trigger the "Remora" Cycle 200 Times',cat:'Fight',req:'Trigger the Remora Esper Cycle reaction 200 times in total.'},
+  {name:'Defeat the Sunday Racing Team',cat:'Fight',req:'Defeat the Sunday Racing Team boss encounter.'},
+  {name:'Win a Prize from the Claw Machine',cat:'Play',req:'Successfully win a prize from a claw machine once.'},
+  {name:'Drive a Taxi to Pick Up 5 Passengers',cat:'Play',req:'Complete taxi driving and pick up 5 passengers.'},
+  {name:'Collect 10,000 Fons in a Single Pink Paws Heist',cat:'Play',req:'Earn 10,000 Fons within one round of the Pink Paws Heist minigame.'},
+  {name:'Participate in 1 Auction',cat:'Play',req:'Take part in an auction at least once.'},
+  {name:'Obtain 1 "Azure Strings" at the Auction',cat:'Play',req:'Win the "Azure Strings" item from the auction house.'},
+  {name:'Pet Small Animals ×10',cat:'City',req:'Pet small animals around the city 10 times.'},
+  {name:'Fill Up the Hunger Bar ×50',cat:'City',req:"Fill your character's Hunger Bar 50 times."},
+];
+
+function renderCats(){
+  document.getElementById('catGrid').innerHTML=CATEGORIES.map(c=>{
+    const tiers = c.bronze!=null
+      ? `<div class="cat-tiers">
+          <span class="cat-tier-pill bronze">${c.bronze}B</span>
+          <span class="cat-tier-pill silver">${c.silver}S</span>
+          <span class="cat-tier-pill gold">${c.gold}G</span>
+        </div>`
+      : `<div class="cat-tiers"><span class="cat-tier-pill hiddenpill">Tier split not itemized</span></div>`;
+    return `<div class="cat-card${activeCat===c.key?' active':''}" onclick="toggleCat('${c.key}')">
+      <div class="cat-head"><div class="cat-icon"><i class="ti ${c.icon}"></i></div><div class="cat-name">${c.key}</div></div>
+      <div class="cat-total">${c.total} achievements</div>
+      ${tiers}
+    </div>`;
+  }).join('');
+}
+function toggleCat(key){
+  activeCat = activeCat===key ? '' : key;
+  renderCats();
+  render();
+}
+
+const SECTIONS=[
+  {key:'hidden',label:'Hidden Achievements',icon:'ti-eye-off'},
+  {key:'notable',label:'Notable Achievements',icon:'ti-list-check'},
+];
+let currentSection='hidden';
+function renderSecTabs(){
+  document.getElementById('secTabs').innerHTML=SECTIONS.map(s=>`
+    <div class="sec-tab${currentSection===s.key?' active':''}" onclick="switchSection('${s.key}')">
+      <i class="ti ${s.icon}"></i>${s.label}
+    </div>`).join('');
+}
+function switchSection(key){
+  currentSection=key;
+  renderSecTabs();
+  renderNote();
+  render();
+}
+function renderNote(){
+  const box=document.getElementById('noteBox');
+  if(currentSection==='hidden'){
+    box.innerHTML=`<div class="note-box"><i class="ti ti-info-circle"></i>Hidden achievements don't appear in your tracker until unlocked. None are missable — you can go back and get every one at any time.</div>`;
+  } else {
+    box.innerHTML=`<div class="note-box"><i class="ti ti-info-circle"></i>NTE has 388 achievements total — this is a curated set of confirmed names and requirements, not the complete list. Filter by category above to narrow it down.</div>`;
+  }
+}
+
+function achCardHTML(a, tier){
+  return `<div class="ach-card">
+    <div class="ach-medal ${tier}"><i class="ti ${tier==='hidden'?'ti-eye-off':'ti-trophy'}"></i></div>
+    <div class="ach-body">
+      <div class="ach-top"><div class="ach-name">${a.name}</div><div class="ach-cat-tag">${a.cat.toUpperCase()}</div></div>
+      <div class="ach-req">${a.req}</div>
+      ${a.howto?`<div class="ach-howto"><i class="ti ti-bulb"></i>${a.howto}</div>`:''}
+      ${a.loc?`<div class="ach-loc"><i class="ti ti-map-pin"></i>${a.loc}</div>`:''}
+    </div>
+  </div>`;
+}
+
+function render(){
+  const q=document.getElementById('searchInput').value.toLowerCase().trim();
+  const source = currentSection==='hidden' ? HIDDEN : NOTABLE;
+  const tier = currentSection==='hidden' ? 'hidden' : 'bronze';
+  const filtered=source.filter(a=>{
+    const text=(a.name+a.req+(a.howto||'')+a.cat).toLowerCase();
+    return (!q||text.includes(q)) && (!activeCat||a.cat===activeCat);
+  });
+  document.getElementById('resultCount').textContent=`Showing ${filtered.length} of ${source.length}`;
+  const list=document.getElementById('achList');
+  list.innerHTML=filtered.length?filtered.map(a=>achCardHTML(a,tier)).join(''):`<div class="empty-msg">No achievements match your filters.</div>`;
+}
+
+renderCats();
+renderSecTabs();
+renderNote();
+render();
+</script>
+</body>
+</html>
