@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NTE Bonds — Neverness to Everness</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0F0E17;--bg2:#1A1825;--bg3:#221F32;--border:#2E2A44;
+  --text:#EBE9F8;--text2:#9E9AC0;--text3:#5C5880;
+  --accent:#7B5CF5;--accent2:#534AB7;--pink:#E85D9E;
+  --green:#3BB37E;--gold:#D9A93C;--red:#D85A5A;
+  --radius:10px;
+  --app-pad: clamp(0.75rem, 4vw, 1.5rem);
+}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh}
+.app{max-width:1100px;margin:0 auto;padding:clamp(1rem,4vw,2rem) var(--app-pad) 5rem}
+
+/* header */
+.header{display:flex;align-items:center;gap:14px;margin-bottom:1rem;flex-wrap:wrap;row-gap:10px}
+.logo{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 0 24px rgba(123,92,245,.25)}
+.logo i{font-size:22px;color:#fff}
+.header-text h1{font-size:clamp(17px,4vw,22px);font-weight:700;letter-spacing:-.3px}
+.header-text p{font-size:12px;color:var(--text2);margin-top:2px}
+.sub{color:var(--text2);font-size:13px;max-width:640px;margin:0 0 20px;line-height:1.6}
+
+/* stat strip */
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:24px}
+.stat-chip{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;text-align:center}
+.stat-chip .val{font-size:18px;font-weight:800;color:var(--pink)}
+.stat-chip .lbl{font-size:9.5px;font-weight:700;letter-spacing:.5px;color:var(--text3);margin-top:2px;text-transform:uppercase;line-height:1.4}
+
+/* section heading */
+.sect-title{display:flex;align-items:center;gap:9px;font-size:15px;font-weight:700;margin:28px 0 14px}
+.sect-title i{color:var(--pink);font-size:16px}
+.sect-title:first-of-type{margin-top:0}
+
+/* priority ordered list */
+.priority-list{display:flex;flex-direction:column;gap:10px;margin-bottom:8px}
+.priority-item{display:flex;gap:14px;background:var(--bg2);border:1px solid var(--border);border-radius:11px;padding:14px 16px}
+.priority-num{width:26px;height:26px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0}
+.priority-text{font-size:13px;color:var(--text2);line-height:1.6}
+.priority-text b{color:var(--text)}
+
+/* method cards grid */
+.method-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;margin-bottom:8px}
+.method-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:16px}
+.method-top{display:flex;align-items:center;gap:10px;margin-bottom:9px}
+.method-icon{width:34px;height:34px;border-radius:9px;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--accent);flex-shrink:0}
+.method-name{font-size:13.5px;font-weight:700;flex:1}
+.method-tag{font-size:9px;font-weight:800;letter-spacing:.4px;padding:3px 7px;border-radius:6px;white-space:nowrap}
+.method-tag.best{background:rgba(59,179,126,.16);color:var(--green)}
+.method-tag.good{background:rgba(217,169,60,.16);color:var(--gold)}
+.method-tag.passive{background:rgba(78,143,232,.16);color:#7FB0EE}
+.method-tag.situational{background:rgba(232,93,158,.16);color:var(--pink)}
+.method-desc{font-size:12px;color:var(--text2);line-height:1.6}
+
+/* gift table */
+.gift-table-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden;overflow-x:auto;margin-bottom:8px}
+table{width:100%;border-collapse:collapse;min-width:640px}
+thead th{background:var(--bg3);font-size:11px;font-weight:700;text-align:left;padding:11px 14px;color:var(--text2);border-bottom:1px solid var(--border);white-space:nowrap}
+tbody tr{border-bottom:1px solid var(--border)}
+tbody tr:last-child{border-bottom:none}
+tbody tr:hover{background:var(--bg3)}
+tbody td{padding:10px 14px;font-size:12.5px;vertical-align:middle}
+.char-name-cell{font-weight:700;color:var(--pink)}
+.gift-cell{display:flex;align-items:center;gap:8px}
+.gift-ic{width:26px;height:26px;border-radius:7px;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--accent);flex-shrink:0}
+.cost-cell{color:#4EC8D9;font-weight:600}
+.aff-cell{color:var(--green);font-weight:700}
+.total-cell{color:var(--gold);font-weight:700}
+
+.note-box{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:16px 18px;margin:8px 0 8px;font-size:12.5px;color:var(--text2);line-height:1.6;display:flex;gap:12px}
+.note-box i{font-size:16px;color:var(--accent);flex-shrink:0;margin-top:1px}
+.note-box.warn i{color:var(--red)}
+.note-box.warn{border-color:rgba(216,90,90,.35)}
+
+@media(max-width:480px){.method-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="header">
+    <div class="logo"><i class="ti ti-heart-handshake"></i></div>
+    <div class="header-text">
+      <h1>Bonds</h1>
+      <p>Neverness to Everness — every way to raise Bond, and the fastest path to max</p>
+    </div>
+  </div>
+  <p class="sub">Bond Level tracks your affinity with each character, from Level 1 to 10. Raising it unlocks stat bonuses, currency, outfits, and character-specific interactions and quests.</p>
+
+  <div class="stats-row">
+    <div class="stat-chip"><div class="val">10</div><div class="lbl">Bond Levels per Character</div></div>
+    <div class="stat-chip"><div class="val">~56,000</div><div class="lbl">Total Affinity to Max One Character</div></div>
+    <div class="stat-chip"><div class="val">10 / day</div><div class="lbl">Gift Cap (Account-Wide)</div></div>
+    <div class="stat-chip"><div class="val">3 / day</div><div class="lbl">Gift Cap (Per Character)</div></div>
+  </div>
+
+  <div class="note-box"><i class="ti ti-info-circle"></i>Do this <b style="color:var(--text)">before</b> gifting anyone: level up Esper Zero's life skill <b style="color:var(--text)">Five-Star Paragon</b>. It gives a permanent +5% bonus to all Affinity earned from gifts (for characters at or below a Bond-level cap that rises with each upgrade, up to Bond Level 8 at max). It's free, permanent, and boosts every gift you'll ever send — there's no reason not to prioritize it first.</div>
+
+  <div class="sect-title"><i class="ti ti-list-numbers"></i>Fastest Path to Max Bond</div>
+  <div class="priority-list">
+    <div class="priority-item"><div class="priority-num">1</div><div class="priority-text"><b>Max Esper Zero's Five-Star Paragon</b> life skill first — a permanent +5% Affinity bonus on every future gift, to any character.</div></div>
+    <div class="priority-item"><div class="priority-num">2</div><div class="priority-text"><b>Give favorite gifts daily</b> — 3 to each of your priority characters, using the full 10-gift account-wide cap. Favorite gifts give 100 Affinity vs. only 50 for non-favorites, so never spend a slot on a non-favorite.</div></div>
+    <div class="priority-item"><div class="priority-num">3</div><div class="priority-text"><b>Focus 3 characters at a time</b>, not your whole roster. With only 10 gifts/day shared across everyone, spreading gifts thin across 10+ characters means nobody reaches max for months. 3 characters × 3 gifts = 9 of your 10 daily gifts, maxing them far faster in sequence.</div></div>
+    <div class="priority-item"><div class="priority-num">4</div><div class="priority-text"><b>Collect and spend Fluffy Clouds weekly</b> from the Compressed Boom Boom Cloud — don't let them cap out unclaimed.</div></div>
+    <div class="priority-item"><div class="priority-num">5</div><div class="priority-text"><b>Reply to every heart-icon text message</b> on your in-game phone. These trigger small bond scenes and are free Affinity you'd otherwise miss just by not checking messages.</div></div>
+    <div class="priority-item"><div class="priority-num">6</div><div class="priority-text"><b>Complete Bond Quests</b> as they unlock in the Bond section — talk to the character while they're present in the city to start them.</div></div>
+    <div class="priority-item"><div class="priority-num">7</div><div class="priority-text"><b>Pray at the Fortune Shades Prayer Tree daily</b> (Southeast New Homeland District) — costs a Prayer Plaque, grants Affinity to a random character. Low value per use, but free steady progress once per day.</div></div>
+    <div class="priority-item"><div class="priority-num">8</div><div class="priority-text"><b>Use Home Invitation interactions</b> once unlocked at Bond Level 4 — hugs, photos, rock-paper-scissors, and other My Room activities. Best used to close a small gap right before a level threshold rather than as a primary grind method.</div></div>
+    <div class="priority-item"><div class="priority-num">9</div><div class="priority-text"><b>Take Swift Travel (taxi) rides</b> — there's a chance an owned character rides along as a passenger, rewarding a small Affinity bonus on a successful trip. Free passive progress, not worth detouring for.</div></div>
+  </div>
+
+  <div class="sect-title"><i class="ti ti-route"></i>All Ways to Gain Bond Affinity</div>
+  <div class="method-grid">
+    <div class="method-card">
+      <div class="method-top"><div class="method-icon"><i class="ti ti-gift"></i></div><div class="method-name">Gifting</div><div class="method-tag best">BEST</div></div>
+      <div class="method-desc">100 Affinity per favorite gift, 50 for non-favorites. Capped at 3 gifts per character, 10 total per day account-wide.</div>
+    </div>
+    <div class="method-card">
+      <div class="method-top"><div class="method-icon"><i class="ti ti-message-heart"></i></div><div class="method-name">Heart-Icon Text Messages</div><div class="method-tag good">GOOD</div></div>
+      <div class="method-desc">Characters occasionally text you. Only messages with a heart icon grant Affinity — reply to trigger a short scene or mini-event.</div>
+    </div>
+    <div class="method-card">
+      <div class="method-top"><div class="method-icon"><i class="ti ti-book-2"></i></div><div class="method-name">Bond Quests</div><div class="method-tag good">GOOD</div></div>
+      <div class="method-desc">Character-specific story quests found in the Bond section. Unlock as you level, and start by talking to the character in the city. Worth doing for lore too.</div>
+    </div>
+    <div class="method-card">
+      <div class="method-top"><div class="method-icon"><i class="ti ti-home-heart"></i></div><div class="method-name">Home Invitation / My Room</div><div class="method-tag situational">SITUATIONAL</div></div>
+      <div class="method-desc">Unlocks at Bond Level 4. Place a character in My Room for interactions — hugs, photos, rock-paper-scissors. Good for topping off right before a level threshold.</div>
+    </div>
+    <div class="method-card">
+      <div class="method-top"><div class="method-icon"><i class="ti ti-cloud"></i></div><div class="method-name">Fluffy Clouds</div><div class="method-tag good">GOOD</div></div>
+      <div class="method-desc">Weekly burst source from the Compressed Boom Boom Cloud. Generated passively based on Apartment Comfort Level — build up your apartment to increase the supply.</div>
+    </div>
+    <div class="method-card">
+      <div class="method-top"><div class="method-icon"><i class="ti ti-flower"></i></div><div class="method-name">Fortune Shades Prayer Tree</div><div class="method-tag situational">SITUATIONAL</div></div>
+      <div class="method-desc">Southeast New Homeland District. Buy a Prayer Plaque, pray once per day (night only) for random Affinity to a random character. Low value, but free daily progress.</div>
+    </div>
+    <div class="method-card">
+      <div class="method-top"><div class="method-icon"><i class="ti ti-car"></i></div><div class="method-name">Swift Travel (Taxi) Rides</div><div class="method-tag situational">SITUATIONAL</div></div>
+      <div class="method-desc">A chance an owned character joins as a passenger during a taxi ride, rewarding a small Affinity bonus for that character on completion.</div>
+    </div>
+    <div class="method-card">
+      <div class="method-top"><div class="method-icon"><i class="ti ti-movie"></i></div><div class="method-name">Memory Theater Encounters</div><div class="method-tag passive">PASSIVE</div></div>
+      <div class="method-desc">Clearing conversation Encounters unlocks Memory Theater entries and grants Affinity. Some need Main Story, Bond Quests, or Spinoff Quests completed first.</div>
+    </div>
+    <div class="method-card">
+      <div class="method-top"><div class="method-icon"><i class="ti ti-heart-plus"></i></div><div class="method-name">City Hangouts (Dates)</div><div class="method-tag passive">PASSIVE</div></div>
+      <div class="method-desc">Unlocked at high Bond thresholds for select characters only — not every character has a unique date encounter yet.</div>
+    </div>
+  </div>
+
+  <div class="note-box warn"><i class="ti ti-alert-triangle"></i>Aurelia is currently capped at Bond Level 2 — she hasn't received the content update that raises her cap to 10 like the rest of the cast yet. Don't over-invest gifts into her expecting the same progression as other characters right now.</div>
+
+  <div class="sect-title"><i class="ti ti-gift"></i>Most Efficient Daily Gift Per Character</div>
+  <div class="note-box"><i class="ti ti-info-circle"></i>Always use each character's favorite gift shown below — it guarantees the maximum Affinity per gift slot. "Total" is the estimated Fons cost to fully max that character's Bond using only their favorite gift.</div>
+  <div class="gift-table-wrap">
+    <table>
+      <thead>
+        <tr><th>Character</th><th>Favorite Gift</th><th>Cost</th><th>Affinity / Gift</th><th>Total to Max</th></tr>
+      </thead>
+      <tbody id="giftTableBody"></tbody>
+    </table>
+  </div>
+
+</div>
+
+<script>
+// Reused from the verified per-character gift data (Fons cost, Affinity/gift, total to max).
+const CHAR_GIFTS={
+  "Fadia":{icon:'ti-glass',name:'Melting Ice',cost:5400,affinity:400,total:756000},
+  "Nanally":{icon:'ti-device-mobile',name:'Blocky',cost:5400,affinity:200,total:1512000},
+  "Jiuyuan":{icon:'ti-flask',name:'Moon Vase',cost:3000,affinity:200,total:840000},
+  "Lacrimosa":{icon:'ti-book',name:'Chill Girl',cost:4000,affinity:200,total:1120000},
+  "Daffodill":{icon:'ti-file-text',name:'Firewire',cost:10000,affinity:400,total:1400000},
+  "Hotori":{icon:'ti-flask',name:'Vase Yellow',cost:3600,affinity:200,total:1008000},
+  "Chiz":{icon:'ti-flower',name:'Flourish',cost:3000,affinity:200,total:840000},
+  "Edgar":{icon:'ti-device-mobile',name:'Snack Fly',cost:5400,affinity:200,total:1120000},
+  "Baicang":{icon:'ti-sun',name:'Backyard Joy',cost:4500,affinity:200,total:1260000},
+  "Sakiri":{icon:'ti-device-mobile',name:'Fever Dream',cost:5000,affinity:200,total:1400000},
+  "Adler":{icon:'ti-device-mobile',name:'Golden Dream',cost:3600,affinity:200,total:1008000},
+  "Hathor":{icon:'ti-device-mobile',name:'Fever Dream',cost:5000,affinity:200,total:1400000},
+  "Skia":{icon:'ti-book',name:'Chill Girl',cost:4000,affinity:200,total:1120000},
+  "Mint":{icon:'ti-flower',name:'Wilt',cost:3000,affinity:200,total:840000},
+  "Haniel":{icon:'ti-flower',name:'Flourish',cost:3000,affinity:200,total:840000},
+  "Aurelia":{icon:'ti-flower',name:'Flourish',cost:3000,affinity:200,total:840000},
+};
+
+function rowHTML(name, g){
+  return `<tr>
+    <td class="char-name-cell">${name}</td>
+    <td><div class="gift-cell"><div class="gift-ic"><i class="ti ${g.icon}"></i></div>${g.name}</div></td>
+    <td class="cost-cell">${g.cost.toLocaleString()} Fons</td>
+    <td class="aff-cell">${g.affinity}</td>
+    <td class="total-cell">${g.total.toLocaleString()} Fons</td>
+  </tr>`;
+}
+document.getElementById('giftTableBody').innerHTML =
+  Object.entries(CHAR_GIFTS)
+    .sort((a,b)=>a[1].total-b[1].total)
+    .map(([name,g])=>rowHTML(name,g))
+    .join('');
+</script>
+</body>
+</html>
