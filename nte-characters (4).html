@@ -1,0 +1,1397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NTE Character Directory — Neverness to Everness</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0F0E17;--bg2:#1A1825;--bg3:#221F32;--border:#2E2A44;
+  --text:#EBE9F8;--text2:#9E9AC0;--text3:#5C5880;
+  --accent:#7B5CF5;--accent2:#534AB7;--pink:#E85D9E;
+  --incant:#D85A5A;--psyche:#4E8FE8;--cosmos:#B7B3D6;--chaos:#9B6BE0;--anima:#3BB37E;--lakshana:#D9A93C;
+  --r4-a:#5A1D78;--r4-b:#8B2FA8;--r5-a:#B5721E;--r5-b:#D9962E;
+  --dpink:#FF3D7E;
+  --radius:10px;
+  --app-pad: clamp(0.75rem, 4vw, 1.5rem);
+}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh}
+.app{max-width:1100px;margin:0 auto;padding:clamp(1rem,4vw,2rem) var(--app-pad) 5rem}
+
+/* header */
+.header{display:flex;align-items:center;gap:14px;margin-bottom:1.75rem;flex-wrap:wrap;row-gap:10px}
+.logo{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 0 24px rgba(123,92,245,.25)}
+.logo i{font-size:22px;color:#fff}
+.header-text h1{font-size:clamp(17px,4vw,22px);font-weight:700;letter-spacing:-.3px}
+.header-text p{font-size:12px;color:var(--text2);margin-top:2px}
+
+/* toolbar */
+.toolbar{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap}
+.search-wrap{position:relative;flex:1;min-width:200px}
+.search-wrap i{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--text3);font-size:16px}
+.search-input{width:100%;padding:10px 12px 10px 36px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:13px;font-family:inherit}
+.search-input:focus{outline:none;border-color:var(--accent)}
+.filter-select{padding:10px 12px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:13px;font-family:inherit;cursor:pointer}
+.filter-select:focus{outline:none;border-color:var(--accent)}
+
+/* table shell */
+.table-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;overflow-x:auto;margin-bottom:2.5rem}
+table{width:100%;border-collapse:collapse;min-width:760px}
+thead th{background:var(--bg3);color:var(--text);font-size:12px;font-weight:700;text-align:left;padding:12px 14px;white-space:nowrap;user-select:none;border-bottom:1px solid var(--border)}
+thead th.sortable{cursor:pointer}
+thead th.sortable:hover{color:var(--accent)}
+thead th .ti{font-size:11px;color:var(--text3);margin-left:3px}
+thead th.sort-asc .ti,thead th.sort-desc .ti{color:var(--accent)}
+tbody tr{border-bottom:1px solid var(--border);transition:background .12s}
+tbody tr:last-child{border-bottom:none}
+tbody tr:hover{background:var(--bg3)}
+tbody td{padding:10px 14px;font-size:13px;vertical-align:middle}
+.row-hidden{display:none}
+
+.avatar{width:40px;height:40px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;color:#fff;flex-shrink:0}
+.name-cell{display:flex;align-items:center;gap:10px}
+.char-name{color:var(--pink);font-weight:600}
+.badge-type{display:inline-flex;align-items:center;gap:5px;font-size:12.5px;font-weight:500}
+.badge-type i{font-size:13px}
+.faction{color:var(--pink);font-size:12.5px}
+.date-cell{white-space:nowrap;color:var(--text2);font-size:12.5px}
+.version-tag{color:var(--accent);font-weight:600;font-size:12.5px}
+.upcoming-version{color:var(--lakshana);font-weight:600;font-size:12.5px}
+.rarity-stars{display:inline-flex;gap:1px;font-size:11px}
+.rarity-stars.r4{color:#C084E8}
+.rarity-stars.r5{color:#F0B84E}
+
+/* view toggle */
+.view-toggle{display:flex;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;flex-shrink:0}
+.view-toggle button{background:transparent;border:none;color:var(--text2);padding:10px 16px;font-size:13px;font-weight:600;font-family:inherit;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all .15s}
+.view-toggle button.active{background:var(--accent);color:#fff}
+.view-toggle button:not(.active):hover{color:var(--text)}
+
+/* gallery grid */
+.gallery-wrap{display:none;margin-bottom:2.5rem}
+.gallery-wrap.active{display:block}
+.gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px}
+.gcard{position:relative;border-radius:12px;overflow:hidden;aspect-ratio:3/4;cursor:default;box-shadow:0 2px 10px rgba(0,0,0,.35);transition:transform .15s}
+.gcard:hover{transform:translateY(-3px)}
+.gcard.r4{background:linear-gradient(160deg,var(--r4-b),var(--r4-a) 70%)}
+.gcard.r5{background:linear-gradient(160deg,var(--r5-b),var(--r5-a) 70%)}
+.gcard-badges{position:absolute;top:7px;left:7px;right:7px;display:flex;justify-content:space-between;z-index:2}
+.gcard-icon{width:22px;height:22px;border-radius:50%;background:rgba(15,14,23,.65);backdrop-filter:blur(2px);display:flex;align-items:center;justify-content:center;font-size:12px}
+.gcard-icon.esper{color:var(--icon-color,#fff)}
+.gcard-icon.arc{color:#fff}
+.gcard-version{position:absolute;top:7px;right:7px;background:var(--lakshana);color:#241a05;font-size:10px;font-weight:800;padding:2px 6px;border-radius:5px;z-index:3}
+.gcard-avatar{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:38px;font-weight:800;color:rgba(255,255,255,.28);letter-spacing:-1px}
+.gcard-foot{position:absolute;left:0;right:0;bottom:0;padding:20px 8px 8px;background:linear-gradient(to top,rgba(0,0,0,.75),transparent)}
+.gcard-name{color:#fff;font-size:12.5px;font-weight:700;text-shadow:0 1px 3px rgba(0,0,0,.5)}
+.gcard-stars{font-size:9px;margin-top:1px}
+.gcard.r4 .gcard-stars{color:#E4C5F5}
+.gcard.r5 .gcard-stars{color:#FFE1A8}
+
+/* section titles */
+.section-title{display:flex;align-items:center;gap:8px;font-size:18px;font-weight:700;margin-bottom:6px}
+.section-title i{color:var(--pink);font-size:18px}
+.section-sub{font-size:12.5px;color:var(--text2);margin-bottom:14px}
+.section-sub b{color:var(--text)}
+.empty-msg{padding:24px;text-align:center;color:var(--text3);font-size:13px}
+
+@media(max-width:640px){
+  thead th,tbody td{padding:9px 10px;font-size:12px}
+  .avatar{width:32px;height:32px;font-size:11px}
+}
+
+/* ── Character Detail Modal ─────────────────────────────────────────────── */
+.detail-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(3px);z-index:100;display:none;align-items:flex-start;justify-content:center;padding:clamp(0.75rem,4vw,2.5rem) clamp(0.5rem,3vw,1rem);overflow-y:auto}
+.detail-overlay.active{display:flex}
+.detail-panel{background:#111113;border:1px solid #232329;border-radius:16px;width:100%;max-width:600px;position:relative;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.detail-topline{height:2px;background:linear-gradient(90deg,transparent,var(--dpink),transparent)}
+.detail-close{position:absolute;top:14px;right:14px;width:32px;height:32px;border-radius:8px;border:1px solid rgba(255,255,255,.15);background:rgba(10,10,12,.55);backdrop-filter:blur(4px);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;font-size:15px;z-index:5}
+.detail-close:hover{background:rgba(0,0,0,.75)}
+
+/* poster banner */
+.dposter{position:relative;height:190px;overflow:hidden}
+.dposter.r4{background:radial-gradient(circle at 30% 20%,var(--r4-b),var(--r4-a) 75%)}
+.dposter.r5{background:radial-gradient(circle at 30% 20%,var(--r5-b),var(--r5-a) 75%)}
+.dposter-pattern{position:absolute;inset:0;opacity:.15;background-image:radial-gradient(circle,#fff 1px,transparent 1px);background-size:16px 16px}
+.dposter-glow{position:absolute;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.25),transparent 70%);top:-60px;right:-40px}
+.dposter-silhouette{position:absolute;bottom:-18px;right:18px;font-size:150px;line-height:1;color:rgba(255,255,255,.16);font-family:'Inter',sans-serif}
+.dposter-silhouette i{font-size:150px}
+.dposter-badges{position:absolute;top:14px;left:16px;display:flex;gap:7px}
+.dposter-badge{width:30px;height:30px;border-radius:9px;background:rgba(10,10,12,.5);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;font-size:15px;color:#fff;border:1px solid rgba(255,255,255,.12)}
+.dposter-foot{position:absolute;left:18px;right:18px;bottom:14px}
+.dposter-stars{font-size:12px;margin-bottom:3px;letter-spacing:1px}
+.dposter.r4 .dposter-stars{color:#E4C5F5}
+.dposter.r5 .dposter-stars{color:#FFE1A8}
+.dposter-name{font-size:22px;font-weight:800;color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.4);letter-spacing:-.3px}
+.dposter-sub{font-size:11.5px;color:rgba(255,255,255,.75);margin-top:2px;font-weight:600}
+.detail-body{padding:16px 20px 22px}
+
+.dtabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+.dtab{background:#18181c;border:1px solid #232329;border-radius:9px;padding:11px 14px;display:flex;align-items:center;justify-content:center;gap:8px;font-size:12.5px;font-weight:600;color:var(--text2);cursor:pointer;transition:all .15s;-webkit-tap-highlight-color:transparent}
+.dtab i{font-size:14px}
+.dtab .dcount{background:rgba(255,255,255,.1);color:var(--text2);font-size:10px;font-weight:700;padding:1px 6px;border-radius:8px;margin-left:2px}
+.dtab.active{background:var(--dpink);border-color:var(--dpink);color:#160009}
+.dtab.active .dcount{background:rgba(0,0,0,.18);color:#160009}
+.dtab:not(.active):hover{border-color:#3a3a44;color:var(--text)}
+.dtab.wide{grid-column:1 / -1}
+
+.dtoolbar{display:flex;justify-content:flex-end;gap:14px;margin-bottom:10px}
+.dtoolbar button{background:none;border:none;color:var(--text3);font-size:11.5px;font-weight:600;display:flex;align-items:center;gap:4px;cursor:pointer}
+.dtoolbar button:hover{color:var(--text2)}
+
+.dacc{display:flex;flex-direction:column;gap:10px}
+.dacc-item{background:#18181c;border:1px solid #232329;border-radius:11px;overflow:hidden}
+.dacc-head{display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.dacc-icon{width:32px;height:32px;border-radius:8px;background:#232329;display:flex;align-items:center;justify-content:center;font-size:15px;color:var(--text2);flex-shrink:0}
+.dacc-title{flex:1;font-size:13.5px;font-weight:700}
+.dacc-tag{font-size:10px;font-weight:700;color:var(--dpink);letter-spacing:.4px;display:block;margin-top:1px}
+.dacc-chev{color:var(--text3);font-size:13px;transition:transform .2s;flex-shrink:0}
+.dacc-item.open .dacc-chev{transform:rotate(180deg)}
+.dacc-content{max-height:0;overflow:hidden;transition:max-height .25s ease}
+.dacc-item.open .dacc-content{max-height:600px}
+.dacc-inner{padding:0 16px 16px 16px;font-size:12.5px;color:var(--text2);line-height:1.6}
+.dacc-inner .placeholder{color:var(--text3);font-style:italic}
+.dlvl{border-left:2px solid var(--dpink);padding:8px 0 8px 12px;margin-bottom:8px}
+.dlvl:last-child{margin-bottom:0}
+.dlvl b{color:var(--text)}
+.dlvl .num{color:var(--dpink);font-weight:700}
+
+.dmats{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+@media(max-width:480px){.dmats{grid-template-columns:1fr}}
+.dmat-card{background:#18181c;border:1px solid #232329;border-radius:11px;padding:14px}
+.dmat-head{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.dmat-icon{width:34px;height:34px;border-radius:8px;background:#0d0d10;display:flex;align-items:center;justify-content:center;font-size:15px;color:var(--dpink);flex-shrink:0}
+.dmat-name{font-size:10.5px;font-weight:800;letter-spacing:.3px;color:var(--text2)}
+.dmat-qty{font-size:15px;font-weight:800;margin-top:1px}
+.dmat-acq{font-size:9.5px;font-weight:700;letter-spacing:.4px;color:var(--text3);margin-bottom:5px}
+.dmat-list{font-size:12px;color:var(--text2);list-style:none}
+.dmat-list li{position:relative;padding-left:11px;margin-bottom:3px}
+.dmat-list li:before{content:'';position:absolute;left:0;top:6px;width:4px;height:4px;border-radius:50%;background:var(--dpink)}
+.dcurrency{display:flex;align-items:center;justify-content:space-between;border-left:2px solid var(--lakshana);padding:10px 16px;background:#18181c;border-radius:0 10px 10px 0}
+.dcurrency-label{font-size:12.5px;color:var(--text2)}
+.dcurrency-val{display:flex;align-items:center;gap:8px;font-size:19px;font-weight:800}
+.dcurrency-icon{width:26px;height:26px;border-radius:50%;background:var(--lakshana);color:#241a05;display:flex;align-items:center;justify-content:center;font-size:14px;box-shadow:0 0 12px rgba(217,169,60,.5)}
+
+.dconsole-wrap{display:flex;justify-content:center;padding:20px 0 6px}
+.dconsole{width:210px;background:linear-gradient(160deg,#F2C43A,#D9A011);border-radius:26px;padding:16px 14px 22px;box-shadow:0 10px 30px rgba(0,0,0,.4)}
+.dconsole-notch{width:44px;height:5px;border-radius:3px;background:rgba(0,0,0,.25);margin:0 auto 10px}
+.dconsole-screen{background:#0c0c0e;border-radius:8px;padding:8px;display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.dconsole-screen div{aspect-ratio:1;border-radius:2px;background:#1c1c1f}
+.dconsole-dial{width:70px;height:70px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#8B5FD9,#3E2270);margin:16px auto 0;display:flex;align-items:center;justify-content:center;box-shadow:inset 0 0 0 4px rgba(0,0,0,.2)}
+.dconsole-dial:after{content:'';width:26px;height:26px;border-radius:50%;border:1.5px dashed rgba(255,255,255,.35)}
+.dconsole-note{text-align:center;font-size:11.5px;color:var(--text3);margin-top:16px}
+
+.dgift-card{background:#18181c;border:1px solid #232329;border-radius:12px;padding:18px;display:flex;align-items:center;gap:14px;margin-bottom:12px}
+.dgift-icon{width:52px;height:52px;border-radius:10px;background:linear-gradient(160deg,#3a3a44,#1c1c22);border:1px solid #2E2A44;display:flex;align-items:center;justify-content:center;font-size:22px;color:var(--dpink);flex-shrink:0}
+.dgift-name{font-size:14px;font-weight:700}
+.dgift-cost{display:flex;align-items:center;gap:5px;font-size:12px;color:#4EC8D9;font-weight:600;margin-top:3px}
+.dgift-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.dgift-stat{background:#18181c;border:1px solid #232329;border-radius:11px;padding:14px;text-align:center}
+.dgift-stat-label{font-size:10.5px;color:var(--text3);font-weight:700;letter-spacing:.4px;margin-bottom:4px}
+.dgift-stat-val{font-size:18px;font-weight:800}
+.dgift-stat-val.pink{color:var(--dpink)}
+.dgift-stat-val.gold{color:var(--lakshana)}
+.dgift-note{font-size:11px;color:var(--text3);margin-top:12px;line-height:1.5}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="header">
+    <div class="logo"><i class="ti ti-users"></i></div>
+    <div class="header-text">
+      <h1>Character Directory</h1>
+      <p>Neverness to Everness — all released &amp; upcoming characters</p>
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <div class="search-wrap">
+      <i class="ti ti-search"></i>
+      <input id="searchInput" class="search-input" placeholder="Search by name or faction…" oninput="filterTable()">
+    </div>
+    <select id="rarityFilter" class="filter-select" onchange="filterTable()">
+      <option value="">All Rarities</option>
+      <option value="5">5★</option>
+      <option value="4">4★</option>
+    </select>
+    <select id="esperFilter" class="filter-select" onchange="filterTable()">
+      <option value="">All Esper Types</option>
+      <option value="Incantation">Incantation</option>
+      <option value="Psyche">Psyche</option>
+      <option value="Cosmos">Cosmos</option>
+      <option value="Chaos">Chaos</option>
+      <option value="Anima">Anima</option>
+      <option value="Lakshana">Lakshana</option>
+    </select>
+    <select id="arcFilter" class="filter-select" onchange="filterTable()">
+      <option value="">All Arc Types</option>
+      <option value="Condensate">Condensate</option>
+      <option value="Plasma">Plasma</option>
+      <option value="Gas">Gas</option>
+      <option value="Liquid">Liquid</option>
+      <option value="Solid">Solid</option>
+    </select>
+    <div class="view-toggle">
+      <button id="btnTableView" class="active" onclick="setView('table')"><i class="ti ti-table"></i>Table</button>
+      <button id="btnGridView" onclick="setView('grid')"><i class="ti ti-layout-grid"></i>Grid</button>
+    </div>
+  </div>
+
+  <div class="table-wrap" id="tableWrapMain">
+    <table id="charTable">
+      <thead>
+        <tr>
+          <th>Icon</th>
+          <th class="sortable" onclick="sortTable(1)">Name <i class="ti ti-arrows-sort"></i></th>
+          <th class="sortable" onclick="sortTable(2)">Rarity <i class="ti ti-arrows-sort"></i></th>
+          <th class="sortable" onclick="sortTable(3)">Esper Type <i class="ti ti-arrows-sort"></i></th>
+          <th class="sortable" onclick="sortTable(4)">Arc Type <i class="ti ti-arrows-sort"></i></th>
+          <th class="sortable" onclick="sortTable(5)">Faction <i class="ti ti-arrows-sort"></i></th>
+          <th class="sortable" onclick="sortTable(6)">Release Date <i class="ti ti-arrows-sort"></i></th>
+          <th class="sortable" onclick="sortTable(7)">Version <i class="ti ti-arrows-sort"></i></th>
+        </tr>
+      </thead>
+      <tbody id="charTableBody"></tbody>
+    </table>
+    <div id="emptyMsg" class="empty-msg" style="display:none">No characters match your filters.</div>
+  </div>
+
+  <div class="gallery-wrap" id="galleryWrapMain">
+    <div class="gallery-grid" id="galleryGridMain"></div>
+    <div id="emptyMsgGrid" class="empty-msg" style="display:none">No characters match your filters.</div>
+  </div>
+
+  <div class="section-title"><i class="ti ti-sparkles"></i>Upcoming Characters</div>
+  <div class="section-sub">There are <b id="upcomingCount">0</b> announced upcoming characters:</div>
+
+  <div class="table-wrap" id="tableWrapUpcoming">
+    <table>
+      <thead>
+        <tr>
+          <th>Icon</th><th>Name</th><th>Rarity</th><th>Esper Type</th><th>Arc Type</th><th>Faction</th><th>Release Date</th><th>Version</th>
+        </tr>
+      </thead>
+      <tbody id="upcomingTableBody"></tbody>
+    </table>
+  </div>
+
+  <div class="gallery-wrap" id="galleryWrapUpcoming">
+    <div class="gallery-grid" id="galleryGridUpcoming"></div>
+  </div>
+
+</div>
+
+<div class="detail-overlay" id="detailOverlay" onclick="if(event.target===this) closeDetail()">
+  <div class="detail-panel">
+    <div class="detail-topline"></div>
+    <div class="detail-close" onclick="closeDetail()"><i class="ti ti-x"></i></div>
+    <div class="dposter" id="dPoster">
+      <div class="dposter-pattern"></div>
+      <div class="dposter-glow"></div>
+      <div class="dposter-silhouette"><i class="ti ti-user-filled"></i></div>
+      <div class="dposter-badges" id="dPosterBadges"></div>
+      <div class="dposter-foot">
+        <div class="dposter-stars" id="dPosterStars"></div>
+        <div class="dposter-name" id="dName"></div>
+        <div class="dposter-sub" id="dSub"></div>
+      </div>
+    </div>
+    <div class="detail-body">
+      <div class="dtabs" id="dTabs"></div>
+      <div id="dPane"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─── Esper / Arc type visuals ───────────────────────────────────────────────
+// Custom SVG glyphs matching the game's official element/type icon set.
+const ESPER_SVG={
+  Anima:'<path d="M12 3c-2.2 3-4.2 6-4.2 9.2A4.2 4.2 0 0 0 12 16.4a4.2 4.2 0 0 0 4.2-4.2C16.2 9 14.2 6 12 3z"/><path d="M12 9.5c-1 1-1.4 2-.8 3.2" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>',
+  Chaos:'<circle cx="12" cy="12" r="7.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M14.6 5.8A7.5 7.5 0 1 0 14.6 18.2 6 6 0 0 1 14.6 5.8z"/>',
+  Cosmos:'<circle cx="12" cy="12" r="2" /><g stroke="currentColor" stroke-width="1.4" stroke-linecap="round" fill="none"><path d="M12 3v3.2M12 17.8V21M3 12h3.2M17.8 12H21"/><path d="M5.6 5.6l2.3 2.3M16.1 16.1l2.3 2.3M18.4 5.6l-2.3 2.3M7.9 16.1l-2.3 2.3"/></g>',
+  Incantation:'<circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="1.4"/><circle cx="12" cy="12" r="3.6" fill="none" stroke="currentColor" stroke-width="1.4"/><g stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3"/></g>',
+  Lakshana:'<path d="M12 2c0 4-1.3 6.7-3.5 8.5S3 12.9 3 12.9 5.7 13 8.5 14.8 12 20 12 22c0-2 1.3-6.7 3.5-8.5S21 12.9 21 12.9 18.3 12.7 15.5 10.9 12 5 12 2z"/>',
+  Psyche:'<path d="M12 3c1.8 2.6 3.6 4.6 3.6 7.4a3.6 3.6 0 0 1-7.2 0c0-1 .3-1.8.9-2.6.2.9.7 1.4 1.4 1.4-.6-1.9.4-3.7 1.3-6.2z"/>',
+};
+const ARC_SVG={
+  Condensate:'<g fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4.5h10M7 19.5h10"/><path d="M8 4.5c0 3.5 4 5.5 4 7.5s-4 4-4 7.5M16 4.5c0 3.5-4 5.5-4 7.5s4 4 4 7.5"/></g>',
+  Gas:'<g fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M12 4a8 8 0 0 1 8 8"/><path d="M12 4a8 8 0 0 0-8 8"/><path d="M4 12a8 8 0 0 0 8 8"/><path d="M20 12a8 8 0 0 1-8 8"/></g><circle cx="12" cy="12" r="1.8"/>',
+  Plasma:'<circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M13.2 5.8 8.4 13h3.6l-1 5.2 5-7.4h-3.7z"/>',
+  Liquid:'<path d="M4 12a8 8 0 0 1 8-8 4 4 0 0 1 0 8 4 4 0 0 0 0 8 8 8 0 0 1-8-8z"/>',
+  Solid:'<path d="M12 2.2 20 7v10l-8 4.8L4 17V7z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="m12 8 4 4-4 4-4-4z"/>',
+};
+function svgIcon(markup, size=16){
+  return `<svg viewBox="0 0 24 24" width="${size}" height="${size}" fill="currentColor" xmlns="http://www.w3.org/2000/svg" style="display:block">${markup}</svg>`;
+}
+const ESPER_META={
+  Incantation:{color:'var(--incant)'},
+  Psyche:{color:'var(--psyche)'},
+  Cosmos:{color:'var(--cosmos)'},
+  Chaos:{color:'var(--chaos)'},
+  Anima:{color:'var(--anima)'},
+  Lakshana:{color:'var(--lakshana)'},
+};
+const ARC_META={
+  Condensate:1,Plasma:1,Gas:1,Liquid:1,Solid:1,
+};
+function avatarColor(name){
+  const colors=['#7B5CF5','#D85A5A','#4E8FE8','#3BB37E','#D9A93C','#9B6BE0','#E85D9E','#3AA0A0'];
+  let hash=0; for(let i=0;i<name.length;i++) hash=name.charCodeAt(i)+((hash<<5)-hash);
+  return colors[Math.abs(hash)%colors.length];
+}
+function esperBadge(type){
+  const m=ESPER_META[type]||{color:'var(--text2)'};
+  const svg=ESPER_SVG[type]?svgIcon(ESPER_SVG[type],14):'';
+  return `<span class="badge-type" style="color:${m.color}">${svg}${type}</span>`;
+}
+function arcBadge(type){
+  const svg=ARC_SVG[type]?svgIcon(ARC_SVG[type],14):'';
+  return `<span class="badge-type" style="color:var(--text2)">${svg}${type}</span>`;
+}
+function avatar(name){
+  const initial=name.split(' ').map(w=>w[0]).slice(0,2).join('');
+  return `<div class="avatar" style="background:${avatarColor(name)}">${initial}</div>`;
+}
+
+// ─── Data ────────────────────────────────────────────────────────────────────
+// Rarity (4★ / 5★) determined from the official character-select background
+// tiers (purple = 4★, gold = 5★).
+const CHARACTERS=[
+  {name:"Adler",rarity:4,esper:"Incantation",arc:"Condensate",faction:"Eibon Antique Shop",date:"April 29, 2026",version:"1.0"},
+  {name:"Aurelia",rarity:4,esper:"Psyche",arc:"Plasma",faction:"Tamamochi Street Resident Association",date:"April 29, 2026",version:"1.0"},
+  {name:"Baicang",rarity:5,esper:"Incantation",arc:"Condensate",faction:"Bureau of Anomaly Control",date:"April 29, 2026",version:"1.0"},
+  {name:"Chaos",rarity:5,esper:"Lakshana",arc:"Condensate",faction:"Bureau of Anomaly Control",date:"June 24, 2026",version:"1.1"},
+  {name:"Chiz",rarity:5,esper:"Cosmos",arc:"Gas",faction:"Dvořák Family",date:"April 29, 2026",version:"1.0"},
+  {name:"Daffodill",rarity:5,esper:"Chaos",arc:"Liquid",faction:"Eibon Antique Shop",date:"April 29, 2026",version:"1.0"},
+  {name:"Edgar",rarity:4,esper:"Cosmos",arc:"Liquid",faction:"Eibon Antique Shop",date:"April 29, 2026",version:"1.0"},
+  {name:"Esper Zero",rarity:5,esper:"Cosmos",arc:"Solid",faction:"Eibon Antique Shop",date:"April 29, 2026",version:"1.0"},
+  {name:"Fadia",rarity:5,esper:"Psyche",arc:"Condensate",faction:"Bureau of Anomaly Control",date:"April 29, 2026",version:"1.0"},
+  {name:"Haniel",rarity:4,esper:"Psyche",arc:"Solid",faction:"Sterry Express",date:"April 29, 2026",version:"1.0"},
+  {name:"Hathor",rarity:5,esper:"Lakshana",arc:"Plasma",faction:"Sterry Express",date:"April 29, 2026",version:"1.0"},
+  {name:"Hotori",rarity:5,esper:"Cosmos",arc:"Solid",faction:"Eibon Antique Shop",date:"May 13, 2026",version:"1.0"},
+  {name:"Jiuyuan",rarity:5,esper:"Anima",arc:"Solid",faction:"Sterry Express",date:"April 29, 2026",version:"1.0"},
+  {name:"Lacrimosa",rarity:5,esper:"Chaos",arc:"Liquid",faction:"Bureau of Anomaly Control",date:"June 03, 2026",version:"1.1"},
+  {name:"Mint",rarity:4,esper:"Anima",arc:"Liquid",faction:"Bureau of Anomaly Control",date:"April 29, 2026",version:"1.0"},
+  {name:"Nanally",rarity:5,esper:"Anima",arc:"Plasma",faction:"Eibon Antique Shop",date:"April 29, 2026",version:"1.0"},
+  {name:"Sakiri",rarity:5,esper:"Incantation",arc:"Gas",faction:"Eibon Antique Shop",date:"April 29, 2026",version:"1.0"},
+  {name:"Skia",rarity:4,esper:"Lakshana",arc:"Gas",faction:"Bureau of Anomaly Control",date:"April 29, 2026",version:"1.0"},
+];
+const UPCOMING=[
+  {name:"Iroi",rarity:5,esper:"Anima",arc:"Liquid",faction:"Bureau of Anomaly Control",date:"July 29, 2026",version:"1.2"},
+  {name:"Shinku",rarity:5,esper:"Cosmos",arc:"Condensate",faction:"Bureau of Anomaly Control",date:"July 08, 2026",version:"1.2"},
+];
+
+// ─── Render ──────────────────────────────────────────────────────────────────
+function starsHTML(rarity){
+  return `<span class="rarity-stars r${rarity}">${'★'.repeat(rarity)}</span>`;
+}
+function rowHTML(c, isUpcoming=false){
+  return `<tr data-name="${c.name.toLowerCase()}" data-esper="${c.esper}" data-arc="${c.arc}" data-rarity="${c.rarity}" data-faction="${c.faction.toLowerCase()}" onclick="openDetail('${c.name}')" style="cursor:pointer">
+    <td>${avatar(c.name)}</td>
+    <td class="name-cell"><span class="char-name">${c.name}</span></td>
+    <td>${starsHTML(c.rarity)}</td>
+    <td>${esperBadge(c.esper)}</td>
+    <td>${arcBadge(c.arc)}</td>
+    <td class="faction">${c.faction}</td>
+    <td class="date-cell">${c.date}</td>
+    <td class="${isUpcoming?'upcoming-version':'version-tag'}">${c.version}</td>
+  </tr>`;
+}
+function cardHTML(c){
+  const m=ESPER_META[c.esper]||{color:'#fff'};
+  const esperSvg=ESPER_SVG[c.esper]?svgIcon(ESPER_SVG[c.esper],13):'';
+  const arcSvg=ARC_SVG[c.arc]?svgIcon(ARC_SVG[c.arc],13):'';
+  const initial=c.name.split(' ').map(w=>w[0]).slice(0,2).join('');
+  const showVersion=c.version!=='1.0';
+  return `<div class="gcard r${c.rarity}" data-name="${c.name.toLowerCase()}" data-esper="${c.esper}" data-arc="${c.arc}" data-rarity="${c.rarity}" data-faction="${c.faction.toLowerCase()}" onclick="openDetail('${c.name}')" style="cursor:pointer">
+    <div class="gcard-avatar">${initial}</div>
+    <div class="gcard-badges">
+      <div class="gcard-icon esper" style="--icon-color:${m.color}">${esperSvg}</div>
+      <div class="gcard-icon arc">${arcSvg}</div>
+    </div>
+    ${showVersion?`<div class="gcard-version">${c.version}</div>`:''}
+    <div class="gcard-foot">
+      <div class="gcard-name">${c.name}</div>
+      <div class="gcard-stars">${'★'.repeat(c.rarity)}</div>
+    </div>
+  </div>`;
+}
+function render(){
+  document.getElementById('charTableBody').innerHTML=CHARACTERS.map(c=>rowHTML(c)).join('');
+  document.getElementById('upcomingTableBody').innerHTML=UPCOMING.map(c=>rowHTML(c,true)).join('');
+  document.getElementById('galleryGridMain').innerHTML=CHARACTERS.map(c=>cardHTML(c)).join('');
+  document.getElementById('galleryGridUpcoming').innerHTML=UPCOMING.map(c=>cardHTML(c)).join('');
+  document.getElementById('upcomingCount').textContent=UPCOMING.length;
+}
+render();
+
+// ─── View toggle ─────────────────────────────────────────────────────────────
+function setView(view){
+  const isGrid=view==='grid';
+  document.getElementById('btnTableView').classList.toggle('active',!isGrid);
+  document.getElementById('btnGridView').classList.toggle('active',isGrid);
+  document.getElementById('tableWrapMain').style.display=isGrid?'none':'block';
+  document.getElementById('tableWrapUpcoming').style.display=isGrid?'none':'block';
+  document.getElementById('galleryWrapMain').classList.toggle('active',isGrid);
+  document.getElementById('galleryWrapUpcoming').classList.toggle('active',isGrid);
+  filterTable();
+}
+
+// ─── Search / filter ────────────────────────────────────────────────────────
+function filterTable(){
+  const q=document.getElementById('searchInput').value.toLowerCase().trim();
+  const esper=document.getElementById('esperFilter').value;
+  const arc=document.getElementById('arcFilter').value;
+  const rarity=document.getElementById('rarityFilter').value;
+  const isGrid=document.getElementById('galleryWrapMain').classList.contains('active');
+
+  const rows=document.querySelectorAll('#charTableBody tr');
+  let visible=0;
+  rows.forEach(r=>{
+    const show=matchesFilters(r.dataset,q,esper,arc,rarity);
+    r.classList.toggle('row-hidden', !show);
+    if(show) visible++;
+  });
+  document.getElementById('emptyMsg').style.display=(!isGrid && visible===0)?'block':'none';
+
+  const cards=document.querySelectorAll('#galleryGridMain .gcard');
+  let gVisible=0;
+  cards.forEach(c=>{
+    const show=matchesFilters(c.dataset,q,esper,arc,rarity);
+    c.style.display=show?'':'none';
+    if(show) gVisible++;
+  });
+  document.getElementById('emptyMsgGrid').style.display=(isGrid && gVisible===0)?'block':'none';
+}
+function matchesFilters(ds,q,esper,arc,rarity){
+  const matchesQ=!q || ds.name.includes(q) || ds.faction.includes(q);
+  const matchesEsper=!esper || ds.esper===esper;
+  const matchesArc=!arc || ds.arc===arc;
+  const matchesRarity=!rarity || ds.rarity===rarity;
+  return matchesQ && matchesEsper && matchesArc && matchesRarity;
+}
+
+// ─── Sort ────────────────────────────────────────────────────────────────────
+let sortState={col:null,dir:1};
+function sortTable(colIdx){
+  const ths=document.querySelectorAll('#charTable thead th');
+  ths.forEach(th=>th.classList.remove('sort-asc','sort-desc'));
+  if(sortState.col===colIdx) sortState.dir*=-1; else { sortState.col=colIdx; sortState.dir=1; }
+  ths[colIdx].classList.add(sortState.dir===1?'sort-asc':'sort-desc');
+
+  const tbody=document.getElementById('charTableBody');
+  const rows=Array.from(tbody.querySelectorAll('tr'));
+  const keyMap={1:'name',2:'rarity',3:'esper',4:'arc',5:'faction'};
+  rows.sort((a,b)=>{
+    let av,bv;
+    if(colIdx===6){ av=new Date(a.children[6].textContent); bv=new Date(b.children[6].textContent); }
+    else if(colIdx===7){ av=parseFloat(a.children[7].textContent); bv=parseFloat(b.children[7].textContent); }
+    else if(colIdx===2){ av=parseInt(a.dataset.rarity); bv=parseInt(b.dataset.rarity); }
+    else { av=a.dataset[keyMap[colIdx]]||''; bv=b.dataset[keyMap[colIdx]]||''; }
+    if(av<bv) return -1*sortState.dir;
+    if(av>bv) return 1*sortState.dir;
+    return 0;
+  });
+  rows.forEach(r=>tbody.appendChild(r));
+}
+
+// ─── Character Detail Modal ─────────────────────────────────────────────────
+// Full per-character kit data, sourced from public NTE game-data references
+// (skills, passives, awakenings, life skills). Breakthrough material costs
+// are only confirmed for Baicang (from user-provided screenshots); other
+// characters show a "not added yet" placeholder for that tab until that
+// data is supplied. Esper Zero (playable MC) and Chaos have no public kit
+// data yet as of this writing.
+const CHAR_DETAILS={
+  "Baicang":{
+    skills:[
+      {icon:'ti-message-circle',title:'Walk the Talk',desc:'Basic Attack — up to 5 consecutive Incantation hits. Every 3rd hit generates a Power Word <b>Bless</b> (max 3 stacks). Summoning any Power Word costs 3% of Baicang\'s current HP (halved below 50% HP).'},
+      {icon:'ti-flower',title:'Generous Guidance',desc:'Redirect Skill — <b>Silenced Thought</b> (after a dodge) hits a single target and applies <b>Silence</b>. <b>Such Crime</b> (after Formless/Unrestrained Words) hits an area and applies <b>Objurgate</b>.'},
+      {icon:'ti-feather',title:'Judgment of Autumn',desc:'Ultimate — opens a domain dealing DoT Incantation damage and executes targets below 10% HP (5% for bosses). Silence deals big single-target damage, Objurgate deals AoE damage, and Bless heals Baicang for 5% Max HP when triggered inside the domain.'},
+      {icon:'ti-hourglass',title:'Break Time Over',desc:'Support Skill — charges briefly then fires an Incantation attack that applies Power Word Silence on hit.'},
+    ],
+    passives:[
+      {icon:'ti-mask',title:'Moderate Mischief',desc:'Scorch Enhancement — inflicts an extra instance of Scorch (same effect) whenever a Power Word lands on a target already affected by Scorch.'},
+      {icon:'ti-eye',title:'Moderate Working',desc:'+20% ATK, and launches coordinated attacks with allies when ETD-4 members are in the team. Has bonus interactions when switching to Baicang while Skia is stealthed, while Fadia is below 20% HP, or while Lacrimosa is in bat form.'},
+    ],
+    lifeSkills:[
+      {icon:'ti-chart-line',title:'Thriving Daily',
+        levels:[
+          "Baicang increases traffic by <b>18</b>.",
+          "Baicang reduces ingredient consumption rate by <b>1%</b>.",
+          "In Owner's Selection, combos persist when customers lose patience or get hit by hammers.",
+          "Baicang reduces ingredient consumption rate by <b>1%</b>.",
+          "Baicang increases traffic by <b>27</b>.",
+        ]},
+    ],
+    awakening:[
+      {icon:'ti-anchor',title:'A1: Yo, Captain!',desc:'+30% next Skill DMG when Silence triggers (stacks). -4s Skill cooldown when Objurgate triggers (stacks).'},
+      {icon:'ti-trees',title:'A2: Soul Caller',desc:'Every Power Word generated grants +6% ATK, up to 4 stacks, each lasting 10s.'},
+      {icon:'ti-feather',title:'A3: Curses Spoken Into Being',desc:'Increases the Power Word generation limit to 4.'},
+      {icon:'ti-wand',title:'A4: Or Perhaps Blessings',desc:'Restores an additional 5% Max HP when any Power Word triggers during Judgment of Autumn.'},
+      {icon:'ti-anchor',title:'A5: In Honor of Moonlight',desc:'Increases the duration of Judgment of Autumn to 16s.'},
+      {icon:'ti-anchor',title:'A6: White Aspect',desc:'+30% CRIT Rate during Judgment of Autumn.'},
+      {icon:'ti-atom-2',title:'Earth Sequence',tag:'RESONANCE',desc:'3-Awakening bonus — increases the skill level of Walk the Talk, Generous Guidance, and Judgment of Autumn by 1.'},
+      {icon:'ti-atom-2',title:'Remained',tag:'RESONANCE',desc:'6-Awakening bonus — grants all allies within the domain +20% ATK and the Execution effect during Judgment of Autumn.'},
+    ],
+    console:{text:"Increases CRIT Rate by 8% for each Type III Module equipped.",type:'III',
+      puzzle:[
+        [0,0,0,0,0,0,0],
+        [0,0,1,1,1,1,0],
+        [0,1,1,1,1,1,0],
+        [0,1,1,1,0,1,0],
+        [0,1,1,0,0,1,0],
+        [0,1,1,1,1,0,0],
+        [0,0,0,0,0,0,0],
+      ]},
+    breakthrough:{
+      materials:[
+        {icon:'ti-moon-2',name:'BLURRED NUMERAL',qty:17,acq:['Monster Drop (Forest Path)','Simulation Center']},
+        {icon:'ti-feather',name:'NEST GUARD FRAGMENT',qty:86,acq:['World Boss: Nestbound Bird']},
+        {icon:'ti-help-circle',name:'UNSOLVED NUMERAL',qty:18,acq:['Monster Drop (Forest Path)','Simulation Center']},
+        {icon:'ti-atom',name:'DISTORTED NUMERAL',qty:15,acq:['Monster Drop (Forest Path)','Simulation Center']},
+      ],
+      currency:525000,
+    },
+  },
+  "Adler":{
+    skills:[
+      {icon:'ti-walk',title:'Deliverance',desc:'Basic Attack — up to 5 Incantation hits, plus an aimed shot (Liberation) and a plunge (Ignorance). Hits build stacks of Karma (up to 20).'},
+      {icon:'ti-ghost',title:"Evil's Bane",desc:'Redirect Skill — summons Sunya phantoms for an AoE hit plus Incantation DoT and a Blessing shield on active characters. Consumes all Karma stacks; each stack spent grants +2% Skill DMG.'},
+      {icon:'ti-users',title:'Tranquility',desc:'Ultimate — summons 5 Sunyas to strike all enemies (5 hits each), or 10 hits total against a single remaining target.'},
+      {icon:'ti-target',title:'Pristine Reflection',desc:'Support Skill — fires a single compressed round, dealing Incantation damage.'},
+    ],
+    passives:[
+      {icon:'ti-flame',title:'Temperance',desc:'Scorch Enhancement — applies a random debuff (-20% ATK, -10% Esper RES, or +10% Break Efficiency) for 15s whenever Scorch is inflicted.'},
+      {icon:'ti-shield',title:'Righteous Heart',desc:"+20% DEF."},
+    ],
+    lifeSkills:[
+      {icon:'ti-coffee',title:'Coffee Master',
+        levels:[
+          "Adler increases dish prices by an additional <b>0.12</b> Fons.",
+          "Adler reduces ingredient consumption rate by <b>1%</b>.",
+          "In Owner's Selection, coffee is automatically prepared.",
+          "Adler reduces ingredient consumption rate by <b>1%</b>.",
+          "Adler increases dish prices by an additional <b>0.18</b> Fons.",
+        ]},
+    ],
+    awakening:[
+      {icon:'ti-sparkles',title:'A1: Form',desc:'Grants Adler 20 stacks of Karma when casting Tranquility.'},
+      {icon:'ti-eye',title:'A2: Sensation',desc:'Each Karma stack grants +3% DMG Bonus.'},
+      {icon:'ti-shield-check',title:'A3: Perception',desc:'Increases the Blessing shield by 20%.'},
+      {icon:'ti-shield',title:'A4: Formation',desc:'Absorbs overflow damage equal to 50% of Adler\'s DEF when Blessing breaks.'},
+      {icon:'ti-bolt',title:'A5: Discernment',desc:'Grants 20 Ultimate Energy when casting Tranquility.'},
+      {icon:'ti-infinity',title:'A6: All Forms Are Void',desc:'Extends the duration of Blessing to 12s.'},
+      {icon:'ti-atom-2',title:'Cleanse',tag:'RESONANCE',desc:'3-Awakening bonus — increases the skill level of Deliverance, Evil\'s Bane, and Tranquility by 1.'},
+      {icon:'ti-atom-2',title:'Enlightened Guardian',tag:'RESONANCE',desc:'6-Awakening bonus — increases team Incantation DMG by 10% while protected by Blessing.'},
+    ],
+    console:{text:"Increases DEF by 12% for each Type III Module equipped.",type:'III'},
+    breakthrough:{
+      materials:[
+        {icon:'ti-moon-2',name:'BLURRED NUMERAL',qty:17,acq:['Monster Drop (Forest Path)','Simulation Center']},
+        {icon:'ti-feather',name:'NEST GUARD FRAGMENT',qty:86,acq:['World Boss: Nestbound Bird']},
+        {icon:'ti-help-circle',name:'UNSOLVED NUMERAL',qty:18,acq:['Monster Drop (Forest Path)','Simulation Center']},
+        {icon:'ti-atom',name:'DISTORTED NUMERAL',qty:15,acq:['Monster Drop (Forest Path)','Simulation Center']},
+      ],
+      currency:525000,
+    },
+  },
+  "Aurelia":{
+    skills:[
+      {icon:'ti-microphone',title:'Cappella',desc:'Basic Attack — up to 4 Psyche hits (Legato). Hold Dodge to ride a jellyfish at high speed (Staccato), auto-firing jellyfish blasts.'},
+      {icon:'ti-disc',title:'Cadenza Aria',desc:'Redirect Skill — AoE Psyche hit, then enters the Cadenza state for 12s (+70% jellyfish blast damage, AoE around target).'},
+      {icon:'ti-music',title:'Canzon Chorus',desc:'Ultimate — gathers nearby jellyfish for 6 AoE Psyche hits and slightly pulls targets together.'},
+      {icon:'ti-wave-saw-tool',title:'Dissonance',desc:'Support Skill — commands a jellyfish strike for a single AoE Psyche hit.'},
+    ],
+    passives:[
+      {icon:'ti-ripple',title:'Harmonics',desc:'Nova Enhancement — deals 3 extra Psyche hits (50% ATK each) to a target after their Nova status ends.'},
+      {icon:'ti-trending-up',title:'Crescendo',desc:'+1% ATK for 5s whenever a jellyfish blast hits, up to 10 stacks.'},
+    ],
+    lifeSkills:[
+      {icon:'ti-glass-full',title:'Perfect Fit',
+        levels:[
+          "Aurelia increases traffic by <b>1%</b> for each Beverage tag on dishes.",
+          "Aurelia reduces ingredient consumption rate by <b>1%</b>.",
+          "In Owner's Selection, customers leave additional tips when they leave.",
+          "Aurelia reduces ingredient consumption rate by <b>1%</b>.",
+          "Aurelia increases traffic by <b>1.5%</b> for every 2 Beverage tags on dishes.",
+        ]},
+    ],
+    awakening:[
+      {icon:'ti-star',title:'A1: Futuristic Prelude',desc:'+15% CRIT Rate while in the Cadenza state.'},
+      {icon:'ti-repeat',title:'A2: Unique Melody',desc:'Enters (or extends by 5s) the Cadenza state after a Critical Dodge or casting Dissonance.'},
+      {icon:'ti-music-plus',title:'A3: Trio Rest',desc:'+20% Canon Chorus DMG while in the Cadenza state.'},
+      {icon:'ti-shield',title:'A4: Staff Gap',desc:'+20% DEF when casting Staccato.'},
+      {icon:'ti-crosshair',title:'A5: Simple Melody',desc:"+15% Canon Chorus CRIT Rate."},
+      {icon:'ti-flame',title:'A6: Bygone Fugue',desc:'Raises max Crescendo stacks to 20; grants 10 stacks instantly after casting Cadenza Aria.'},
+      {icon:'ti-atom-2',title:'Universal Harmony',tag:'RESONANCE',desc:'3-Awakening bonus — increases the skill level of Cappella, Cadenza Aria, and Canon Chorus by 1.'},
+      {icon:'ti-atom-2',title:'Shared Melody',tag:'RESONANCE',desc:'6-Awakening bonus — +8% Psyche DMG for all allies for 15s when entering/extending the Cadenza state.'},
+    ],
+    console:{text:"Increases ATK by 10% for each Type III Module equipped.",type:'III'},
+    breakthrough:{
+      materials:[
+        {icon:'ti-moon-2',name:'BLURRED NUMERAL',qty:17,acq:['Monster Drop (Forest Path)','Simulation Center']},
+        {icon:'ti-feather',name:'NEST GUARD FRAGMENT',qty:86,acq:['World Boss: Nestbound Bird']},
+        {icon:'ti-help-circle',name:'UNSOLVED NUMERAL',qty:18,acq:['Monster Drop (Forest Path)','Simulation Center']},
+        {icon:'ti-atom',name:'DISTORTED NUMERAL',qty:15,acq:['Monster Drop (Forest Path)','Simulation Center']},
+      ],
+      currency:525000,
+    },
+  },
+  "Chiz":{
+    skills:[
+      {icon:'ti-sword',title:'Exiled Swordplay',desc:'Basic Attack — up to 5 Cosmos hits, granting Grain. Held Blighted Vale devours targets for extra Grain and Fons.'},
+      {icon:'ti-coin',title:'Pink Paws Priority Principle',desc:'Redirect Skill — stacks up to 3 charges; consumes Grain in escalating tiers (No/Half/Full Grain) for bonus Cosmos damage. Cannot Crit.'},
+      {icon:'ti-chart-candle',title:'Zero-Sum Game',desc:'Ultimate — AoE Cosmos hit, then enters the Grain Market for 7s where the first Grain Settlement is a guaranteed Crit.'},
+      {icon:'ti-run',title:'Temporary Entry',desc:'Support Skill — Brown Sugar Boba carries Chiz into the target for a Cosmos hit.'},
+    ],
+    passives:[
+      {icon:'ti-bolt',title:'Hanahaki Disease',desc:'Charge Enhancement — grants active characters +4 Charge.'},
+      {icon:'ti-clock',title:'Hoarding',desc:'+20% Charge Efficiency while Chiz is on the field.'},
+    ],
+    lifeSkills:[
+      {icon:'ti-building-bank',title:'Lobby Manager',
+        levels:[
+          "Chiz increases traffic by <b>18</b>.",
+          "Chiz reduces ingredient consumption rate by <b>1%</b>.",
+          "In Owner's Selection, each correct dish raises prices, up to 15 times per round.",
+          "Chiz reduces ingredient consumption rate by <b>1%</b>.",
+          "Chiz increases traffic by <b>27</b>.",
+        ]},
+    ],
+    awakening:[
+      {icon:'ti-sun',title:'A1: Sun, Sun — speak to me!',desc:'+10% Grain and Grain Loan storage limit.'},
+      {icon:'ti-fireworks',title:'A2: Fireworks in Silence',desc:'Grants 10% of current Grain as interest per second while in the Surplus state.'},
+      {icon:'ti-cloud-rain',title:'A3: If There Were No Rainy Days',desc:'+50% chance of a Grain Price increase.'},
+      {icon:'ti-gift',title:'A4: To Riccitali, Bandage, Fons',desc:'+20% Grain acquisition efficiency.'},
+      {icon:'ti-notebook',title:'A5: Blank Diary Pages',desc:'Grants Grain equal to 100% of the storage limit upon entering combat.'},
+      {icon:'ti-calendar',title:'A6: Thirty-Three Days',desc:"+15% Grain's additional Cosmos DMG."},
+      {icon:'ti-atom-2',title:'Friends and Family',tag:'RESONANCE',desc:'3-Awakening bonus — +50% Grain acquisition efficiency while in the Debt state.'},
+      {icon:'ti-atom-2',title:'Homecoming',tag:'RESONANCE',desc:'6-Awakening bonus — reduces target Cosmos RES by 10% on hit.'},
+    ],
+    console:{text:"Increases Cosmos DMG Bonus by 10% for each Type III Module equipped.",type:'III'},
+    breakthrough:{
+      materials:[
+        {icon:'ti-moon-2',name:'BLURRED NUMERAL',qty:17,acq:['Monster Drop (Forest Path)','Simulation Center']},
+        {icon:'ti-feather',name:'NEST GUARD FRAGMENT',qty:86,acq:['World Boss: Nestbound Bird']},
+        {icon:'ti-help-circle',name:'UNSOLVED NUMERAL',qty:18,acq:['Monster Drop (Forest Path)','Simulation Center']},
+        {icon:'ti-atom',name:'DISTORTED NUMERAL',qty:15,acq:['Monster Drop (Forest Path)','Simulation Center']},
+      ],
+      currency:525000,
+    },
+  },
+  "Daffodill":{
+    skills:[
+      {icon:'ti-sword',title:'Still Waters',desc:'Basic Attack — up to 5 Chaos hits with twin blades; Light Prism raises her Break Damage contribution by 20%.'},
+      {icon:'ti-wave-square',title:'Resonance',desc:'Redirect Skill — hits the target and grants Resonance stacks (+DMG/Break per ally Support Skill cast). Enhances into Echoes at max stacks.'},
+      {icon:'ti-eye',title:'Finale',desc:'Ultimate — AoE Chaos hit; unseals her left eye for bonus damage and inflicts Insight. Unlocks Phantom Step (auto-parry on switch-in).'},
+      {icon:'ti-sword-off',title:'Crossed Blades',desc:'Support Skill — a slashing Chaos hit on the target.'},
+    ],
+    passives:[
+      {icon:'ti-bolt',title:'Blade Draw',desc:'Discord Enhancement — further reduces target Break cap by 10% (stacking to -30%) for 30s while Discord is active.'},
+      {icon:'ti-ghost',title:'Cicada Shell',desc:'+80% Phantom Step damage.'},
+    ],
+    lifeSkills:[
+      {icon:'ti-heart-handshake',title:'The Art of Hospitality',
+        levels:[
+          "Daffodill increases traffic by <b>18</b>.",
+          "Daffodill reduces ingredient consumption rate by <b>1%</b>.",
+          "Daffodill increases traffic by <b>18</b>.",
+          "Daffodill reduces ingredient consumption rate by <b>1%</b>.",
+          "Daffodill increases traffic by <b>27</b>.",
+        ]},
+    ],
+    awakening:[
+      {icon:'ti-eye',title:'A1: Eye',desc:"+100% Resonance DMG and +250% Break per Support Skill cast."},
+      {icon:'ti-run',title:'A2: Mechanical March',desc:'Phantom Step deals high damage/Break and fully charges Finale if a counter fails.'},
+      {icon:'ti-layers-intersect',title:'A3: Assembly of Creations',desc:'Prevents Insight from being removed and allows it to stack up to 3 times.'},
+      {icon:'ti-eye-check',title:'A4: In Concealment',desc:'+15% Break DMG per Insight stack when the target breaks.'},
+      {icon:'ti-target',title:'A5: Perfect Truth',desc:'Deals 1 extra Break Damage instance per Insight stack when the target breaks.'},
+      {icon:'ti-shield-x',title:'A6: Bloom in the Lake',desc:"Ignores 15% of target's DEF."},
+      {icon:'ti-atom-2',title:'Covert Operation',tag:'RESONANCE',desc:'3-Awakening bonus — increases the skill level of Still Waters, Resonance, and Witness This Finale by 1.'},
+      {icon:'ti-atom-2',title:'Sunlight and Sanctuary',tag:'RESONANCE',desc:"6-Awakening bonus — reduces a target's Chaos RES by 15% when they break."},
+    ],
+    console:{text:"Increases Chaos DMG Bonus by 10% for each Type III Module equipped.",type:'III'},
+    breakthrough:{
+      materials:[
+        {icon:'ti-moon-2',name:'BLURRED NUMERAL',qty:17,acq:['Monster Drop (Forest Path)','Simulation Center']},
+        {icon:'ti-feather',name:'NEST GUARD FRAGMENT',qty:86,acq:['World Boss: Nestbound Bird']},
+        {icon:'ti-help-circle',name:'UNSOLVED NUMERAL',qty:18,acq:['Monster Drop (Forest Path)','Simulation Center']},
+        {icon:'ti-atom',name:'DISTORTED NUMERAL',qty:15,acq:['Monster Drop (Forest Path)','Simulation Center']},
+      ],
+      currency:525000,
+    },
+  },
+  "Edgar":{
+    skills:[
+      {icon:'ti-backpack',title:'Combat Practice',desc:'Basic Attack — up to 5 Cosmos hits, plus a plunge (Calculated Landing).'},
+      {icon:'ti-droplet',title:'Wild Current',desc:'Redirect Skill — hold to channel repeated Cosmos hits that heal the lowest-HP ally. Cooldown grows the longer it\'s held.'},
+      {icon:'ti-brain',title:"Finnegan's Wake",desc:'Ultimate — opens a 10s domain dealing an AoE Cosmos hit and healing the active character over its duration.'},
+      {icon:'ti-briefcase',title:'Weight of Knowledge',desc:'Support Skill — charges and swings his bag for an AoE Cosmos hit.'},
+    ],
+    passives:[
+      {icon:'ti-bolt',title:'Gentle Edge',desc:'Charge Enhancement — grants 120 Ultimate Energy when a Support Skill triggers Charge (30s cooldown).'},
+      {icon:'ti-key',title:'Unchanging Warmth',desc:'Casting Wild Current or Weight of Knowledge grants a Key of Truth (up to 3), each extending the Ultimate duration by 1s.'},
+    ],
+    lifeSkills:[
+      {icon:'ti-book',title:'Knowledge in Action',
+        levels:[
+          "Edgar increases traffic by <b>18</b>.",
+          "Edgar reduces ingredient consumption rate by <b>1%</b>.",
+          "In Owner's Selection, customers are more likely to choose the highest-priced dishes.",
+          "Edgar reduces ingredient consumption rate by <b>1%</b>.",
+          "Edgar increases traffic by <b>27</b>.",
+        ]},
+    ],
+    awakening:[
+      {icon:'ti-eye',title:'A1: Anomaly-Loving Observer',desc:'Grants 1 Key of Truth whenever any teammate casts a Support Skill.'},
+      {icon:'ti-clock-pause',title:'A2: Intern Anomaly Hunter',desc:'Caps Wild Current\'s cooldown extension at 3s.'},
+      {icon:'ti-heart-plus',title:'A3: One of the Eibon Detectives',desc:"+15% Wild Current healing for allies below 30% HP."},
+      {icon:'ti-sword',title:'A4: Skilled Strategist',desc:'+50% Wild Current DMG.'},
+      {icon:'ti-shield',title:'A5: Guardian of the Antique Shop\'s Light',desc:"+20% Max HP."},
+      {icon:'ti-users',title:'A6: Visitor from Planet Curiosity',desc:"Grants +15% DEF to all allies within Finnegan's Wake."},
+      {icon:'ti-atom-2',title:'Pursuit of Knowledge',tag:'RESONANCE',desc:"3-Awakening bonus — increases the skill level of Wild Current, Finnegan's Wake, and Weight of Knowledge by 1."},
+      {icon:'ti-atom-2',title:'Keen Insight',tag:'RESONANCE',desc:"6-Awakening bonus — converts 3% of any ally's lost Max HP into 1 Charge for the Ultimate, up to 20."},
+    ],
+    console:{text:"Increases HP by 10% for each Type III Module equipped.",type:'III'},
+    breakthrough:{
+      materials:[
+        {icon:'ti-moon-2',name:'BLURRED NUMERAL',qty:17,acq:['Monster Drop (Forest Path)','Simulation Center']},
+        {icon:'ti-feather',name:'NEST GUARD FRAGMENT',qty:86,acq:['World Boss: Nestbound Bird']},
+        {icon:'ti-help-circle',name:'UNSOLVED NUMERAL',qty:18,acq:['Monster Drop (Forest Path)','Simulation Center']},
+        {icon:'ti-atom',name:'DISTORTED NUMERAL',qty:15,acq:['Monster Drop (Forest Path)','Simulation Center']},
+      ],
+      currency:525000,
+    },
+  },
+  "Fadia":{
+    skills:[
+      {icon:'ti-shield',title:'Wordless Rejection',desc:'Basic Attack — up to 5 Psyche hits. Passive "All Eyes on Me" redirects ally damage to herself above 1 HP, or shares her own damage with the team at 1 HP.'},
+      {icon:'ti-link',title:'Existence',desc:'Redirect Skill — hits an area and inflicts Destructive Experience on the highest-HP enemy, sharing a portion of damage Fadia takes with that target.'},
+      {icon:'ti-mood-crazy-happy',title:'Agony to Euphoria',desc:'Ultimate — enters the Lilith state for 6 hits + up to 5 follow-ups of Mental damage, restoring HP. Fully refunds energy if cast at/above her Destructive Threshold.'},
+      {icon:'ti-shield-half',title:'Outsider',desc:'Support Skill — a Psyche hit to an area.'},
+    ],
+    passives:[
+      {icon:'ti-flame',title:'Furnace of Guilt',desc:'Nova Enhancement — drains the target\'s Max HP (200% of Fadia\'s base Max HP) and grants the team bonus Max HP when Nova ends.'},
+      {icon:'ti-heart',title:'Denial and Plunder',desc:"+10% team Max HP while Fadia is in the team."},
+    ],
+    lifeSkills:[
+      {icon:'ti-eye',title:'Be Conscious',
+        levels:[
+          "Fadia increases traffic by <b>1%</b> for every Beverage tag on dishes.",
+          "Fadia reduces ingredient consumption rate by <b>1%</b>.",
+          "In Owner's Selection, customers leave additional tips when they leave.",
+          "Fadia reduces ingredient consumption rate by <b>1%</b>.",
+          "Fadia increases traffic by <b>1.5%</b> for every 2 Beverage tags on dishes.",
+        ]},
+      {icon:'ti-car',title:'Good Driving',
+        levels:[
+          "Grants an additional <b>1000</b> Fons in tips for each order in Swift Travel.",
+          "In Swift Travel, final satisfaction for orders is increased by an additional <b>25</b> points.",
+          "Grants an additional <b>1000</b> Fons in tips for each order in Swift Travel.",
+          "In Swift Travel, final satisfaction for orders is increased by an additional <b>25</b> points.",
+          "In Swift Travel, the satisfaction cap for each customer is increased by <b>50</b> points.",
+        ]},
+    ],
+    awakening:[
+      {icon:'ti-shield-half',title:'A1: Apostate',desc:'Increases her damage-redirect ratio to 75%.'},
+      {icon:'ti-link',title:'A2: Instinct',desc:'Raises Destructive Experience\'s damage share to 600% and its cap to 25% of Max HP.'},
+      {icon:'ti-heart-plus',title:'A3: Curser of Blessings',desc:'+30% base Max HP on entering combat (lost on leaving combat).'},
+      {icon:'ti-heart',title:'A4: Breaker of Taboos',desc:'Raises Lilith healing to 30% Max HP (60% above the Destructive Threshold).'},
+      {icon:'ti-crosshair',title:'A5: Survivor of Death',desc:'+50% CRIT Rate while in Lilith state.'},
+      {icon:'ti-users',title:'A6: Bringer of Love and Death',desc:'Inflicts Destructive Experience on up to 10 targets at once.'},
+      {icon:'ti-atom-2',title:'The Disrespecting Saint',tag:'RESONANCE',desc:'3-Awakening bonus — increases the skill level of Wordless Rejection, Existence, and Agony to Euphoria by 1.'},
+      {icon:'ti-atom-2',title:'The Unified Saint',tag:'RESONANCE',desc:'6-Awakening bonus — grants all team members +10% ATK while Fadia is on the team.'},
+    ],
+    console:{text:"Increases HP by 6% for each Type II Module equipped.",type:'II'},
+    breakthrough:{
+      materials:[
+        {icon:'ti-moon-2',name:'BLURRED NUMERAL',qty:17,acq:['Monster Drop (Forest Path)','Simulation Center']},
+        {icon:'ti-feather',name:'NEST GUARD FRAGMENT',qty:86,acq:['World Boss: Nestbound Bird']},
+        {icon:'ti-help-circle',name:'UNSOLVED NUMERAL',qty:18,acq:['Monster Drop (Forest Path)','Simulation Center']},
+        {icon:'ti-atom',name:'DISTORTED NUMERAL',qty:15,acq:['Monster Drop (Forest Path)','Simulation Center']},
+      ],
+      currency:525000,
+    },
+  },
+  "Haniel":{
+    skills:[
+      {icon:'ti-wand',title:'Genesse Technique',desc:'Basic Attack — up to 5 Psyche hits, plus a chargeable Paranormal Cannon.'},
+      {icon:'ti-speakerphone',title:'Silent Moonlit Forest Guardian',desc:'Redirect Skill — throws speaker "Hootie," granting the team an ATK bonus while active. Builds Four-Part Harmony stacks that trigger an AoE Ensemble.'},
+      {icon:'ti-crown',title:'A Melody Named Haniel',desc:'Ultimate — releases an ATK-buffing field and Paranormal Ace state; Ensemble triggers an extra Symphony hit while active.'},
+      {icon:'ti-target',title:'Easter Egg Time',desc:'Support Skill — fires a Psyche projectile at the enemy.'},
+    ],
+    passives:[
+      {icon:'ti-heart',title:"It's Friendship!",desc:'Nova Enhancement — drains ATK from the target and distributes it to allies when Nova ends.'},
+      {icon:'ti-shield-star',title:"It's Bond!",desc:'Grants stacks of Plot Armor (raising Paranormal Cannon\'s ricochet cap) whenever Ensemble triggers; double stacks in Paranormal Ace.'},
+    ],
+    lifeSkills:[
+      {icon:'ti-briefcase',title:'A Pro on the Job',
+        levels:[
+          "Haniel increases dish prices by an additional <b>0.12</b> Fons.",
+          "Haniel reduces ingredient consumption rate by <b>1%</b>.",
+          "Haniel increases dish prices by an additional <b>0.12</b> Fons.",
+          "Haniel reduces ingredient consumption rate by <b>1%</b>.",
+          "Haniel increases dish prices by an additional <b>0.10</b> Fons.",
+        ]},
+    ],
+    awakening:[
+      {icon:'ti-school',title:'A1: New here! Genus transfer student reporting in!',desc:"Raises Plot Armor's cap to 6 and Paranormal Cannon's ricochet limit to 6."},
+      {icon:'ti-clock',title:'A2: Legendary! The gold back row window seat!',desc:"+4s Hootie duration."},
+      {icon:'ti-users',title:'A3: Assembled! The hero team is formed!',desc:'+20% CRIT Chance while in Paranormal Ace state.'},
+      {icon:'ti-beach',title:'A4: Seaside! Beach episode!',desc:"+100% next-attack bonus DMG from Ensemble while in Paranormal Ace state."},
+      {icon:'ti-alert-triangle',title:'A5: Crisis! Shattering trust!',desc:'+30% Psyche DMG while in Paranormal Ace state.'},
+      {icon:'ti-sunrise',title:'A6: Finale! For the coming dawn!',desc:"-4s Hootie cooldown."},
+      {icon:'ti-atom-2',title:'Prequel',tag:'RESONANCE',desc:'3-Awakening bonus — increases the skill level of Genesse Technique, Silent Moonlit Forest Guardian, and A Melody Named Haniel by 1.'},
+      {icon:'ti-atom-2',title:'Sequel',tag:'RESONANCE',desc:"6-Awakening bonus — +12% team CRIT DMG in the Paranormal Ace state."},
+    ],
+    console:{text:"Increases ATK by 10% for each Type III Module equipped.",type:'III'},
+    breakthrough:{
+      materials:[
+        {icon:'ti-moon-2',name:'BLURRED NUMERAL',qty:17,acq:['Monster Drop (Forest Path)','Simulation Center']},
+        {icon:'ti-feather',name:'NEST GUARD FRAGMENT',qty:86,acq:['World Boss: Nestbound Bird']},
+        {icon:'ti-help-circle',name:'UNSOLVED NUMERAL',qty:18,acq:['Monster Drop (Forest Path)','Simulation Center']},
+        {icon:'ti-atom',name:'DISTORTED NUMERAL',qty:15,acq:['Monster Drop (Forest Path)','Simulation Center']},
+      ],
+      currency:525000,
+    },
+  },
+  "Hathor":{
+    skills:[
+      {icon:'ti-package',title:'Rapid Delivery',desc:'Basic Attack — up to 5 Lakshana hits, plus a plunge and a knock-up combo (To The Skies).'},
+      {icon:'ti-plane',title:'Aerial Command',desc:'Redirect Skill — leaps for a slash granting Express Delivery Power stacks; hold to charge an AoE hit. Upgrades to Cyclone Strike in Emergency Delivery state.'},
+      {icon:'ti-motorbike',title:'Rider Express',desc:'Ultimate — a thorn-motorcycle charge and dive-bomb hit; enters Emergency Delivery state with bonus Move Speed and ATK from stacks.'},
+      {icon:'ti-map-pin',title:'Impact Point Designation',desc:'Support Skill — an aerial kick dealing 2 Lakshana hits.'},
+    ],
+    passives:[
+      {icon:'ti-alert-circle',title:'Delay Warning',desc:'Remora Enhancement — extends Remora duration to 12s and +10% CRIT Rate against Remora targets.'},
+      {icon:'ti-bolt',title:'Efficiency Boost',desc:'Grants 1 stack of Express Delivery Power after defeating a target.'},
+    ],
+    lifeSkills:[
+      {icon:'ti-truck-delivery',title:'Elite Courier',
+        levels:[
+          "Increases delivery points for City Delivery by <b>2</b> per day.",
+          "Increases customer satisfaction for City Delivery by an additional <b>10</b> points.",
+          "Increases delivery points for City Delivery by <b>2</b> per day.",
+          "Increases customer satisfaction for City Delivery by an additional <b>10</b> points.",
+          "Hathor can help complete 1 City Delivery per day and directly obtain the rewards.",
+        ]},
+    ],
+    awakening:[
+      {icon:'ti-bolt',title:'A1: Elite Courier',desc:'Holding the Redirect Skill for the first time in battle grants 6 stacks of Express Delivery Power.'},
+      {icon:'ti-crown-thorns',title:'A2: Thorn Dominion',desc:'Grants Express Delivery Power when Excellent Rating Lock and Five-Star Tracking naturally expire.'},
+      {icon:'ti-wing',title:'A3: Lost Wings',desc:'+15% DMG to non-Boss targets.'},
+      {icon:'ti-engine',title:'A4: Engine Resonance',desc:'+25% CRIT Chance for the next Cyclone Strike per successful cast in Emergency Delivery.'},
+      {icon:'ti-sandwich',title:'A5: Regular Sandwich',desc:'+1% DMG per Express Delivery Power stack gained (up to 15%).'},
+      {icon:'ti-sun',title:'A6: Daily Life Walkthrough',desc:'+30% CRIT DMG while in Emergency Delivery state.'},
+      {icon:'ti-atom-2',title:'Doubled Capacity',tag:'RESONANCE',desc:'3-Awakening bonus — increases the skill level of Rapid Delivery, Aerial Command, and Rider Express by 1.'},
+      {icon:'ti-atom-2',title:'Unhindered Passage',tag:'RESONANCE',desc:"6-Awakening bonus — ignores 10% of target's DEF while in Emergency Delivery state."},
+    ],
+    console:{text:"Increases ATK by 10% for each Type III Module equipped.",type:'III'},
+    breakthrough:{
+      materials:[
+        {icon:'ti-moon-2',name:'BLURRED NUMERAL',qty:17,acq:['Monster Drop (Forest Path)','Simulation Center']},
+        {icon:'ti-feather',name:'NEST GUARD FRAGMENT',qty:86,acq:['World Boss: Nestbound Bird']},
+        {icon:'ti-help-circle',name:'UNSOLVED NUMERAL',qty:18,acq:['Monster Drop (Forest Path)','Simulation Center']},
+        {icon:'ti-atom',name:'DISTORTED NUMERAL',qty:15,acq:['Monster Drop (Forest Path)','Simulation Center']},
+      ],
+      currency:525000,
+    },
+  },
+  "Hotori":{
+    skills:[
+      {icon:'ti-umbrella',title:'Misty Moon Style',desc:'Basic Attack — up to 5 Cosmos hits. Displays a Non-Closed Timepiece that slowly fills with energy over time (in or out of combat).'},
+      {icon:'ti-recharging',title:'Present Replay',desc:'Redirect Skill (60 energy, no cooldown) — a 7-hit Cosmos attack, then records up to 3 allies\' Support/Redirect Skills over the next 5s.'},
+      {icon:'ti-clock-pause',title:"World's Tide",desc:'Ultimate (needs full energy, no cooldown) — a 10-hit Cosmos attack that slows time to a stop, replays all recorded skills once, and builds a combo for a Finisher hit.'},
+      {icon:'ti-umbrella-closed',title:"Shopkeeper's Authority",desc:'Support Skill — throws her umbrella for a Cosmos hit.'},
+    ],
+    passives:[
+      {icon:'ti-flower',title:'Ghost Orchid Crest',desc:'Blossom Enhancement — prevents Vita Bud attacks from pausing during Time Stop.'},
+      {icon:'ti-coin',title:'All Treasures Under Heaven',desc:"+100% World's Tide Finisher DMG Ratio."},
+    ],
+    lifeSkills:[
+      {icon:'ti-gavel',title:'Treasure Hunt',
+        levels:[
+          "Increases auction items by <b>1</b> extra per auction.",
+          "Grants <b>1</b> additional attempt to refresh unpurchased auction items per auction.",
+          "Increases auction items by <b>2</b> extra per auction.",
+          "Sets the number of attempts to refresh unpurchased auction items to <b>2</b>.",
+          "Increases auction items by <b>3</b> extra per auction.",
+        ]},
+    ],
+    awakening:[
+      {icon:'ti-flower',title:'A1: Flourish',desc:'+12% Time Stop DMG for each recorded Support/Redirect Skill.'},
+      {icon:'ti-history',title:'A2: Distant Memories',desc:'+20% DMG during Time Stop.'},
+      {icon:'ti-eye',title:'A3: Momentary Gaze',desc:'Recovers Present Replay\'s spent energy after a full recording (60s cooldown).'},
+      {icon:'ti-puzzle',title:'A4: Scattered Relics',desc:'+10 Timepiece energy per team kill while the pointer isn\'t rewinding, up to 3 times.'},
+      {icon:'ti-eye-check',title:'A5: All-Seeing',desc:'+15% team DMG to a lone remaining enemy while Hotori is deployed.'},
+      {icon:'ti-clock-x',title:'A6: Time Takes Away',desc:"Ignores 30% of target's DEF during Time Stop."},
+      {icon:'ti-atom-2',title:'Eternity Shattered',tag:'RESONANCE',desc:'3-Awakening bonus — increases the skill level of Misty Moon Style, Present Replay, and World\'s Tide by 1.'},
+      {icon:'ti-atom-2',title:'The Ultimate Treasure of Clear Understanding',tag:'RESONANCE',desc:"6-Awakening bonus — grants the team +30% ATK while Hotori is alive and on the team."},
+    ],
+    console:{text:"Increases Cosmos DMG by 10% for each Type III Module equipped.",type:'III'},
+    breakthrough:{
+      materials:[
+        {icon:'ti-moon-2',name:'BLURRED NUMERAL',qty:17,acq:['Monster Drop (Forest Path)','Simulation Center']},
+        {icon:'ti-feather',name:'NEST GUARD FRAGMENT',qty:86,acq:['World Boss: Nestbound Bird']},
+        {icon:'ti-help-circle',name:'UNSOLVED NUMERAL',qty:18,acq:['Monster Drop (Forest Path)','Simulation Center']},
+        {icon:'ti-atom',name:'DISTORTED NUMERAL',qty:15,acq:['Monster Drop (Forest Path)','Simulation Center']},
+      ],
+      currency:525000,
+    },
+  },
+  "Jiuyuan":{
+    skills:[
+      {icon:'ti-guns',title:'When Secrets Take Shape',desc:'Basic Attack — up to 5 Anima hits granting Rose Pact Bullets; the final hit establishes a Lethal Rose Pact.'},
+      {icon:'ti-target',title:'Intel Hunter',desc:'Redirect Skill — dashes and pulls the target for multiple Anima hits, granting 4 Rose Pact Bullets and applying a Lethal Rose Pact.'},
+      {icon:'ti-explosion',title:'Final Reckoning',desc:'Ultimate — dashes while firing, ending in a large AoE Anima explosion. Triggers Pact Settlement on all Lethal Rose Pact targets simultaneously.'},
+      {icon:'ti-crosshair',title:'Intel Lock-On',desc:'Support Skill — fires a curved bullet, granting 2 Rose Pact Bullets on hit.'},
+    ],
+    passives:[
+      {icon:'ti-flower',title:'Seize the Moment',desc:'Blossom Enhancement — spawns 1 extra Vita Bud and raises the field limit to 6.'},
+      {icon:'ti-link',title:'Whispers at My Command',desc:'Binds unmarked targets hit by Vita Pistils; triggers an extra settlement on already-bound targets for +15% Anima DMG.'},
+    ],
+    lifeSkills:[
+      {icon:'ti-car',title:'Dealership VIP',
+        levels:[
+          "Reduces vehicle durability loss when damaged by <b>3%</b>.",
+          "Reduces Rampage Players vehicle modification labor fees by <b>10%</b>.",
+          "Reduces vehicle durability loss when damaged by <b>3%</b>.",
+          "Reduces Rampage Players vehicle modification labor fees by <b>10%</b>.",
+          "Reduces vehicle durability loss when damaged by <b>4%</b>.",
+        ]},
+    ],
+    awakening:[
+      {icon:'ti-scale',title:'A1: To Know, To Balance',desc:'+5% ATK for each Lethal Rose Pact target on field, up to 15%.'},
+      {icon:'ti-heart-plus',title:'A2: Intel Turns Into Blades',desc:"+100% Lethal Rose Pact DMG; heals the team for 5% of that Pact's damage on settlement."},
+      {icon:'ti-hammer',title:'A3: Advantage Established',desc:'+4 extra Break on active Pact Settlement.'},
+      {icon:'ti-bolt',title:'A4: Strike to Kill',desc:'+50% DMG and expands the AoE on active Pact Settlement.'},
+      {icon:'ti-crosshair',title:'A5: Intel Superiority',desc:'+8% DMG to Lethal Rose Pact targets.'},
+      {icon:'ti-repeat',title:'A6: Know Every Secret',desc:'Deals 200% DMG to bound targets whenever they cast a skill (5s cooldown).'},
+      {icon:'ti-atom-2',title:'Doubled Capacity',tag:'RESONANCE',desc:'3-Awakening bonus — increases the skill level of When Secrets Take Shape, Intel Hunter, and Final Reckoning by 1.'},
+      {icon:'ti-atom-2',title:'Unhindered Passage',tag:'RESONANCE',desc:'6-Awakening bonus — reduces Anima RES of bound targets by 10%.'},
+    ],
+    console:{text:"Increases CRIT Rate by 6% for each Type II Module equipped.",type:'II'},
+    breakthrough:{
+      materials:[
+        {icon:'ti-moon-2',name:'BLURRED NUMERAL',qty:17,acq:['Monster Drop (Forest Path)','Simulation Center']},
+        {icon:'ti-feather',name:'NEST GUARD FRAGMENT',qty:86,acq:['World Boss: Nestbound Bird']},
+        {icon:'ti-help-circle',name:'UNSOLVED NUMERAL',qty:18,acq:['Monster Drop (Forest Path)','Simulation Center']},
+        {icon:'ti-atom',name:'DISTORTED NUMERAL',qty:15,acq:['Monster Drop (Forest Path)','Simulation Center']},
+      ],
+      currency:525000,
+    },
+  },
+  "Lacrimosa":{
+    skills:[
+      {icon:'ti-tools-kitchen',title:'Sweet and Sour',desc:'Basic Attack — two switchable modes (Tomato Metal / Tomato Percussion), each up to 5 Chaos hits. Attacks inflict stacking Nightmare (up to 10).'},
+      {icon:'ti-copy',title:'Devilish Gift',desc:'Redirect Skill — copies and casts a learned enemy skill; grants ATK based on the original owner\'s ATK.'},
+      {icon:'ti-truck',title:'Working Day Judgement',desc:'Ultimate — a truck or car-based multi-hit Chaos attack (varies by Basic Attack mode) that inflicts Nightmare on all targets hit.'},
+      {icon:'ti-bed',title:'Microwake',desc:'Support Skill — a Chaos hit to an area.'},
+    ],
+    passives:[
+      {icon:'ti-tools-kitchen-2',title:'Tomato Banquet',desc:'Discord Enhancement — +400% ATK bonus DMG on Discord if the target is already Broken.'},
+      {icon:'ti-alarm',title:'Sleep In',desc:'Grants 1 extra Morning Tomato cast after 5 basic-attack uses within a skill cooldown (once per cooldown).'},
+    ],
+    lifeSkills:[
+      {icon:'ti-chef-hat',title:'Chef Tomato',
+        levels:[
+          "Lacrimosa increases dish prices by <b>1%</b> for each Dessert tag on dishes.",
+          "Lacrimosa reduces ingredient consumption rate by <b>1%</b>.",
+          "In Owner's Selection, a special dish \"Special Tomato Juice\" appears.",
+          "Lacrimosa reduces ingredient consumption rate by <b>1%</b>.",
+          "Lacrimosa increases dish prices by <b>1.5%</b> for every 2 Dessert tags on dishes.",
+        ]},
+      {icon:'ti-bat',title:'Exclusive Bat-efit',
+        levels:[
+          "Increases Fons and Paw-Paw Coins from Pink Paws Heist by <b>15%</b> while Lacrimosa is in the team.",
+          "Increases the bonus to <b>20%</b> while Lacrimosa is in the team.",
+        ]},
+    ],
+    awakening:[
+      {icon:'ti-moon',title:'A1: Clock Out Clemency',desc:'Increases Nightmare\'s DMG Ratio to 50% at current skill level.'},
+      {icon:'ti-sun',title:'A2: Rise and Shine',desc:'+15% DMG for 15s when switching in via a Support Skill.'},
+      {icon:'ti-ice-cream',title:'A3: Molten Ice Cream',desc:'Triggers all accumulated Nightmare stacks at once on the 5th combo hit.'},
+      {icon:'ti-clock-plus',title:'A4: Almighty Lord of Tomatoes',desc:'Extends Nightmare duration to 6s.'},
+      {icon:'ti-glass',title:'A5: Tempest Glass Adjustment',desc:'Reduces target Max HP based on Nightmare DMG dealt; heals Lacrimosa periodically from that DMG.'},
+      {icon:'ti-alarm',title:'A6: Morning Spell',desc:'Auto-casts Support Skill (triggering its Esper Cycle) when switching in from a Nova/Scorch/Discord character within 5s of Devilish Gift.'},
+      {icon:'ti-atom-2',title:"The Heart's Drowsy Flames",tag:'RESONANCE',desc:'3-Awakening bonus — +1 skill level to Sweet and Sour, Morning Tomato, Devilish Gift, and Working Day Judgement; reduced bat-flight stamina cost.'},
+      {icon:'ti-atom-2',title:'Lullaby',tag:'RESONANCE',desc:"6-Awakening bonus — ignores 20% of target's DEF; further reduced bat-flight stamina cost."},
+    ],
+    console:{text:"Increases Chaos DMG by 10% for each Type III Module equipped.",type:'III'},
+    breakthrough:{
+      materials:[
+        {icon:'ti-moon-2',name:'BLURRED NUMERAL',qty:17,acq:['Monster Drop (Forest Path)','Simulation Center']},
+        {icon:'ti-feather',name:'NEST GUARD FRAGMENT',qty:86,acq:['World Boss: Nestbound Bird']},
+        {icon:'ti-help-circle',name:'UNSOLVED NUMERAL',qty:18,acq:['Monster Drop (Forest Path)','Simulation Center']},
+        {icon:'ti-atom',name:'DISTORTED NUMERAL',qty:15,acq:['Monster Drop (Forest Path)','Simulation Center']},
+      ],
+      currency:525000,
+    },
+  },
+  "Mint":{
+    skills:[
+      {icon:'ti-shield-lock',title:'Perfect Containment',desc:'Basic Attack — up to 5 Anima hits, plus a plunge and a tornado-spin hold attack (Minty Whirlwind).'},
+      {icon:'ti-paw',title:'Ultimate: Super Claws',desc:'Redirect Skill — dashes forward and back, dealing 2 AoE Anima hits along the path.'},
+      {icon:'ti-wind',title:'Ultimate: Thunderous Whirlwind Slash',desc:'Ultimate — channels wind into her blades for multiple Anima hits, ending in a massive final slash.'},
+      {icon:'ti-sword',title:'Ultimate: Invincible Tornado Slash',desc:'Support Skill — a leaping penetrating Anima hit.'},
+    ],
+    passives:[
+      {icon:'ti-flower',title:'Transform! Super Mint!',desc:"Blossom Enhancement — expands Vita Pistils' hit area."},
+      {icon:'ti-shield',title:"Bingo! We're Done Here!",desc:'+20% DEF and +30% Interruption Resistance while on the field.'},
+    ],
+    lifeSkills:[
+      {icon:'ti-tornado',title:'Mint Tornado',
+        levels:[
+          "Mint increases dish prices by an additional <b>0.12</b> Fons.",
+          "Mint reduces ingredient consumption rate by <b>1%</b>.",
+          "In Owner's Selection, tips increase with each combo, up to 5 times.",
+          "Mint reduces ingredient consumption rate by <b>1%</b>.",
+          "Mint increases dish prices by an additional <b>0.18</b> Fons.",
+        ]},
+    ],
+    awakening:[
+      {icon:'ti-refresh',title:'A1: Task Force Operation',desc:"Resets Ultimate: Super Claws' cooldown when Caramel Crisp hits (once every 3s)."},
+      {icon:'ti-arrow-up',title:'A2: Re-examination',desc:"+40% Redirect Skill: Ultimate: Super Claws damage."},
+      {icon:'ti-flower',title:'A3: Attendance Bonus',desc:"+15% ATK for 15s whenever anyone triggers Blossom or Hexed."},
+      {icon:'ti-clock-hour-4',title:'A4: Lunch Break',desc:'+12% CRIT Chance against the last enemy on the field.'},
+      {icon:'ti-crosshair',title:'A5: First Instinct',desc:"+25% CRIT DMG for 6s after casting Redirect Skill: Ultimate: Super Claws."},
+      {icon:'ti-heart-broken',title:'A6: Elite Member',desc:'+15% DMG to targets below 40% HP.'},
+      {icon:'ti-atom-2',title:'Minty Bubble Tea',tag:'RESONANCE',desc:'3-Awakening bonus — increases the skill level of Perfect Containment and both Ultimates by 1.'},
+      {icon:'ti-atom-2',title:'Fluffy Mousse',tag:'RESONANCE',desc:'6-Awakening bonus — +2 Cycle Rate after successfully casting Ultimate: Super Claws.'},
+    ],
+    console:{text:"Increases CRIT Rate by 8% for each Type III Module equipped.",type:'III'},
+    breakthrough:{
+      materials:[
+        {icon:'ti-moon-2',name:'BLURRED NUMERAL',qty:17,acq:['Monster Drop (Forest Path)','Simulation Center']},
+        {icon:'ti-feather',name:'NEST GUARD FRAGMENT',qty:86,acq:['World Boss: Nestbound Bird']},
+        {icon:'ti-help-circle',name:'UNSOLVED NUMERAL',qty:18,acq:['Monster Drop (Forest Path)','Simulation Center']},
+        {icon:'ti-atom',name:'DISTORTED NUMERAL',qty:15,acq:['Monster Drop (Forest Path)','Simulation Center']},
+      ],
+      currency:525000,
+    },
+  },
+  "Nanally":{
+    skills:[
+      {icon:'ti-claw',title:'Colucci Secret Skill',desc:'Basic Attack — up to 5 Anima hits (dodge doesn\'t interrupt the combo), plus a held heavy-hit chain.'},
+      {icon:'ti-wolf',title:'Colucci Howling Technique',desc:'Redirect Skill — 5 AoE Anima hits, then wraps in Ichi-daime\'s Authority for 12s (or until switched out).'},
+      {icon:'ti-users',title:'Colucci Ultimate Technique',desc:'Ultimate — 7 AoE Anima hits and summons Underboss, who adds Anima follow-up damage to Nanally\'s attacks.'},
+      {icon:'ti-boot',title:'Justice from Above',desc:'Support Skill — a spinning kick dealing an Anima hit.'},
+    ],
+    passives:[
+      {icon:'ti-flower',title:'More Than Passionate',desc:'Blossom Enhancement — fires 10 Vita Pistils per Vita Bud, at a 1s interval.'},
+      {icon:'ti-swords',title:'Fair Duel',desc:'Applies a follow-up Anima hit (60% ATK, scaling with skill level) whenever anyone deals Esper Cycle DMG while Ichi-daime\'s Authority is active. Once per 2s.'},
+    ],
+    lifeSkills:[
+      {icon:'ti-building-store',title:'Family Business',
+        levels:[
+          "Nanally increases dish prices by <b>0.2</b> Fons for every Main Dish tag on dishes.",
+          "Nanally reduces ingredient consumption rate by <b>1%</b>.",
+          "In Owner's Selection, hitting customers with the hammer grants 115% of the current dish price.",
+          "Nanally reduces ingredient consumption rate by <b>1%</b>.",
+          "Nanally increases dish prices by <b>0.3</b> Fons for every 2 Main Dish tags on dishes.",
+        ]},
+    ],
+    awakening:[
+      {icon:'ti-bolt',title:'A1: Gang Formation',desc:'+2.5 Ultimate Energy per follow-up attack (max once per second).'},
+      {icon:'ti-user-plus',title:'A2: Second Member',desc:'Underboss lasts 3s longer.'},
+      {icon:'ti-crown',title:'A3: Call Me the Boss',desc:"Adds a second follow-up hit (50% ATK, scales with skill level) while in Ichi-daime's Authority."},
+      {icon:'ti-users',title:'A4: Not a Troublemaker',desc:'Underboss deals +100% damage.'},
+      {icon:'ti-trending-up',title:'A5: Followers Everywhere',desc:'+2% ATK per follow-up attack, up to +20%.'},
+      {icon:'ti-heart-handshake',title:'A6: Because We\'re Family',desc:"Extends Ichi-daime's Authority to 15s (20s out of combat)."},
+      {icon:'ti-atom-2',title:'Colucci Secrets Part 1',tag:'RESONANCE',desc:'3-Awakening bonus — increases the skill level of Colucci Secret Skill, Howling Technique, and Ultimate Technique by 1.'},
+      {icon:'ti-atom-2',title:'Colucci Secrets Part 2',tag:'RESONANCE',desc:'6-Awakening bonus — +15% Nanally DMG.'},
+    ],
+    console:{text:"Increases CRIT Rate by 6% for each Type II Module equipped.",type:'II'},
+    breakthrough:{
+      materials:[
+        {icon:'ti-moon-2',name:'BLURRED NUMERAL',qty:17,acq:['Monster Drop (Forest Path)','Simulation Center']},
+        {icon:'ti-feather',name:'NEST GUARD FRAGMENT',qty:86,acq:['World Boss: Nestbound Bird']},
+        {icon:'ti-help-circle',name:'UNSOLVED NUMERAL',qty:18,acq:['Monster Drop (Forest Path)','Simulation Center']},
+        {icon:'ti-atom',name:'DISTORTED NUMERAL',qty:15,acq:['Monster Drop (Forest Path)','Simulation Center']},
+      ],
+      currency:525000,
+    },
+  },
+  "Sakiri":{
+    skills:[
+      {icon:'ti-paw',title:'Kiroumaru Headbutt',desc:'Basic Attack — up to 5 Incantation hits alongside Kiroumaru; hold to enter Eating Mode and devour weak enemies.'},
+      {icon:'ti-jaw',title:'Devour Whole',desc:'Redirect Skill — Kiroumaru pulls in and knocks down enemies (Burp), or holds to levitate them with gravity (Gravity Eater).'},
+      {icon:'ti-meteor',title:'Feast of Gluttony',desc:'Ultimate — 6 Incantation hits from above plus heavy gravity suppression; grants the team ATK based on Sakiri\'s base ATK.'},
+      {icon:'ti-hand-stop',title:'Squash!',desc:'Support Skill — slams Kiroumaru onto the target for an Incantation hit.'},
+    ],
+    passives:[
+      {icon:'ti-flame',title:'Can I Eat This?',desc:'Scorch Enhancement — +25% DoT taken per DoT type while in Scorch, up to +100%.'},
+      {icon:'ti-shield-x',title:'Impish Trick',desc:'-10% target DEF for 20s after inflicting Airborne or Suppress.'},
+    ],
+    lifeSkills:[
+      {icon:'ti-tools',title:'No Work, No Reward',
+        levels:[
+          "Sakiri increases dish prices by an additional <b>0.12</b> Fons.",
+          "Sakiri reduces ingredient consumption rate by <b>1%</b>.",
+          "In Owner's Selection, Kiroumaru actively attacks and drives away Danzaburou.",
+          "Sakiri reduces ingredient consumption rate by <b>1%</b>.",
+          "Sakiri increases dish prices by <b>0.3</b> Fons when a dish contains 3 identical tags.",
+        ]},
+    ],
+    awakening:[
+      {icon:'ti-clock-plus',title:'A1: Diffusive Haze',desc:'Extends Feast of Gluttony\'s immovable effect to 6s.'},
+      {icon:'ti-arrow-up',title:'A2: Dextrous Separation',desc:"Extra damage to airborne enemies with Feast of Gluttony, up to 600% ATK."},
+      {icon:'ti-skull',title:'A3: Adhesive Grip',desc:'+6% Devour Whole / Feast of Gluttony DMG per team kill over the next 15s, up to 60%.'},
+      {icon:'ti-bolt',title:'A4: Wishful Reliance',desc:"+30% team ATK (of Sakiri's base ATK) for 20s after casting the Ultimate."},
+      {icon:'ti-recharging',title:'A5: Sensory Collapse',desc:'Fully restores Ultimate energy and resets its cooldown when Devour Whole airbornes a target.'},
+      {icon:'ti-jaw',title:'A6: Gluttonous Dissolution',desc:'Lets Kiroumaru digest up to 3 enemies at once in Eating Mode.'},
+      {icon:'ti-atom-2',title:'Insatiable Appetite',tag:'RESONANCE',desc:'3-Awakening bonus — increases the skill level of Kiroumaru Headbutt, Devour Whole, and Feast of Gluttony by 1.'},
+      {icon:'ti-atom-2',title:'Fog Penetration',tag:'RESONANCE',desc:'6-Awakening bonus — +3% DMG per negative effect on the target, up to +12%.'},
+    ],
+    console:{text:"Increases Incantation DMG by 9% for each Type III Module equipped.",type:'III'},
+    breakthrough:{
+      materials:[
+        {icon:'ti-moon-2',name:'BLURRED NUMERAL',qty:17,acq:['Monster Drop (Forest Path)','Simulation Center']},
+        {icon:'ti-feather',name:'NEST GUARD FRAGMENT',qty:86,acq:['World Boss: Nestbound Bird']},
+        {icon:'ti-help-circle',name:'UNSOLVED NUMERAL',qty:18,acq:['Monster Drop (Forest Path)','Simulation Center']},
+        {icon:'ti-atom',name:'DISTORTED NUMERAL',qty:15,acq:['Monster Drop (Forest Path)','Simulation Center']},
+      ],
+      currency:525000,
+    },
+  },
+  "Skia":{
+    skills:[
+      {icon:'ti-shadow',title:'Arresting Art',desc:'Basic Attack — up to 5 Lakshana hits, splitting Fang Thrust marks (up to 3 stacks) onto hit targets.'},
+      {icon:'ti-dog',title:'Shadow Hound Chase',desc:'Redirect Skill — 6 AoE Lakshana hits, splits 3 Fang Thrusts, then enters Shadow Hound Gnaw (fast movement + bonus damage to marked enemies).'},
+      {icon:'ti-paw',title:'The Pack',desc:'Ultimate — a spread + converging shadow attack; boosts Fang Thrust damage for 15s and applies a brief control effect.'},
+      {icon:'ti-gavel',title:'Arrest Warrant',desc:'Support Skill — commands the shadow to bite the target for a Lakshana hit.'},
+    ],
+    passives:[
+      {icon:'ti-alert-circle',title:'Suppression',desc:'Remora Enhancement — inflicts an extra Remora when Fang Thrust locks onto a Remora-affected target.'},
+      {icon:'ti-lock',title:'Apprehension',desc:'+10% Fang Thrust damage for 15s after casting The Pack, including Shadow Hound Gnaw collisions.'},
+    ],
+    lifeSkills:[
+      {icon:'ti-briefcase',title:'Middle Manager',
+        levels:[
+          "Skia increases traffic by <b>18</b>.",
+          "Skia reduces ingredient consumption rate by <b>1%</b>.",
+          "In Owner's Selection, customer patience is boosted by <b>50%</b>.",
+          "Skia reduces ingredient consumption rate by <b>1%</b>.",
+          "Skia increases traffic by <b>27</b>.",
+        ]},
+    ],
+    awakening:[
+      {icon:'ti-target',title:'A1: Process of Elimination',desc:"+60% Fang Thrust auto-attack DMG Ratio."},
+      {icon:'ti-gavel',title:'A2: Law and Order',desc:"+10% CRIT Chance and +50% Interruption Resistance for 15s after casting Shadow Hound Chase."},
+      {icon:'ti-target-arrow',title:'A3: Solution',desc:'+4% DMG to Fang Thrust-locked targets (+4% more if only one target is locked).'},
+      {icon:'ti-clock-plus',title:'A4: Resolution',desc:"Extends Tailed to 12s; +2% Attachment DMG per second attached, up to 40%."},
+      {icon:'ti-weight',title:'A5: Social Contract',desc:'+50 mass and -20% Move Speed to targets per Fang Thrust locked onto them.'},
+      {icon:'ti-mood-nervous',title:'A6: Unbothered Appearance',desc:"+20% Fang Thrust extra DMG in Shadow Hound Gnaw against locked enemies."},
+      {icon:'ti-atom-2',title:'Cubical Survival Manual',tag:'RESONANCE',desc:'3-Awakening bonus — increases the skill level of Arresting Art, Shadow Hound Chase, and The Pack by 1.'},
+      {icon:'ti-atom-2',title:'Employee of the Month',tag:'RESONANCE',desc:'6-Awakening bonus — reduces locked target Lakshana RES by 2% per Fang Thrust, up to 6%.'},
+    ],
+    console:{text:"Increases ATK by 10% for each Type III Module equipped.",type:'III'},
+    breakthrough:{
+      materials:[
+        {icon:'ti-moon-2',name:'BLURRED NUMERAL',qty:17,acq:['Monster Drop (Forest Path)','Simulation Center']},
+        {icon:'ti-feather',name:'NEST GUARD FRAGMENT',qty:86,acq:['World Boss: Nestbound Bird']},
+        {icon:'ti-help-circle',name:'UNSOLVED NUMERAL',qty:18,acq:['Monster Drop (Forest Path)','Simulation Center']},
+        {icon:'ti-atom',name:'DISTORTED NUMERAL',qty:15,acq:['Monster Drop (Forest Path)','Simulation Center']},
+      ],
+      currency:525000,
+    },
+  },
+};
+// Favorite-gift data (affinity gained per gift + total gold to max affinity).
+// Affinity/Total figures are transcribed reliably; a few gift item names were
+// hard to make out at source resolution — double-check those against the game.
+const CHAR_GIFTS={
+  "Fadia":{icon:'ti-glass',name:'Melting Ice',cost:5400,affinity:400,total:756000},
+  "Nanally":{icon:'ti-device-mobile',name:'Blocky',cost:5400,affinity:200,total:1512000},
+  "Jiuyuan":{icon:'ti-flask',name:'Moon Vase',cost:3000,affinity:200,total:840000},
+  "Lacrimosa":{icon:'ti-book',name:'Chill Girl',cost:4000,affinity:200,total:1120000},
+  "Daffodill":{icon:'ti-file-text',name:'Firewire',cost:10000,affinity:400,total:1400000},
+  "Hotori":{icon:'ti-flask',name:'Vase Yellow',cost:3600,affinity:200,total:1008000},
+  "Chiz":{icon:'ti-flower',name:'Flourish',cost:3000,affinity:200,total:840000},
+  "Edgar":{icon:'ti-device-mobile',name:'Snack Fly',cost:5400,affinity:200,total:1120000},
+  "Baicang":{icon:'ti-sun',name:'Backyard Joy',cost:4500,affinity:200,total:1260000},
+  "Sakiri":{icon:'ti-device-mobile',name:'Fever Dream',cost:5000,affinity:200,total:1400000},
+  "Adler":{icon:'ti-device-mobile',name:'Golden Dream',cost:3600,affinity:200,total:1008000},
+  "Hathor":{icon:'ti-device-mobile',name:'Fever Dream',cost:5000,affinity:200,total:1400000},
+  "Skia":{icon:'ti-book',name:'Chill Girl',cost:4000,affinity:200,total:1120000},
+  "Mint":{icon:'ti-flower',name:'Wilt',cost:3000,affinity:200,total:840000},
+  "Haniel":{icon:'ti-flower',name:'Flourish',cost:3000,affinity:200,total:840000},
+  "Aurelia":{icon:'ti-flower',name:'Flourish',cost:3000,affinity:200,total:840000},
+};
+const DTAB_DEFS=[
+  {key:'skills',label:'Skills',icon:'ti-crosshair'},
+  {key:'console',label:'Console',icon:'ti-plug'},
+  {key:'passives',label:'Passives',icon:'ti-shield'},
+  {key:'lifeSkills',label:'Life Skills',icon:'ti-heart'},
+  {key:'awakening',label:'Awakening',icon:'ti-arrow-big-up-lines'},
+  {key:'breakthrough',label:'Breakthrough',icon:'ti-book-2'},
+  {key:'gifts',label:'Gifts',icon:'ti-gift'},
+];
+let currentDetail=null, currentTab='skills';
+
+function getDetails(name){
+  return CHAR_DETAILS[name]||{skills:[],passives:[],lifeSkills:[],awakening:[],breakthrough:{
+      materials:[
+        {icon:'ti-moon-2',name:'BLURRED NUMERAL',qty:17,acq:['Monster Drop (Forest Path)','Simulation Center']},
+        {icon:'ti-feather',name:'NEST GUARD FRAGMENT',qty:86,acq:['World Boss: Nestbound Bird']},
+        {icon:'ti-help-circle',name:'UNSOLVED NUMERAL',qty:18,acq:['Monster Drop (Forest Path)','Simulation Center']},
+        {icon:'ti-atom',name:'DISTORTED NUMERAL',qty:15,acq:['Monster Drop (Forest Path)','Simulation Center']},
+      ],
+      currency:525000,
+    }};
+}
+function openDetail(name){
+  const c=[...CHARACTERS,...UPCOMING].find(x=>x.name===name);
+  if(!c) return;
+  currentDetail=c; currentTab='skills';
+  const m=ESPER_META[c.esper]||{color:'#fff'};
+  const esperSvg=ESPER_SVG[c.esper]?svgIcon(ESPER_SVG[c.esper],16):'';
+  const arcSvg=ARC_SVG[c.arc]?svgIcon(ARC_SVG[c.arc],16):'';
+  document.getElementById('dPoster').className=`dposter r${c.rarity}`;
+  document.getElementById('dPosterBadges').innerHTML=
+    `<div class="dposter-badge" style="color:${m.color}">${esperSvg}</div>
+     <div class="dposter-badge">${arcSvg}</div>`;
+  document.getElementById('dPosterStars').innerHTML=`<span style="color:inherit">${'★'.repeat(c.rarity)}</span>`;
+  document.getElementById('dName').textContent=c.name;
+  document.getElementById('dSub').textContent=`${c.esper} · ${c.arc} · ${c.faction}`;
+  renderTabs(); renderPane();
+  document.getElementById('detailOverlay').classList.add('active');
+  document.body.style.overflow='hidden';
+}
+function closeDetail(){
+  document.getElementById('detailOverlay').classList.remove('active');
+  document.body.style.overflow='';
+}
+function renderTabs(){
+  const d=getDetails(currentDetail.name);
+  document.getElementById('dTabs').innerHTML=DTAB_DEFS.map(t=>{
+    const count=(t.key==='console'||t.key==='gifts')?null:(t.key==='breakthrough'?d.breakthrough.materials.length:d[t.key].length);
+    return `<div class="dtab${currentTab===t.key?' active':''}${t.key==='gifts'?' wide':''}" onclick="switchTab('${t.key}')">
+      <i class="ti ${t.icon}"></i>${t.label}${count!==null?`<span class="dcount">${count}</span>`:''}
+    </div>`;
+  }).join('');
+}
+function switchTab(key){ currentTab=key; renderTabs(); renderPane(); }
+
+function accItemHTML(item, idx, innerHTML){
+  return `<div class="dacc-item" data-idx="${idx}">
+    <div class="dacc-head" onclick="toggleAcc(this)">
+      <div class="dacc-icon"><i class="ti ${item.icon||'ti-star'}"></i></div>
+      <div class="detail-title-wrap" style="flex:1">
+        <div class="dacc-title">${item.title}</div>
+        ${item.tag?`<span class="dacc-tag">${item.tag}</span>`:''}
+      </div>
+      <i class="ti ti-chevron-down dacc-chev"></i>
+    </div>
+    <div class="dacc-content"><div class="dacc-inner">${innerHTML}</div></div>
+  </div>`;
+}
+function toggleAcc(headEl){ headEl.closest('.dacc-item').classList.toggle('open'); }
+function expandAll(){ document.querySelectorAll('.dacc-item').forEach(el=>el.classList.add('open')); }
+function collapseAll(){ document.querySelectorAll('.dacc-item').forEach(el=>el.classList.remove('open')); }
+
+function renderPane(){
+  const d=getDetails(currentDetail.name);
+  const pane=document.getElementById('dPane');
+
+  if(currentTab==='console'){
+    const cons=d.console;
+    let squares='';
+    if(cons&&cons.puzzle){
+      cons.puzzle.flat().forEach(cell=>{
+        squares+=cell ? `<div style="background:var(--dpink);opacity:.95"></div>` : `<div></div>`;
+      });
+    } else {
+      for(let i=0;i<49;i++) squares+=`<div style="opacity:${(Math.sin(i*12.9898)*43758.5453)%1>0.5?0.9:0.35}"></div>`;
+    }
+    const traitHTML = cons
+      ? `<div class="dgift-card">
+          <div class="dgift-icon"><i class="ti ti-cpu"></i></div>
+          <div>
+            <div class="dgift-name">Type ${cons.type} Specialization</div>
+            <div style="font-size:12.5px;color:var(--text2);margin-top:4px;line-height:1.5">${cons.text}</div>
+          </div>
+        </div>`
+      : `<div class="dacc-inner placeholder" style="padding:16px 0">No console trait added yet for ${currentDetail.name}.</div>`;
+    pane.innerHTML=traitHTML+`<div class="dconsole-wrap">
+      <div class="dconsole">
+        <div class="dconsole-notch"></div>
+        <div class="dconsole-screen">${squares}</div>
+        <div class="dconsole-dial"></div>
+      </div>
+    </div>
+    <div class="dconsole-note">Console module grid — slot Type ${cons?cons.type:'?'} Modules to trigger this character's trait.</div>`;
+    return;
+  }
+
+  if(currentTab==='gifts'){
+    const g=CHAR_GIFTS[currentDetail.name];
+    if(!g){ pane.innerHTML=`<div class="dacc-inner placeholder" style="padding:16px 0">No gift data added yet for ${currentDetail.name}.</div>`; return; }
+    pane.innerHTML=`
+    <div class="dgift-card">
+      <div class="dgift-icon"><i class="ti ${g.icon}"></i></div>
+      <div>
+        <div class="dgift-name">${g.name}</div>
+        <div class="dgift-cost"><i class="ti ti-fish"></i>${g.cost.toLocaleString()}</div>
+      </div>
+    </div>
+    <div class="dgift-stats">
+      <div class="dgift-stat"><div class="dgift-stat-label">AFFINITY / GIFT</div><div class="dgift-stat-val pink">${g.affinity}</div></div>
+      <div class="dgift-stat"><div class="dgift-stat-label">TOTAL TO MAX</div><div class="dgift-stat-val gold">${g.total.toLocaleString()}</div></div>
+    </div>
+    <div class="dgift-note">Favorite gift — gives bonus affinity when given. Total is the estimated gold cost to max out affinity using this gift.</div>`;
+    return;
+  }
+
+  if(currentTab==='breakthrough'){
+    const mats=d.breakthrough.materials;
+    if(mats.length===0){ pane.innerHTML=`<div class="dacc-inner placeholder">Breakthrough materials not added yet.</div>`; return; }
+    pane.innerHTML=`<div class="dmats">${mats.map(m=>`
+      <div class="dmat-card">
+        <div class="dmat-head">
+          <div class="dmat-icon"><i class="ti ${m.icon}"></i></div>
+          <div>
+            <div class="dmat-name">${m.name}</div>
+            <div class="dmat-qty">x${m.qty}</div>
+          </div>
+        </div>
+        <div class="dmat-acq">ACQUISITION:</div>
+        <ul class="dmat-list">${m.acq.map(a=>`<li>${a}</li>`).join('')}</ul>
+      </div>`).join('')}</div>
+    <div class="dcurrency">
+      <div class="dcurrency-label">Required Currency</div>
+      <div class="dcurrency-val"><div class="dcurrency-icon"><i class="ti ti-currency-dollar"></i></div>${d.breakthrough.currency.toLocaleString()}</div>
+    </div>`;
+    return;
+  }
+
+  // accordion-style tabs: skills, passives, lifeSkills, awakening
+  const items=d[currentTab]||[];
+  if(items.length===0){
+    pane.innerHTML=`<div class="dacc"><div class="dacc-inner placeholder" style="padding:16px 0">No ${DTAB_DEFS.find(t=>t.key===currentTab).label.toLowerCase()} data added yet for ${currentDetail.name}.</div></div>`;
+    return;
+  }
+  let toolbar=`<div class="dtoolbar"><button onclick="expandAll()"><i class="ti ti-chevron-up"></i>Expand All</button><button onclick="collapseAll()"><i class="ti ti-chevron-down"></i>Collapse All</button></div>`;
+  let body='';
+  if(currentTab==='lifeSkills'){
+    body=items.map((it,idx)=>{
+      const inner = it.levels ? it.levels.map((lv,i)=>`<div class="dlvl"><span class="num">Level ${i+1}</span>: ${lv}</div>`).join('') : `<span class="placeholder">No details yet.</span>`;
+      return accItemHTML(it, idx, inner);
+    }).join('');
+  } else {
+    body=items.map((it,idx)=>accItemHTML(it, idx, it.desc?it.desc:`<span class="placeholder">No details yet.</span>`)).join('');
+  }
+  pane.innerHTML=toolbar+`<div class="dacc">${body}</div>`;
+}
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeDetail(); });
+
+</script>
+</body>
+</html>
