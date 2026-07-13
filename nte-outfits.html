@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NTE Outfits — Neverness to Everness</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0F0E17;--bg2:#1A1825;--bg3:#221F32;--border:#2E2A44;
+  --text:#EBE9F8;--text2:#9E9AC0;--text3:#5C5880;
+  --accent:#7B5CF5;--accent2:#534AB7;--pink:#E85D9E;
+  --green:#3BB37E;--gold:#D9A93C;--orange:#E0954F;
+  --radius:10px;
+}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh}
+
+/* top toolbar */
+.toolbar{position:sticky;top:0;z-index:40;background:rgba(15,14,23,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);padding:14px clamp(1rem,4vw,2rem)}
+.toolbar-inner{max-width:1400px;margin:0 auto;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.tb-logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:14px;letter-spacing:.3px;margin-right:6px}
+.tb-logo .logo-ic{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:14px;color:#fff}
+.tb-tabs{display:flex;background:var(--bg2);border:1px solid var(--border);border-radius:9px;padding:3px}
+.tb-tab{padding:8px 16px;font-size:11.5px;font-weight:700;letter-spacing:.4px;color:var(--text2);border-radius:7px;cursor:pointer}
+.tb-tab.active{background:var(--accent);color:#fff}
+.tb-search{position:relative;flex:1;max-width:340px;min-width:180px;margin-left:auto}
+.tb-search i{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--text3);font-size:14px}
+.tb-search input{width:100%;padding:9px 12px 9px 34px;background:var(--bg2);border:1px solid var(--border);border-radius:9px;color:var(--text);font-size:12.5px;font-family:inherit}
+.tb-search input:focus{outline:none;border-color:var(--accent)}
+
+/* layout */
+.layout{max-width:1400px;margin:0 auto;display:flex;gap:0;align-items:flex-start}
+.sidebar{width:200px;flex-shrink:0;position:sticky;top:64px;max-height:calc(100vh - 64px);overflow-y:auto;padding:24px 12px 40px;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
+.sidebar::-webkit-scrollbar{width:5px}
+.sidebar::-webkit-scrollbar-thumb{background:var(--border);border-radius:5px}
+.sb-label{font-size:10px;font-weight:700;letter-spacing:1px;color:var(--text3);padding:0 12px;margin-bottom:10px}
+.sb-item{display:flex;align-items:center;gap:9px;padding:9px 12px;border-radius:8px;font-size:12px;font-weight:600;letter-spacing:.3px;color:var(--text3);cursor:pointer;transition:all .15s}
+.sb-item .dot{width:5px;height:5px;border-radius:50%;background:var(--text3);flex-shrink:0;transition:background .15s}
+.sb-item:hover{color:var(--text2);background:var(--bg2)}
+.sb-item.active{color:var(--gold);background:rgba(217,169,60,.1)}
+.sb-item.active .dot{background:var(--gold)}
+
+.main{flex:1;min-width:0;padding:24px clamp(1rem,4vw,2rem) 80px}
+
+/* character sections */
+.char-section{margin-bottom:56px;scroll-margin-top:76px}
+.char-heading{position:relative;margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid var(--border)}
+.char-heading .bg-name{position:absolute;top:-34px;left:0;font-size:56px;font-weight:800;color:var(--bg2);letter-spacing:1px;white-space:nowrap;pointer-events:none;user-select:none;z-index:0}
+.char-heading .fg-row{position:relative;z-index:1;display:flex;align-items:baseline;gap:10px}
+.char-heading h2{font-size:22px;font-weight:800;letter-spacing:.5px}
+.char-heading .count{font-size:12px;font-weight:700;color:var(--gold)}
+
+.outfit-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:14px}
+.ocard{background:var(--bg2);border-radius:10px;overflow:hidden;border-bottom:3px solid var(--accent)}
+.ocard.gacha{border-bottom-color:var(--orange)}
+.ocard-img{aspect-ratio:3/4;background:linear-gradient(155deg,var(--bg3),#1c1928);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.ocard-img .init{font-size:15px;font-weight:800;color:rgba(255,255,255,.14);letter-spacing:1px}
+.ocard-img i{font-size:38px;color:rgba(255,255,255,.12)}
+.ocard-body{padding:11px 13px 13px}
+.ocard-char{font-size:9px;font-weight:700;letter-spacing:.6px;color:var(--text3);text-transform:uppercase;margin-bottom:3px}
+.ocard-name{font-size:13px;font-weight:700;margin-bottom:9px;line-height:1.3}
+.ocard-meta{display:flex;align-items:flex-end;justify-content:space-between;gap:6px;padding-top:9px;border-top:1px solid var(--border)}
+.ocard-src{font-size:9.5px;color:#7FB0EE;font-weight:600;letter-spacing:.2px;line-height:1.4}
+.ocard-cost{font-size:11px;font-weight:800;white-space:nowrap;flex-shrink:0}
+.ocard-cost.fons{color:#5DCAA5}
+.ocard-cost.crystal{color:var(--gold)}
+.ocard-cost.gacha-tag{color:var(--orange)}
+
+.placeholder-note{background:var(--bg2);border:1px dashed var(--border);border-radius:10px;padding:16px 18px;font-size:12.5px;color:var(--text3);font-style:italic;display:flex;align-items:center;gap:10px}
+.placeholder-note i{font-size:15px;color:var(--text3);flex-shrink:0}
+
+@media(max-width:820px){
+  .sidebar{display:none}
+  .main{padding-top:20px}
+}
+</style>
+</head>
+<body>
+
+<div class="toolbar">
+  <div class="toolbar-inner">
+    <div class="tb-logo"><div class="logo-ic"><i class="ti ti-shirt"></i></div>Outfits</div>
+    <div class="tb-tabs">
+      <div class="tb-tab active">Characters</div>
+      <div class="tb-tab">Gliders</div>
+      <div class="tb-tab">Vehicles</div>
+    </div>
+    <div class="tb-search"><i class="ti ti-search"></i><input id="searchInput" placeholder="Search skins or heroes…" oninput="filterOutfits()"></div>
+  </div>
+</div>
+
+<div class="layout">
+  <div class="sidebar" id="sidebar">
+    <div class="sb-label">COLLECTION</div>
+    <div id="sidebarList"></div>
+  </div>
+
+  <div class="main" id="mainContent"></div>
+</div>
+
+<script>
+// ─── Character roster (matches in-game Collection sidebar order) ───────────
+const ROSTER=['Adler','Aurelia','Baicang','Chiz','Daffodill','Edgar','Fadia','Haniel','Hathor','Hotori','Jiuyuan','Lacrimosa','Mint','Nanally','Sakiri','Skia','Zero (Female)','Zero (Male)'];
+
+// ─── Confirmed outfit data (transcribed from the in-game Outfits catalog) ──
+// Only Mint and Nanally are fully confirmed; the rest show a "not yet
+// confirmed" placeholder rather than guessed data.
+const OUTFITS={
+  'Mint':[
+    {name:'CSU Prodigy',src:'DEFAULT APPEARANCE'},
+    {name:'Leisurely Holiday',src:'BOND LEVEL 10 (MINT)'},
+    {name:'To Mary',src:'SHOP: AVAILABLE IN MALL',cost:'3,000,000 Fons',costType:'fons'},
+  ],
+  'Nanally':[
+    {name:'Family Boss',src:'DEFAULT APPEARANCE'},
+    {name:'Phoenix Kick',src:'SCARBOROUGH FAIR',cost:'Gacha',costType:'gacha',gacha:true},
+    {name:'The Popular Kid',src:'SHOP: AVAILABLE IN MALL',cost:'2,480 Crystals',costType:'crystal'},
+    {name:'Fluffy Flying Tiger',src:'BOND LEVEL 10 (NANALLY)'},
+    {name:'Reverse Fairy Tale',src:'SHOP: AVAILABLE IN MALL',cost:'3,000,000 Fons',costType:'fons'},
+  ],
+};
+
+function initials(name){
+  return name.replace(/\s*\(.*?\)/,'').split(' ').map(w=>w[0]).slice(0,2).join('');
+}
+
+function outfitCardHTML(charName, o){
+  const costClass = o.costType==='fons'?'fons':o.costType==='crystal'?'crystal':o.costType==='gacha'?'gacha-tag':'';
+  return `<div class="ocard${o.gacha?' gacha':''}" data-char="${charName.toLowerCase()}" data-name="${o.name.toLowerCase()}">
+    <div class="ocard-img"><span class="init">${initials(charName)}</span></div>
+    <div class="ocard-body">
+      <div class="ocard-char">${charName}</div>
+      <div class="ocard-name">${o.name}</div>
+      <div class="ocard-meta">
+        <div class="ocard-src">${o.src}</div>
+        ${o.cost?`<div class="ocard-cost ${costClass}">${o.cost}</div>`:''}
+      </div>
+    </div>
+  </div>`;
+}
+
+function sectionHTML(charName){
+  const outfits=OUTFITS[charName];
+  const anchorId='char-'+charName.toLowerCase().replace(/[^a-z0-9]+/g,'-');
+  const body = outfits && outfits.length
+    ? `<div class="outfit-grid">${outfits.map(o=>outfitCardHTML(charName,o)).join('')}</div>`
+    : `<div class="placeholder-note"><i class="ti ti-info-circle"></i>No outfit data confirmed yet for ${charName}. Send a screenshot of their Outfits tab and it'll get added here.</div>`;
+  return `<div class="char-section" id="${anchorId}" data-char="${charName.toLowerCase()}">
+    <div class="char-heading">
+      <div class="bg-name">${charName.split(' ')[0].toUpperCase()}</div>
+      <div class="fg-row">
+        <h2>${charName.toUpperCase()}</h2>
+        <span class="count">${outfits ? outfits.length+' Outfits' : ''}</span>
+      </div>
+    </div>
+    ${body}
+  </div>`;
+}
+
+function render(){
+  document.getElementById('sidebarList').innerHTML = ROSTER.map(c=>{
+    const anchorId='char-'+c.toLowerCase().replace(/[^a-z0-9]+/g,'-');
+    return `<div class="sb-item" data-char="${c.toLowerCase()}" onclick="scrollToChar('${anchorId}')"><span class="dot"></span>${c.toUpperCase()}</div>`;
+  }).join('');
+  document.getElementById('mainContent').innerHTML = ROSTER.map(sectionHTML).join('');
+  setActiveSidebar(ROSTER[0]);
+}
+
+function scrollToChar(anchorId){
+  document.getElementById(anchorId).scrollIntoView({behavior:'smooth', block:'start'});
+}
+function setActiveSidebar(charName){
+  document.querySelectorAll('.sb-item').forEach(el=>{
+    el.classList.toggle('active', el.dataset.char===charName.toLowerCase());
+  });
+}
+
+// Scroll-spy: highlight the sidebar entry for whichever section is in view
+const observer=new IntersectionObserver((entries)=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){
+      setActiveSidebar(ROSTER.find(c=>('char-'+c.toLowerCase().replace(/[^a-z0-9]+/g,'-'))===entry.target.id));
+    }
+  });
+},{rootMargin:'-20% 0px -70% 0px'});
+
+function filterOutfits(){
+  const q=document.getElementById('searchInput').value.toLowerCase().trim();
+  document.querySelectorAll('.char-section').forEach(section=>{
+    const cards=section.querySelectorAll('.ocard');
+    let visibleCount=0;
+    cards.forEach(card=>{
+      const match=!q || card.dataset.name.includes(q) || card.dataset.char.includes(q);
+      card.style.display=match?'':'none';
+      if(match) visibleCount++;
+    });
+    // if searching and this character's name itself matches, show all their cards regardless
+    const charMatches = q && section.dataset.char.includes(q);
+    if(charMatches){
+      cards.forEach(card=>card.style.display='');
+      visibleCount=cards.length;
+    }
+    section.style.display = (!q || visibleCount>0 || charMatches) ? '' : 'none';
+  });
+}
+
+render();
+document.querySelectorAll('.char-section').forEach(s=>observer.observe(s));
+</script>
+</body>
+</html>
