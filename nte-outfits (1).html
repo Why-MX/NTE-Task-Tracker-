@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NTE Outfits — Neverness to Everness</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0F0E17;--bg2:#1A1825;--bg3:#221F32;--border:#2E2A44;
+  --text:#EBE9F8;--text2:#9E9AC0;--text3:#5C5880;
+  --accent:#7B5CF5;--accent2:#534AB7;--pink:#E85D9E;
+  --green:#3BB37E;--gold:#D9A93C;--orange:#E0954F;
+  --radius:10px;
+}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh}
+
+/* top toolbar */
+.toolbar{position:sticky;top:0;z-index:40;background:rgba(15,14,23,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);padding:14px clamp(1rem,4vw,2rem)}
+.toolbar-inner{max-width:1400px;margin:0 auto;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.tb-logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:14px;letter-spacing:.3px;margin-right:6px}
+.tb-logo .logo-ic{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:14px;color:#fff}
+.tb-tabs{display:flex;background:var(--bg2);border:1px solid var(--border);border-radius:9px;padding:3px}
+.tb-tab{padding:8px 16px;font-size:11.5px;font-weight:700;letter-spacing:.4px;color:var(--text2);border-radius:7px;cursor:pointer;transition:color .15s}
+.tb-tab:not(.active):hover{color:var(--text)}
+.tb-tab.active{background:var(--accent);color:#fff}
+.tb-search{position:relative;flex:1;max-width:340px;min-width:180px;margin-left:auto}
+.tb-search i{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--text3);font-size:14px}
+.tb-search input{width:100%;padding:9px 12px 9px 34px;background:var(--bg2);border:1px solid var(--border);border-radius:9px;color:var(--text);font-size:12.5px;font-family:inherit}
+.tb-search input:focus{outline:none;border-color:var(--accent)}
+
+/* layout */
+.layout{max-width:1400px;margin:0 auto;display:flex;gap:0;align-items:flex-start}
+.sidebar{width:200px;flex-shrink:0;position:sticky;top:64px;max-height:calc(100vh - 64px);overflow-y:auto;padding:24px 12px 40px;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
+.sidebar::-webkit-scrollbar{width:5px}
+.sidebar::-webkit-scrollbar-thumb{background:var(--border);border-radius:5px}
+.sb-label{font-size:10px;font-weight:700;letter-spacing:1px;color:var(--text3);padding:0 12px;margin-bottom:10px}
+.sb-item{display:flex;align-items:center;gap:9px;padding:9px 12px;border-radius:8px;font-size:12px;font-weight:600;letter-spacing:.3px;color:var(--text3);cursor:pointer;transition:all .15s}
+.sb-item .dot{width:5px;height:5px;border-radius:50%;background:var(--text3);flex-shrink:0;transition:background .15s}
+.sb-item:hover{color:var(--text2);background:var(--bg2)}
+.sb-item.active{color:var(--gold);background:rgba(217,169,60,.1)}
+.sb-item.active .dot{background:var(--gold)}
+
+.main{flex:1;min-width:0;padding:24px clamp(1rem,4vw,2rem) 80px}
+
+/* character sections */
+.char-section{margin-bottom:56px;scroll-margin-top:76px}
+.char-heading{position:relative;margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid var(--border)}
+.char-heading .bg-name{position:absolute;top:-34px;left:0;font-size:56px;font-weight:800;color:var(--bg2);letter-spacing:1px;white-space:nowrap;pointer-events:none;user-select:none;z-index:0}
+.char-heading .fg-row{position:relative;z-index:1;display:flex;align-items:baseline;gap:10px}
+.char-heading h2{font-size:22px;font-weight:800;letter-spacing:.5px}
+.char-heading .count{font-size:12px;font-weight:700;color:var(--gold)}
+
+.outfit-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:14px}
+.ocard{background:var(--bg2);border-radius:10px;overflow:hidden;border-bottom:3px solid var(--accent)}
+.ocard.gacha{border-bottom-color:var(--orange)}
+.ocard-img{aspect-ratio:3/4;background:linear-gradient(155deg,var(--bg3),#1c1928);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.ocard-img .init{font-size:15px;font-weight:800;color:rgba(255,255,255,.14);letter-spacing:1px}
+.ocard-img i{font-size:38px;color:rgba(255,255,255,.12)}
+.ocard-body{padding:11px 13px 13px}
+.ocard-char{font-size:9px;font-weight:700;letter-spacing:.6px;color:var(--text3);text-transform:uppercase;margin-bottom:3px}
+.ocard-name{font-size:13px;font-weight:700;margin-bottom:9px;line-height:1.3}
+.ocard-meta{display:flex;align-items:flex-end;justify-content:space-between;gap:6px;padding-top:9px;border-top:1px solid var(--border)}
+.ocard-src{font-size:9.5px;color:#7FB0EE;font-weight:600;letter-spacing:.2px;line-height:1.4}
+.ocard-cost{font-size:11px;font-weight:800;white-space:nowrap;flex-shrink:0}
+.ocard-cost.fons{color:#5DCAA5}
+.ocard-cost.crystal{color:var(--gold)}
+.ocard-cost.gacha-tag{color:var(--orange)}
+
+.placeholder-note{background:var(--bg2);border:1px dashed var(--border);border-radius:10px;padding:16px 18px;font-size:12.5px;color:var(--text3);font-style:italic;display:flex;align-items:center;gap:10px}
+.placeholder-note i{font-size:15px;color:var(--text3);flex-shrink:0}
+
+@media(max-width:820px){
+  .sidebar{display:none}
+  .main{padding-top:20px}
+}
+</style>
+</head>
+<body>
+
+<div class="toolbar">
+  <div class="toolbar-inner">
+    <div class="tb-logo"><div class="logo-ic"><i class="ti ti-shirt"></i></div>Outfits</div>
+    <div class="tb-tabs">
+      <div class="tb-tab active" data-tab="characters" onclick="switchTab('characters')">Characters</div>
+      <div class="tb-tab" data-tab="gliders" onclick="switchTab('gliders')">Gliders</div>
+      <div class="tb-tab" data-tab="vehicles" onclick="switchTab('vehicles')">Vehicles</div>
+    </div>
+    <div class="tb-search"><i class="ti ti-search"></i><input id="searchInput" placeholder="Search skins or heroes…" oninput="filterOutfits()"></div>
+  </div>
+</div>
+
+<div class="layout">
+  <div class="sidebar" id="sidebar">
+    <div class="sb-label">COLLECTION</div>
+    <div id="sidebarList"></div>
+  </div>
+
+  <div class="main" id="mainContent"></div>
+</div>
+
+<script>
+// ─── Card + section renderers (shared by Characters, Gliders, Vehicles) ────
+function initials(name){
+  return name.replace(/\s*\(.*?\)/,'').split(' ').map(w=>w[0]).slice(0,2).join('');
+}
+
+function outfitCardHTML(o){
+  const costClass = o.costType==='fons'?'fons':o.costType==='crystal'?'crystal':o.costType==='gacha'?'gacha-tag':'';
+  const imgInner = o.icon ? `<i class="ti ${o.icon}"></i>` : `<span class="init">${initials(o.charLabel||'')}</span>`;
+  return `<div class="ocard${o.gacha?' gacha':''}" data-name="${o.name.toLowerCase()}">
+    <div class="ocard-img">${imgInner}</div>
+    <div class="ocard-body">
+      ${o.charLabel?`<div class="ocard-char">${o.charLabel}</div>`:''}
+      <div class="ocard-name"${o.charLabel?'':' style="margin-bottom:9px"'}>${o.name}</div>
+      <div class="ocard-meta">
+        <div class="ocard-src">${o.src}</div>
+        ${o.cost?`<div class="ocard-cost ${costClass}">${o.cost}</div>`:''}
+      </div>
+    </div>
+  </div>`;
+}
+
+function sectionHTML(cat){
+  const items=cat.items;
+  const body = items && items.length
+    ? `<div class="outfit-grid">${items.map(outfitCardHTML).join('')}</div>`
+    : `<div class="placeholder-note"><i class="ti ti-info-circle"></i>${cat.emptyMsg||`No data confirmed yet for ${cat.label}.`}</div>`;
+  return `<div class="char-section" id="${cat.anchorId}" data-key="${cat.key}">
+    <div class="char-heading">
+      <div class="bg-name">${cat.bgLabel||cat.label}</div>
+      <div class="fg-row">
+        <h2>${cat.label.toUpperCase()}</h2>
+        <span class="count">${items ? items.length+' '+(cat.unitLabel||'Items') : ''}</span>
+      </div>
+    </div>
+    ${body}
+  </div>`;
+}
+
+// ─── Character roster (matches in-game Collection sidebar order) ───────────
+const ROSTER=['Adler','Aurelia','Baicang','Chiz','Daffodill','Edgar','Fadia','Haniel','Hathor','Hotori','Jiuyuan','Lacrimosa','Mint','Nanally','Sakiri','Skia','Zero (Female)','Zero (Male)'];
+
+// ─── Confirmed outfit data (transcribed from the in-game Outfits catalog) ──
+// Only Mint and Nanally are fully confirmed; the rest show a "not yet
+// confirmed" placeholder rather than guessed data.
+const OUTFITS={
+  'Mint':[
+    {name:'CSU Prodigy',src:'DEFAULT APPEARANCE'},
+    {name:'Leisurely Holiday',src:'BOND LEVEL 10 (MINT)'},
+    {name:'To Mary',src:'SHOP: AVAILABLE IN MALL',cost:'3,000,000 Fons',costType:'fons'},
+  ],
+  'Nanally':[
+    {name:'Family Boss',src:'DEFAULT APPEARANCE'},
+    {name:'Phoenix Kick',src:'SCARBOROUGH FAIR',cost:'Gacha',costType:'gacha',gacha:true},
+    {name:'The Popular Kid',src:'SHOP: AVAILABLE IN MALL',cost:'2,480 Crystals',costType:'crystal'},
+    {name:'Fluffy Flying Tiger',src:'BOND LEVEL 10 (NANALLY)'},
+    {name:'Reverse Fairy Tale',src:'SHOP: AVAILABLE IN MALL',cost:'3,000,000 Fons',costType:'fons'},
+  ],
+};
+
+function charCategories(){
+  return ROSTER.map(name=>({
+    key:name.toLowerCase(),
+    label:name,
+    bgLabel:name.split(' ')[0].toUpperCase(),
+    anchorId:'char-'+name.toLowerCase().replace(/[^a-z0-9]+/g,'-'),
+    unitLabel:'Outfits',
+    emptyMsg:`No outfit data confirmed yet for ${name}. Send a screenshot of their Outfits tab and it'll get added here.`,
+    items:(OUTFITS[name]||[]).map(o=>({...o,charLabel:name})),
+  }));
+}
+
+// ─── Gliders & Vehicle Liveries — reused from the verified cosmetics data,
+// grouped by acquisition source (same structural pattern as the character
+// sidebar/sections) ──────────────────────────────────────────────────────
+const GLIDER_GROUPS=[
+  {key:'default',label:'Default',items:[
+    {name:'Chuppa',icon:'ti-parachute',src:'DEFAULT APPEARANCE'},
+    {name:'Skycurrent',icon:'ti-parachute',src:'DEFAULT (AURELIA-EXCLUSIVE)'},
+  ]},
+  {key:'shop',label:'Fashion Shop',items:[
+    {name:'Ace',icon:'ti-parachute',src:'SHOP: AVAILABLE IN MALL',cost:'2,480 Crystals',costType:'crystal'},
+    {name:'Order Guardian EX',icon:'ti-parachute',src:'SHOP: AVAILABLE IN MALL',cost:'300 Crystals',costType:'crystal'},
+    {name:'Orchid Breeze',icon:'ti-parachute',src:'SHOP: AVAILABLE IN MALL',cost:'2,480 Crystals',costType:'crystal'},
+    {name:'Skyrider',icon:'ti-parachute',src:'SHOP: AVAILABLE IN MALL',cost:'2,480 Crystals',costType:'crystal'},
+    {name:'Tomato Duo',icon:'ti-parachute',src:'SHOP: AVAILABLE IN MALL',cost:'2,480 Crystals',costType:'crystal'},
+  ]},
+  {key:'limited',label:'Limited Banner',items:[
+    {name:'Wayward Fish Streamer',icon:'ti-parachute',src:'LIMITED BANNER',cost:'Gacha',costType:'gacha',gacha:true},
+    {name:'Zero-G Gag',icon:'ti-parachute',src:'LIMITED BANNER',cost:'Gacha',costType:'gacha',gacha:true},
+    {name:'Underboss-of-the-Underboss',icon:'ti-parachute',src:"NANALLY'S LAUNCH BANNER",cost:'Gacha',costType:'gacha',gacha:true},
+  ]},
+];
+const LIVERY_GROUPS=[
+  {key:'default',label:'Default',items:[
+    {name:'Original',icon:'ti-car',src:'DEFAULT APPEARANCE'},
+  ]},
+  {key:'shop',label:'Fashion Shop',items:[
+    {name:'City Trails',icon:'ti-car',src:'SHOP: AVAILABLE IN MALL'},
+    {name:'Midnight Ghost',icon:'ti-car',src:'SHOP: AVAILABLE IN MALL'},
+    {name:'Speed Legendary',icon:'ti-car',src:'SHOP: AVAILABLE IN MALL'},
+    {name:'ST999',icon:'ti-car',src:'SHOP: AVAILABLE IN MALL'},
+    {name:'Beyond-Tomorrow Engine',icon:'ti-engine',src:'SHOP: AVAILABLE IN MALL'},
+    {name:'Overmorrow Engine',icon:'ti-engine',src:'SHOP: AVAILABLE IN MALL'},
+    {name:'Autumn Haze - Livery',icon:'ti-car',src:'SHOP: AVAILABLE IN MALL'},
+    {name:'Blue Channel - Livery',icon:'ti-car',src:'SHOP: AVAILABLE IN MALL'},
+    {name:'Crimson Alert - Livery',icon:'ti-car',src:'SHOP: AVAILABLE IN MALL'},
+    {name:'Dark Flame Striker - Livery',icon:'ti-car',src:'SHOP: AVAILABLE IN MALL'},
+    {name:"Eibon's Blue Phantom - Livery",icon:'ti-car',src:'SHOP: AVAILABLE IN MALL'},
+    {name:'Golden Breeze - Livery',icon:'ti-car',src:'SHOP: AVAILABLE IN MALL'},
+    {name:'Hound Blitz - Livery',icon:'ti-car',src:'SHOP: AVAILABLE IN MALL'},
+    {name:'Midnight Rose - Livery',icon:'ti-car',src:'SHOP: AVAILABLE IN MALL'},
+    {name:'Night Wanderer - Livery',icon:'ti-car',src:'SHOP: AVAILABLE IN MALL'},
+    {name:'Swift Cab - Livery',icon:'ti-car',src:'SHOP: AVAILABLE IN MALL'},
+    {name:'Swift Cab - Roof Light',icon:'ti-car',src:'SHOP: AVAILABLE IN MALL'},
+    {name:'Warp Light - Livery',icon:'ti-car',src:'SHOP: AVAILABLE IN MALL'},
+  ]},
+  {key:'event',label:'Story / Event',items:[
+    {name:'Mint Rush - Livery',icon:'ti-car',src:'STORY / EVENT (MINT-THEMED)'},
+    {name:'Patrol Trainee on Duty',icon:'ti-car',src:'STORY / EVENT'},
+    {name:'Pinky Paws',icon:'ti-car',src:'PINK PAWS HEIST REWARD'},
+    {name:'Sakiri Roll! - Livery',icon:'ti-car',src:'STORY / EVENT (SAKIRI-THEMED)'},
+    {name:'Tomato Cruise - Livery',icon:'ti-car',src:'STORY / EVENT (LACRIMOSA-THEMED)'},
+  ]},
+  {key:'limited',label:'Limited Banner',items:[
+    {name:'Agent Arrival - Set',icon:'ti-car',src:'LIMITED BANNER',cost:'Gacha',costType:'gacha',gacha:true},
+    {name:'Cheers to Departure - Livery',icon:'ti-car',src:'LIMITED BANNER',cost:'Gacha',costType:'gacha',gacha:true},
+    {name:"Heaven's Inferno Supreme - Livery",icon:'ti-car',src:'LIMITED BANNER',cost:'Gacha',costType:'gacha',gacha:true},
+    {name:'Tiger Incoming! - Livery',icon:'ti-car',src:'LIMITED BANNER',cost:'Gacha',costType:'gacha',gacha:true},
+  ]},
+];
+
+function groupsToCategories(groups, unitLabel){
+  return groups.map(g=>({
+    key:g.key,
+    label:g.label,
+    bgLabel:g.label.split(' ')[0].toUpperCase(),
+    anchorId:'cat-'+g.key,
+    unitLabel,
+    items:g.items,
+  }));
+}
+
+const TAB_CATEGORIES={
+  characters: charCategories,
+  gliders: ()=>groupsToCategories(GLIDER_GROUPS,'Gliders'),
+  vehicles: ()=>groupsToCategories(LIVERY_GROUPS,'Liveries'),
+};
+
+let currentTab='characters';
+function switchTab(tab){
+  currentTab=tab;
+  document.querySelectorAll('.tb-tab').forEach(t=>t.classList.toggle('active', t.dataset.tab===tab));
+  document.getElementById('searchInput').value='';
+  renderTab();
+}
+
+function renderTab(){
+  const categories=TAB_CATEGORIES[currentTab]();
+  document.getElementById('sidebarList').innerHTML = categories.map(c=>
+    `<div class="sb-item" data-key="${c.key}" onclick="scrollToCat('${c.anchorId}')"><span class="dot"></span>${c.label.toUpperCase()}</div>`
+  ).join('');
+  document.getElementById('mainContent').innerHTML = categories.map(sectionHTML).join('');
+  document.querySelectorAll('.char-section').forEach(s=>observer.observe(s));
+  setActiveSidebar(categories[0]?.key);
+}
+
+function scrollToCat(anchorId){
+  document.getElementById(anchorId).scrollIntoView({behavior:'smooth', block:'start'});
+}
+function setActiveSidebar(key){
+  document.querySelectorAll('.sb-item').forEach(el=>{
+    el.classList.toggle('active', el.dataset.key===key);
+  });
+}
+
+
+// Scroll-spy: highlight the sidebar entry for whichever section is in view
+const observer=new IntersectionObserver((entries)=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){
+      setActiveSidebar(entry.target.dataset.key);
+    }
+  });
+},{rootMargin:'-20% 0px -70% 0px'});
+
+function filterOutfits(){
+  const q=document.getElementById('searchInput').value.toLowerCase().trim();
+  document.querySelectorAll('.char-section').forEach(section=>{
+    const cards=section.querySelectorAll('.ocard');
+    let visibleCount=0;
+    cards.forEach(card=>{
+      const match=!q || card.dataset.name.includes(q);
+      card.style.display=match?'':'none';
+      if(match) visibleCount++;
+    });
+    // if searching and this section's own label matches, show all its cards regardless
+    const sectionMatches = q && section.dataset.key.includes(q);
+    if(sectionMatches){
+      cards.forEach(card=>card.style.display='');
+      visibleCount=cards.length;
+    }
+    section.style.display = (!q || visibleCount>0 || sectionMatches) ? '' : 'none';
+  });
+}
+
+renderTab();
+</script>
+</body>
+</html>
