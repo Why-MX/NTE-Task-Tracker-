@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NTE Bond Items — Neverness to Everness</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0F0E17;--bg2:#1A1825;--bg3:#221F32;--border:#2E2A44;
+  --text:#EBE9F8;--text2:#9E9AC0;--text3:#5C5880;
+  --accent:#7B5CF5;--accent2:#534AB7;--pink:#E85D9E;
+  --green:#3BB37E;--gold:#D9A93C;
+  --radius:10px;
+  --app-pad: clamp(0.75rem, 4vw, 1.5rem);
+}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh}
+.app{max-width:1100px;margin:0 auto;padding:clamp(1rem,4vw,2rem) var(--app-pad) 5rem}
+
+/* header */
+.header{display:flex;align-items:center;gap:14px;margin-bottom:1rem;flex-wrap:wrap;row-gap:10px}
+.logo{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 0 24px rgba(123,92,245,.25)}
+.logo i{font-size:22px;color:#fff}
+.header-text h1{font-size:clamp(17px,4vw,22px);font-weight:700;letter-spacing:-.3px}
+.header-text p{font-size:12px;color:var(--text2);margin-top:2px}
+.sub{color:var(--text2);font-size:13px;max-width:640px;margin:0 0 20px;line-height:1.6}
+
+.note-box{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:16px 18px;margin-bottom:22px;font-size:12.5px;color:var(--text2);line-height:1.6;display:flex;gap:12px}
+.note-box i{font-size:16px;color:var(--accent);flex-shrink:0;margin-top:1px}
+
+.sect-title{display:flex;align-items:center;gap:9px;font-size:15px;font-weight:700;margin:28px 0 14px}
+.sect-title i{color:var(--pink);font-size:16px}
+.sect-title:first-of-type{margin-top:0}
+
+/* universal gifts */
+.universal-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;margin-bottom:8px}
+.ugift-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:16px}
+.ugift-top{display:flex;align-items:center;gap:10px;margin-bottom:9px}
+.ugift-icon{width:36px;height:36px;border-radius:9px;background:linear-gradient(160deg,#F0C96A,var(--gold));display:flex;align-items:center;justify-content:center;font-size:17px;color:#241a05;flex-shrink:0}
+.ugift-name{font-size:13.5px;font-weight:700;flex:1}
+.ugift-aff{font-size:13px;font-weight:800;color:var(--green);white-space:nowrap}
+.ugift-desc{font-size:12px;color:var(--text2);line-height:1.6}
+
+/* toolbar */
+.toolbar{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap}
+.search-wrap{position:relative;flex:1;min-width:200px}
+.search-wrap i{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--text3);font-size:16px}
+.search-input{width:100%;padding:10px 12px 10px 36px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:13px;font-family:inherit}
+.search-input:focus{outline:none;border-color:var(--accent)}
+
+/* gift table */
+.gift-table-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden;overflow-x:auto;margin-bottom:8px}
+table{width:100%;border-collapse:collapse;min-width:680px}
+thead th{background:var(--bg3);font-size:11px;font-weight:700;text-align:left;padding:11px 14px;color:var(--text2);border-bottom:1px solid var(--border);white-space:nowrap;cursor:pointer;user-select:none}
+thead th:hover{color:var(--text)}
+thead th i{font-size:10px;color:var(--text3);margin-left:3px}
+tbody tr{border-bottom:1px solid var(--border)}
+tbody tr:last-child{border-bottom:none}
+tbody tr:hover{background:var(--bg3)}
+tbody td{padding:10px 14px;font-size:12.5px;vertical-align:middle}
+.char-name-cell{font-weight:700;color:var(--pink)}
+.gift-cell{display:flex;align-items:center;gap:8px}
+.gift-ic{width:26px;height:26px;border-radius:7px;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--accent);flex-shrink:0}
+.cost-cell{color:#4EC8D9;font-weight:600}
+.aff-cell{color:var(--green);font-weight:700}
+.total-cell{color:var(--gold);font-weight:700}
+.perpt-cell{color:var(--text2)}
+
+.result-count{font-size:11px;color:var(--text3);font-weight:600;letter-spacing:.4px;margin-bottom:14px;text-transform:uppercase}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="header">
+    <div class="logo"><i class="ti ti-gift"></i></div>
+    <div class="header-text">
+      <h1>Bond Items</h1>
+      <p>Neverness to Everness — every gift, its Affinity value, and its price</p>
+    </div>
+  </div>
+  <p class="sub">Two tiers of gifts exist: universal items every character accepts at max value, and each character's own favorite item.</p>
+
+  <div class="note-box"><i class="ti ti-info-circle"></i>Full multi-tier gift catalogs (each character actually has 5–10 acceptable gifts at varying Affinity levels) are only published as screenshots I can't reliably read, not text. What's below is the <b style="color:var(--text)">single best confirmed favorite</b> per character — the one guides consistently agree gives the most Affinity for the price. If you want a specific character's full gift list transcribed, send me a screenshot of their in-game Gifts tab and I'll add it here exactly.</div>
+
+  <div class="sect-title"><i class="ti ti-stars"></i>Universal Gifts (Accepted by Everyone)</div>
+  <div class="universal-grid">
+    <div class="ugift-card">
+      <div class="ugift-top"><div class="ugift-icon"><i class="ti ti-mail"></i></div><div class="ugift-name">A Handwritten Letter</div><div class="ugift-aff">+2,000 AP</div></div>
+      <div class="ugift-desc">The single best gift in the game — every character treats it as a top favorite. Obtained from the Warp Exchange or Circle Bounty (Battle Pass). Scarce, so save it for characters without an affordable favorite, or for the expensive Level 5–6 thresholds.</div>
+    </div>
+    <div class="ugift-card">
+      <div class="ugift-icon" style="display:none"></div>
+      <div class="ugift-top"><div class="ugift-icon"><i class="ti ti-cloud"></i></div><div class="ugift-name">Fluffy Cotton</div><div class="ugift-aff">+400 AP</div></div>
+      <div class="ugift-desc">Free and universally accepted. Comes from interacting with the Compressed Boom Boom Cloud anomaly inside your apartment (Wiener Apartments, Eden Apartments, Fenglin Villa). Limited supply — realistically ~20–25 per month.</div>
+    </div>
+    <div class="ugift-card">
+      <div class="ugift-top"><div class="ugift-icon"><i class="ti ti-building-castle"></i></div><div class="ugift-name">Ebisu Royal Tower</div><div class="ugift-aff">+100 AP</div></div>
+      <div class="ugift-desc">Free, low value, but not everyone accepts it. Obtained from a story scene at the Ebisu Auction (~40 given). Fine for burning off extras once your priority characters are handled.</div>
+    </div>
+  </div>
+
+  <div class="sect-title"><i class="ti ti-heart"></i>Best Confirmed Favorite Gift Per Character</div>
+
+  <div class="toolbar">
+    <div class="search-wrap">
+      <i class="ti ti-search"></i>
+      <input id="searchInput" class="search-input" placeholder="Search by character or gift name…" oninput="render()">
+    </div>
+  </div>
+
+  <div class="result-count" id="resultCount"></div>
+  <div class="gift-table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th onclick="sortBy('name')">Character <i class="ti ti-arrows-sort"></i></th>
+          <th onclick="sortBy('gift')">Favorite Gift <i class="ti ti-arrows-sort"></i></th>
+          <th onclick="sortBy('cost')">Price <i class="ti ti-arrows-sort"></i></th>
+          <th onclick="sortBy('affinity')">Affinity / Gift <i class="ti ti-arrows-sort"></i></th>
+          <th onclick="sortBy('perpoint')">Fons / Affinity Point <i class="ti ti-arrows-sort"></i></th>
+          <th onclick="sortBy('total')">Total Fons to Max <i class="ti ti-arrows-sort"></i></th>
+        </tr>
+      </thead>
+      <tbody id="giftTableBody"></tbody>
+    </table>
+  </div>
+
+</div>
+
+<script>
+// Verified per-character favorite-gift data (name, Fons cost, Affinity per
+// gift, and the estimated total Fons cost to max Bond using only this gift).
+const CHAR_GIFTS={
+  "Fadia":{icon:'ti-glass',name:'Melting Ice',cost:5400,affinity:400,total:756000},
+  "Nanally":{icon:'ti-device-mobile',name:'Blocky',cost:5400,affinity:200,total:1512000},
+  "Jiuyuan":{icon:'ti-flask',name:'Moon Vase',cost:3000,affinity:200,total:840000},
+  "Lacrimosa":{icon:'ti-book',name:'Chill Girl',cost:4000,affinity:200,total:1120000},
+  "Daffodill":{icon:'ti-file-text',name:'Firewire',cost:10000,affinity:400,total:1400000},
+  "Hotori":{icon:'ti-flask',name:'Vase Yellow',cost:3600,affinity:200,total:1008000},
+  "Chiz":{icon:'ti-flower',name:'Flourish',cost:3000,affinity:200,total:840000},
+  "Edgar":{icon:'ti-device-mobile',name:'Snack Fly',cost:5400,affinity:200,total:1120000},
+  "Baicang":{icon:'ti-sun',name:'Backyard Joy',cost:4500,affinity:200,total:1260000},
+  "Sakiri":{icon:'ti-device-mobile',name:'Fever Dream',cost:5000,affinity:200,total:1400000},
+  "Adler":{icon:'ti-device-mobile',name:'Golden Dream',cost:3600,affinity:200,total:1008000},
+  "Hathor":{icon:'ti-device-mobile',name:'Fever Dream',cost:5000,affinity:200,total:1400000},
+  "Skia":{icon:'ti-book',name:'Chill Girl',cost:4000,affinity:200,total:1120000},
+  "Mint":{icon:'ti-flower',name:'Wilt',cost:3000,affinity:200,total:840000},
+  "Haniel":{icon:'ti-flower',name:'Flourish',cost:3000,affinity:200,total:840000},
+  "Aurelia":{icon:'ti-flower',name:'Flourish',cost:3000,affinity:200,total:840000},
+};
+
+let sortKey='total', sortDir=1;
+function sortBy(key){
+  if(sortKey===key) sortDir*=-1; else { sortKey=key; sortDir=1; }
+  render();
+}
+
+function rowHTML(name, g){
+  const perPoint=(g.cost/g.affinity).toFixed(1);
+  return `<tr>
+    <td class="char-name-cell">${name}</td>
+    <td><div class="gift-cell"><div class="gift-ic"><i class="ti ${g.icon}"></i></div>${g.name}</div></td>
+    <td class="cost-cell">${g.cost.toLocaleString()} Fons</td>
+    <td class="aff-cell">${g.affinity}</td>
+    <td class="perpt-cell">${perPoint}</td>
+    <td class="total-cell">${g.total.toLocaleString()} Fons</td>
+  </tr>`;
+}
+
+function render(){
+  const q=document.getElementById('searchInput').value.toLowerCase().trim();
+  let entries=Object.entries(CHAR_GIFTS).filter(([name,g])=>
+    !q || name.toLowerCase().includes(q) || g.name.toLowerCase().includes(q)
+  );
+
+  const keyMap={
+    name:(n,g)=>n,
+    gift:(n,g)=>g.name,
+    cost:(n,g)=>g.cost,
+    affinity:(n,g)=>g.affinity,
+    perpoint:(n,g)=>g.cost/g.affinity,
+    total:(n,g)=>g.total,
+  };
+  entries.sort((a,b)=>{
+    const av=keyMap[sortKey](a[0],a[1]), bv=keyMap[sortKey](b[0],b[1]);
+    if(av<bv) return -1*sortDir;
+    if(av>bv) return 1*sortDir;
+    return 0;
+  });
+
+  document.getElementById('resultCount').textContent=`Showing ${entries.length} of ${Object.keys(CHAR_GIFTS).length} characters`;
+  document.getElementById('giftTableBody').innerHTML = entries.map(([name,g])=>rowHTML(name,g)).join('');
+}
+
+render();
+</script>
+</body>
+</html>
